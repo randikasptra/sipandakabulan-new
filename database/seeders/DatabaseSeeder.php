@@ -3,17 +3,21 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+// ✅ Tambahkan semua ini
+use Database\Seeders\KlasterSeeder;
+use Database\Seeders\IndikatorSeeder;
+use Database\Seeders\IndikatorOpsiNilaiSeeder;
+use Database\Seeders\KategoriUploadSeeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Jalankan seeder UserSeeder
         $this->call([
-            UserSeeder::class,
+            KlasterSeeder::class,
+            IndikatorSeeder::class,
+            IndikatorOpsiNilaiSeeder::class,
+            KategoriUploadSeeder::class,
         ]);
     }
 }
