@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Klaster;
-use App\Models\Indikator;
+use App\Models\IndikatorKlaster;
 use App\Models\IndikatorOpsiNilai;
 use App\Models\KategoriUpload;
 
