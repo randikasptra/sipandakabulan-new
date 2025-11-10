@@ -9,6 +9,8 @@ class KategoriUpload extends Model
 {
     use HasFactory;
 
+    protected $table = 'kategori_uploads';
+
     protected $fillable = [
         'indikator_id',
         'nama_kategori',

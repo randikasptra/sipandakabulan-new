@@ -12,14 +12,16 @@ class KelembagaanSeeder extends Seeder
 {
     public function run(): void
     {
-        // Tambah Klaster Kelembagaan
-        $klaster = Klaster::create([
-            'title' => 'Kelembagaan',
-            'slug' => 'kelembagaan',
-            'nilai_em' => 0,
-            'nilai_maksimal' => 100,
-            'progres' => 0,
-        ]);
+        // Tambah Klaster Kelembagaan (buat jika belum ada)
+        $klaster = Klaster::firstOrCreate(
+            ['slug' => 'kelembagaan'],
+            [
+                'title' => 'Kelembagaan',
+                'nilai_em' => 0,
+                'nilai_maksimal' => 220, // 60+50+40+50+20
+                'progres' => 0,
+            ]
+        );
 
         // Data indikator kelembagaan
         $indikators = [
@@ -139,7 +141,7 @@ class KelembagaanSeeder extends Seeder
         foreach ($indikators as $indikatorData) {
             $indikator = IndikatorKlaster::create([
                 'klaster_id' => $klaster->id,
-                'nama_indikator' => $indikatorData['judul'],
+                'nama_indikator' => $indikatorData['judul'], // ✅ Ubah dari 'nama'
                 'slug' => $indikatorData['slug'],
                 'total_nilai' => $indikatorData['nilai'],
                 'template_excel' => $indikatorData['template_excel'],

@@ -10,10 +10,34 @@ class IndikatorOpsiNilaiSeeder extends Seeder
     public function run(): void
     {
         DB::table('indikator_opsi_nilai')->insert([
-            ['indikator_id' => 1, 'label' => '≤10%', 'nilai' => 0],
-            ['indikator_id' => 1, 'label' => '10–20%', 'nilai' => 20],
-            ['indikator_id' => 1, 'label' => '20–80%', 'nilai' => 40],
-            ['indikator_id' => 1, 'label' => '80–100%', 'nilai' => 60],
+            [
+                'indikator_id' => 1,
+                'label' => '≤10%',
+                'poin' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'indikator_id' => 1,
+                'label' => '10–20%',
+                'poin' => 20,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'indikator_id' => 1,
+                'label' => '20–80%',
+                'poin' => 40,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'indikator_id' => 1,
+                'label' => '80–100%',
+                'poin' => 60,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

@@ -9,6 +9,9 @@ class Klaster extends Model
 {
     use HasFactory;
 
+
+    protected $table = 'klasters';
+
     protected $fillable = [
         'title',
         'slug',

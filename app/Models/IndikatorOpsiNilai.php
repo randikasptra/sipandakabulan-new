@@ -9,6 +9,8 @@ class IndikatorOpsiNilai extends Model
 {
     use HasFactory;
 
+    protected $table = 'indikator_opsi_nilai';
+
     protected $fillable = [
         'indikator_id',
         'label',

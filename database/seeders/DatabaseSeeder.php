@@ -9,16 +9,23 @@ use Database\Seeders\IndikatorSeeder;
 use Database\Seeders\IndikatorOpsiNilaiSeeder;
 use Database\Seeders\KategoriUploadSeeder;
 use Database\Seeders\KelembagaanSeeder;
+use Database\Seeders\UserSeeder;
+use Database\Seeders\Klaster1Seeder;
+use Database\Seeders\Klaster2Seeder;
+use Database\Seeders\Klaster3Seeder;
+use Database\Seeders\Klaster4Seeder;
+use Database\Seeders\Klaster5Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         $this->call([
-            KlasterSeeder::class,
-            IndikatorSeeder::class,
-            IndikatorOpsiNilaiSeeder::class,
-            KategoriUploadSeeder::class,
+            UserSeeder::class,
+            // KlasterSeeder::class,
+            // IndikatorSeeder::class,
+            // IndikatorOpsiNilaiSeeder::class,
+            // KategoriUploadSeeder::class,
             KelembagaanSeeder::class,
             Klaster1Seeder::class,
             Klaster2Seeder::class,

@@ -16,11 +16,11 @@ class Klaster4Seeder extends Seeder
         $klaster = Klaster::firstOrCreate(
             ['slug' => 'klaster4'],
             [
-            'title' => 'Pendidikan, Pemanfaatan Waktu Luang dan Kegiatan Budaya',
-            'nilai_em' => 0,
-            'nilai_maksimal' => 270,
-            'progres' => 0,
-        ]
+                'title' => 'Pendidikan, Pemanfaatan Waktu Luang dan Kegiatan Budaya',
+                'nilai_em' => 0,
+                'nilai_maksimal' => 270,
+                'progres' => 0,
+            ]
         );
 
         // Data indikator klaster 4

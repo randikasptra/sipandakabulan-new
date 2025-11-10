@@ -10,8 +10,8 @@ return new class () extends Migration {
         Schema::create('indikator_opsi_nilai', function (Blueprint $table) {
             $table->id();
             $table->foreignId('indikator_id')->constrained('indikator_klaster')->onDelete('cascade');
-            $table->string('label'); // "≤10%", "10–20%", dst
-            $table->integer('nilai'); // poin
+            $table->string('label');
+            $table->integer('poin'); // ✅ ubah dari 'nilai'
             $table->timestamps();
         });
     }

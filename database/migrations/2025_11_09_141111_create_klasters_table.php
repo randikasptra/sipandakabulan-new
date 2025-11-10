@@ -9,12 +9,15 @@ return new class () extends Migration {
     {
         Schema::create('klasters', function (Blueprint $table) {
             $table->id();
-            $table->string('nama'); // Contoh: Klaster I: Hak Sipil dan Kebebasan
-            $table->string('kode')->unique(); // klaster1, klaster2, dst
-            $table->text('deskripsi')->nullable();
+            $table->string('title'); // contoh: Hak Sipil dan Kebebasan
+            $table->string('slug')->unique(); // contoh: klaster1
+            $table->integer('nilai_em')->default(0);
+            $table->integer('nilai_maksimal')->default(0);
+            $table->integer('progres')->default(0);
             $table->timestamps();
         });
     }
+
 
     public function down(): void
     {

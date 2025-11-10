@@ -9,9 +9,11 @@ class IndikatorKlaster extends Model
 {
     use HasFactory;
 
+    protected $table = 'indikator_klaster';
+
     protected $fillable = [
         'klaster_id',
-        'nama_indikator',
+        'nama',
         'slug',
         'total_nilai',
         'template_excel',

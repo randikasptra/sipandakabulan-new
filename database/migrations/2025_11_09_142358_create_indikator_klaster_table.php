@@ -10,9 +10,10 @@ return new class () extends Migration {
         Schema::create('indikator_klaster', function (Blueprint $table) {
             $table->id();
             $table->foreignId('klaster_id')->constrained('klasters')->onDelete('cascade');
-            $table->string('nama');
+            $table->string('nama_indikator'); // ✅ ubah dari 'nama'
+            $table->string('slug'); // ✅ tambahkan ini
             $table->text('deskripsi')->nullable();
-            $table->integer('bobot')->default(0); // optional, misal nilai max per indikator
+            $table->integer('total_nilai')->default(0); // ✅ ubah dari 'bobot'
             $table->timestamps();
         });
     }

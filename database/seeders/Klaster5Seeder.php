@@ -16,11 +16,11 @@ class Klaster5Seeder extends Seeder
         $klaster = Klaster::firstOrCreate(
             ['slug' => 'klaster5'],
             [
-            'title' => 'Perlindungan Khusus',
-            'nilai_em' => 0,
-            'nilai_maksimal' => 130,
-            'progres' => 0,
-        ]
+                'title' => 'Perlindungan Khusus',
+                'nilai_em' => 0,
+                'nilai_maksimal' => 130,
+                'progres' => 0,
+            ]
         );
 
         // Data indikator klaster 5

@@ -10,7 +10,7 @@ return new class () extends Migration {
         Schema::create('kategori_uploads', function (Blueprint $table) {
             $table->id();
             $table->foreignId('indikator_id')->constrained('indikator_klaster')->onDelete('cascade');
-            $table->string('nama'); // contoh: "KUA", "0–60 hari", "Posyandu HI"
+            $table->string('nama_kategori'); // ✅ ubah dari 'nama'
             $table->timestamps();
         });
     }
