@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Desa\DesaDashboardController;
 use App\Http\Controllers\Kecamatan\KecamatanDashboardController;
+use App\Http\Controllers\Desa\PenilaianController;
 
 // =======================
 // ROOT REDIRECT
@@ -36,13 +37,15 @@ Route::middleware(['auth', 'role:admin'])
 // =======================
 // DESA ROUTES
 // =======================
-Route::middleware(['auth', 'role:desa'])
-    ->prefix('desa')
-    ->name('desa.')
-    ->group(function () {
-        Route::get('/dashboard', [DesaDashboardController::class, 'index'])->name('dashboard');
-        // Route tambahan untuk desa nanti
-    });
+use App\Http\Controllers\Desa\DesaController;
+
+Route::prefix('desa')->name('desa.')->group(function () {
+    Route::get('/dashboard', [DesaController::class, 'index'])->name('dashboard');
+    Route::get('/klaster/{slug}', [DesaController::class, 'showKlaster'])->name('klaster.detail');
+    Route::get('/klaster/{klaster}/{indikator}', [DesaController::class, 'showIndikator'])->name('indikator.detail');
+    Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
+});
+
 
 // =======================
 // KECAMATAN ROUTES

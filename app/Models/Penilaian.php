@@ -9,35 +9,33 @@ class Penilaian extends Model
 {
     use HasFactory;
 
+    protected $table = 'penilaians';
+
     protected $fillable = [
-        'user_id',
         'klaster_id',
         'indikator_id',
+        'user_id',
+        'nilai',
         'tahun',
         'bulan',
-        'total_nilai',
-        'status',
     ];
 
-    // Relasi: penilaian dimiliki oleh user
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Relasi: penilaian terkait dengan klaster
+    // Relasi
     public function klaster()
     {
         return $this->belongsTo(Klaster::class);
     }
 
-    // Relasi: penilaian terkait dengan indikator
     public function indikator()
     {
         return $this->belongsTo(IndikatorKlaster::class, 'indikator_id');
     }
 
-    // Relasi: penilaian punya banyak berkas upload
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function berkasUploads()
     {
         return $this->hasMany(BerkasUpload::class, 'penilaian_id');
