@@ -14,6 +14,7 @@ class Penilaian extends Model
     protected $fillable = [
         'klaster_id',
         'indikator_id',
+        'desa_id',
         'user_id',
         'nilai',
         'tahun',
@@ -40,4 +41,9 @@ class Penilaian extends Model
     {
         return $this->hasMany(BerkasUpload::class, 'penilaian_id');
     }
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class);
+    }
+
 }

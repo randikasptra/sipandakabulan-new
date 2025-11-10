@@ -16,60 +16,63 @@ class PenilaianController extends Controller
 {
     public function store(Request $request)
     {
-        // 1️⃣ Simpan nilai indikator
+        $desaId = Auth::user()->desa_id;
+        $userId = Auth::id();
+
         foreach ($request->all() as $key => $value) {
             if (Str::startsWith($key, 'indikator_')) {
                 $indikatorId = Str::after($key, 'indikator_');
-
-                // Ambil klaster_id dari indikator
                 $indikator = IndikatorKlaster::find($indikatorId);
                 if (!$indikator) {
-                    continue; // skip jika tidak ditemukan
+                    continue;
+                }
+
+                // Cari penilaian desa-klaster-tahun ini
+                $existing = Penilaian::where([
+                    'desa_id' => $desaId,
+                    'klaster_id' => $indikator->klaster_id,
+                    'indikator_id' => $indikatorId,
+                    'tahun' => now()->year,
+                ])->first();
+
+                // Kalau sudah approved, skip
+                if ($existing && $existing->status === 'approved') {
+                    continue;
                 }
 
                 Penilaian::updateOrCreate(
                     [
+                        'desa_id' => $desaId,
+                        'klaster_id' => $indikator->klaster_id,
                         'indikator_id' => $indikatorId,
-                        'user_id' => Auth::id(),
+                        'tahun' => now()->year,
                     ],
                     [
-                        'klaster_id' => $indikator->klaster_id,
+                        'user_id' => $userId,
                         'nilai' => $value,
-                        'tahun' => now()->year,
                         'bulan' => now()->format('F'),
+                        'status' => 'pending',
                     ]
                 );
             }
         }
 
-        // 2️⃣ Upload file ke Supabase Storage (tanpa package)
+        // 🔹 Upload file ke Supabase Storage
         foreach ($request->files as $key => $file) {
             if (Str::startsWith($key, 'file_') && $file !== null) {
                 $kategoriId = Str::after($key, 'file_');
                 $kategori = KategoriUpload::find($kategoriId);
-
                 if (!$kategori) {
                     continue;
                 }
 
                 $filename = time() . '_' . $file->getClientOriginalName();
-
-                // Ambil indikator dan klaster untuk struktur folder
-                $indikator = $kategori->indikator ?? $kategori->indikatorUpload ?? null;
-                if (!$indikator) {
-                    $indikator = \App\Models\IndikatorKlaster::find($kategori->indikator_id);
-                }
-
-                $klaster = $indikator?->klaster ?? null;
-
-                // Pastikan punya slug klaster
+                $indikator = \App\Models\IndikatorKlaster::find($kategori->indikator_id);
+                $klaster = $indikator?->klaster;
                 $klasterSlug = $klaster ? Str::slug($klaster->slug ?? $klaster->title, '-') : 'unknown';
 
-                // Struktur path → desa/klasterX/{nama_file}
                 $path = "desa/{$klasterSlug}/{$filename}";
 
-
-                // Upload file via HTTP PUT ke Supabase Storage
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_ROLE_KEY'),
                     'Content-Type' => $file->getClientMimeType(),
@@ -80,7 +83,6 @@ class PenilaianController extends Controller
                     env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_STORAGE_BUCKET') . '/' . $path
                 );
 
-                // Jika gagal, log error tapi lanjut ke file berikutnya
                 if ($response->failed()) {
                     \Log::error('Gagal upload ke Supabase', [
                         'file' => $filename,
@@ -89,11 +91,14 @@ class PenilaianController extends Controller
                     continue;
                 }
 
-                // 3️⃣ Simpan info file ke tabel berkas_uploads
+                $penilaianId = Penilaian::where([
+                    'desa_id' => $desaId,
+                    'indikator_id' => $kategori->indikator_id,
+                    'tahun' => now()->year,
+                ])->value('id');
+
                 BerkasUpload::create([
-                    'penilaian_id' => Penilaian::where('indikator_id', $kategori->indikator_id)
-                        ->where('user_id', Auth::id())
-                        ->value('id'),
+                    'penilaian_id' => $penilaianId,
                     'kategori_upload_id' => $kategori->id,
                     'path_file' => $path,
                     'nilai' => 0,
@@ -101,6 +106,6 @@ class PenilaianController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', '✅ Penilaian dan file berhasil disimpan ke Supabase!');
+        return redirect()->back()->with('success', '✅ Penilaian berhasil disimpan & file diunggah!');
     }
 }

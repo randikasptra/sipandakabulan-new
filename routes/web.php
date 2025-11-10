@@ -3,23 +3,20 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Desa\DesaDashboardController;
-use App\Http\Controllers\Kecamatan\KecamatanDashboardController;
+use App\Http\Controllers\Desa\DesaController;
 use App\Http\Controllers\Desa\PenilaianController;
+use App\Http\Controllers\Kecamatan\KecamatanDashboardController;
 
 // =======================
 // ROOT REDIRECT
 // =======================
 Route::get('/', function () {
-    // Kalau sudah login, langsung arahkan ke dashboard sesuai role
     if (auth()->check()) {
         $role = auth()->user()->role;
         if (in_array($role, ['admin', 'desa', 'kecamatan'])) {
             return redirect()->route($role . '.dashboard');
         }
     }
-
-    // Kalau belum login → arahkan ke halaman login
     return redirect()->route('login');
 })->name('home');
 
@@ -31,21 +28,21 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-        // Route admin lainnya taruh di sini
+        // Route admin lainnya di sini
     });
 
 // =======================
 // DESA ROUTES
 // =======================
-use App\Http\Controllers\Desa\DesaController;
-
-Route::prefix('desa')->name('desa.')->group(function () {
-    Route::get('/dashboard', [DesaController::class, 'index'])->name('dashboard');
-    Route::get('/klaster/{slug}', [DesaController::class, 'showKlaster'])->name('klaster.detail');
-    Route::get('/klaster/{klaster}/{indikator}', [DesaController::class, 'showIndikator'])->name('indikator.detail');
-    Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
-});
-
+Route::middleware(['auth', 'role:desa'])
+    ->prefix('desa')
+    ->name('desa.')
+    ->group(function () {
+        Route::get('/dashboard', [DesaController::class, 'index'])->name('dashboard');
+        Route::get('/klaster/{slug}', [DesaController::class, 'showKlaster'])->name('klaster.detail');
+        Route::get('/klaster/{klaster}/{indikator}', [DesaController::class, 'showIndikator'])->name('indikator.detail');
+        Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
+    });
 
 // =======================
 // KECAMATAN ROUTES
