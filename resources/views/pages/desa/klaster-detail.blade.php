@@ -36,7 +36,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="fw-bold mb-0">
                             <i class="bi bi-list-ol me-2"></i>
-                            {{ $indikator->nama_indikator }}
+                            {{ $index + 1 }}. {{ $indikator->nama_indikator }}
                         </h5>
                         <span class="badge bg-light text-primary fs-6">
                             <i class="bi bi-star-fill me-1"></i>
@@ -144,8 +144,7 @@
         @endforeach
 
         <div class="text-center mt-5">
-            <button type="submit"
-                    class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm fw-bold">
+            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm fw-bold">
                 <i class="bi bi-save me-2"></i>
                 Simpan & Upload
             </button>
