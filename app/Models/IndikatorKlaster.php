@@ -42,4 +42,11 @@ class IndikatorKlaster extends Model
     {
         return $this->hasMany(Penilaian::class, 'indikator_id');
     }
+
+    // App\Models\IndikatorKlaster.php
+    public function getNamaAttribute()
+    {
+        return $this->attributes['nama_indikator'] ?? null;
+    }
+
 }

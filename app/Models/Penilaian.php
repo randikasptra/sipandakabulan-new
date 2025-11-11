@@ -12,13 +12,15 @@ class Penilaian extends Model
     protected $table = 'penilaians';
 
     protected $fillable = [
-        'klaster_id',
-        'indikator_id',
         'desa_id',
         'user_id',
+        'klaster_id',
+        'indikator_id',
         'nilai',
         'tahun',
         'bulan',
+        'total_nilai',
+        'status',
     ];
 
     // Relasi
