@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Desa;
 
 use App\Http\Controllers\Controller;
 
-class TutorialController extends Controller
+class PengumumanController extends Controller
 {
     public function index()
     {
-        return view('pages.desa.tutorial');
+        return view('pages.desa.pengumuman');
     }
 }

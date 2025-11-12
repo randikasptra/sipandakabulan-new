@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,12 +26,33 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
         }
 
+        /* ✅ Fixed Header (selalu di atas) */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 50;
+        }
+
+        /* ✅ Gradient Header Style */
         .bg-gradient-header {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         }
 
+        /* ✅ Tambahkan ruang agar konten tidak tertimpa header */
+        main {
+            padding-top: 90px;
+            /* sesuaikan tinggi header kamu */
+        }
+
+        /* Scrollbar style */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -54,7 +76,7 @@
 
         .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         .btn-animate {
@@ -69,17 +91,18 @@
     {{-- Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="bg-gray-50 text-gray-800">
 
-    {{-- Header --}}
+    {{-- ✅ Header (sudah fixed, tidak menimpa konten) --}}
     @include('components.header')
 
-    {{-- Content --}}
-    <main class="max-w-7xl mx-auto px-6 py-8" data-aos="fade-up" data-aos-duration="800">
+    {{-- ✅ Content --}}
+    <main class="mt-24 max-w-7xl mx-auto px-6 py-8" data-aos="fade-up" data-aos-duration="800">
         @yield('content')
     </main>
 
-    {{-- Footer --}}
+    {{-- ✅ Footer --}}
     @include('components.footer')
 
     {{-- ✅ JavaScript Libraries --}}
@@ -95,14 +118,13 @@
             offset: 100
         });
 
-        // Custom JavaScript untuk interaksi
+        // Disable double submit form
         document.addEventListener('DOMContentLoaded', function() {
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
                 form.addEventListener('submit', function(e) {
                     const button = this.querySelector('button[type="submit"]');
                     if (button) {
-                        const originalText = button.innerHTML;
                         button.innerHTML = `
                             <span class="spinner-border spinner-border-sm me-2" role="status"></span>
                             Memproses...
@@ -115,4 +137,5 @@
     </script>
 
 </body>
+
 </html>
