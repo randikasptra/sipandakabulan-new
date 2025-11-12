@@ -18,11 +18,19 @@ class Desa extends Model
     ];
 
     /**
-     * Relasi ke user
-     * Satu desa bisa punya banyak user (operator)
+     * Relasi ke user (operator desa)
      */
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Relasi ke penilaians
+     * Satu desa bisa punya banyak penilaian
+     */
+    public function penilaians()
+    {
+        return $this->hasMany(Penilaian::class, 'desa_id');
     }
 }

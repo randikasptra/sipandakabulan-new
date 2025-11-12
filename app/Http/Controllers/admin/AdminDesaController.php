@@ -8,6 +8,6 @@ class AdminDesaController extends Controller
 {
     public function index()
     {
-        return view('pages.admin.desa.index');
+        return view('pages.admin.desa');
     }
 }

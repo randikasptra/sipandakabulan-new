@@ -36,13 +36,20 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/desa', [AdminDesaController::class, 'index'])->name('desa.index');
-        Route::get('/penilaian', [AdminPenilaianController::class, 'index'])->name('penilaian.index');
-        Route::get('/pengumuman', [AdminPengumumanController::class, 'index'])->name('pengumuman.index');
-        Route::get('/tutorial', [AdminTutorialController::class, 'index'])->name('tutorial.index');
-        Route::get('/laporan', [AdminLaporanController::class, 'index'])->name('laporan.index');
-    });
 
+        // Route Penilaian
+        Route::get('/penilaian', [AdminPenilaianController::class, 'index'])->name('penilaian');
+        Route::get('/penilaian/desa/{desa}', [AdminPenilaianController::class, 'showDesa'])->name('penilaian.desa'); // ← UBAH INI
+        Route::get('/penilaian/desa/{desa}/klaster/{klaster}', [AdminPenilaianController::class, 'showKlaster'])->name('penilaian.klaster'); // ← TAMBAH INI
+        Route::patch('/penilaian/{penilaian}/approve', [AdminPenilaianController::class, 'approve'])->name('penilaian.approve');
+        Route::patch('/penilaian/{penilaian}/reject', [AdminPenilaianController::class, 'reject'])->name('penilaian.reject');
+
+        // Route lainnya
+        Route::get('/desa', [AdminDesaController::class, 'index'])->name('desa');
+        Route::get('/pengumuman', [AdminPengumumanController::class, 'index'])->name('pengumuman');
+        Route::get('/tutorial', [AdminTutorialController::class, 'index'])->name('tutorial');
+        Route::get('/laporan', [AdminLaporanController::class, 'index'])->name('laporan');
+    });
 // =======================
 // DESA ROUTES
 // =======================
