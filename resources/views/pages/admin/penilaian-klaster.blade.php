@@ -2,7 +2,11 @@
 @section('title', 'Verifikasi Penilaian | Klaster per Desa')
 
 @section('content')
-    <h2 class="text-2xl font-bold mb-3">📊 Penilaian Desa {{ $desa->nama_desa }}</h2>
+    <h2 class="text-2xl font-bold mb-3">
+        📊 Penilaian Desa {{ $desa->nama_desa }} ({{ request('bulan', now()->format('F')) }}
+        {{ request('tahun', now()->year) }})
+    </h2>
+
     <a href="{{ route('admin.penilaian') }}" class="btn btn-secondary mb-4">← Kembali</a>
 
     <div class="bg-white shadow rounded-xl p-5">

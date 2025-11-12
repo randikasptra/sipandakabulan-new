@@ -2,7 +2,27 @@
 @section('title', 'Verifikasi Penilaian | Daftar Desa')
 
 @section('content')
-    <h2 class="text-2xl font-bold mb-6">🏘️ Daftar Desa yang Telah Mengisi Penilaian</h2>
+
+    <h2 class="text-2xl font-bold mb-6">
+        🏘️ Daftar Desa ({{ request('bulan', now()->format('F')) }} {{ request('tahun', now()->year) }})
+    </h2>
+
+    <form method="GET" class="d-flex gap-2 mb-4 align-items-center">
+        <input type="number" name="tahun" class="form-control w-auto" value="{{ request('tahun', now()->year) }}"
+            min="2020" max="{{ now()->year }}">
+
+        <select name="bulan" class="form-select w-auto">
+            @foreach (['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $b)
+                <option value="{{ $b }}" {{ request('bulan', now()->format('F')) === $b ? 'selected' : '' }}>
+                    {{ $b }}
+                </option>
+            @endforeach
+        </select>
+
+        <button class="btn btn-primary">
+            <i class="bi bi-search"></i> Filter
+        </button>
+    </form>
 
     <div class="bg-white shadow rounded-xl p-5">
         <table id="tableDesa" class="table table-striped align-middle">

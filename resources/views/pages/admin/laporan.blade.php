@@ -11,6 +11,18 @@
             📊 Laporan Penilaian Desa ({{ $bulan }} {{ $tahun }})
         </h2>
 
+        <div class="d-flex justify-content-end gap-2 mb-3">
+            <a href="{{ route('admin.laporan.exportExcel', ['tahun' => request('tahun'), 'bulan' => request('bulan')]) }}"
+                class="btn btn-success">
+                <i class="bi bi-file-earmark-excel"></i> Export Excel
+            </a>
+
+            <a href="{{ route('admin.laporan.exportPdf', ['tahun' => request('tahun'), 'bulan' => request('bulan')]) }}"
+                class="btn btn-danger">
+                <i class="bi bi-filetype-pdf"></i> Export PDF
+            </a>
+        </div>
+
 
         <form method="GET" class="d-flex gap-2">
             <input type="number" name="tahun" class="form-control" value="{{ $tahun }}" min="2020"

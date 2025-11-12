@@ -54,6 +54,8 @@ Route::middleware(['auth', 'role:admin'])
             Route::get('/export/excel', [AdminLaporanController::class, 'exportExcel'])->name('exportExcel');
             Route::get('/export/pdf', [AdminLaporanController::class, 'exportPdf'])->name('exportPdf');
         });
+        Route::get('/laporan/export/excel', [AdminLaporanController::class, 'exportExcel'])->name('laporan.exportExcel');
+        Route::get('/laporan/export/pdf', [AdminLaporanController::class, 'exportPdf'])->name('laporan.exportPdf');
 
 
     });

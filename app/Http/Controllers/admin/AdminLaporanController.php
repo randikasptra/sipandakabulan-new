@@ -7,6 +7,9 @@ use App\Models\Desa;
 use App\Models\Klaster;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LaporanExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
 class AdminLaporanController extends Controller
@@ -70,16 +73,27 @@ class AdminLaporanController extends Controller
      */
     public function exportExcel(Request $request)
     {
-        // Placeholder dulu, nanti kita pakai Laravel Excel
-        return back()->with('success', '✅ Fitur export Excel akan segera aktif!');
+        $tahun = $request->get('tahun', now()->year);
+        $bulan = $request->get('bulan', now()->format('F'));
+
+        $fileName = "Laporan_Penilaian_{$bulan}_{$tahun}.xlsx";
+        return Excel::download(new LaporanExport($tahun, $bulan), $fileName);
     }
 
-    /**
-     * 📄 Tahap 3: Export PDF (simulasi dulu)
-     */
     public function exportPdf(Request $request)
     {
-        // Placeholder, nanti pakai DomPDF
-        return back()->with('success', '✅ Fitur export PDF akan segera aktif!');
+        $tahun = $request->get('tahun', now()->year);
+        $bulan = $request->get('bulan', now()->format('F'));
+
+        $penilaians = \App\Models\Penilaian::with(['desa', 'klaster', 'indikator'])
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->where('status', 'approved')
+            ->get();
+
+        $pdf = Pdf::loadView('exports.laporan-pdf', compact('penilaians', 'tahun', 'bulan'))
+                  ->setPaper('a4', 'landscape');
+
+        return $pdf->download("Laporan_Penilaian_{$bulan}_{$tahun}.pdf");
     }
 }
