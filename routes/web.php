@@ -2,13 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Desa\DesaController;
 use App\Http\Controllers\Desa\PenilaianController;
 use App\Http\Controllers\Desa\PengumumanController;
 use App\Http\Controllers\Desa\TutorialController;
 use App\Http\Controllers\Desa\SettingsController;
 use App\Http\Controllers\Kecamatan\KecamatanDashboardController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminDesaController;
+use App\Http\Controllers\Admin\AdminPenilaianController;
+use App\Http\Controllers\Admin\AdminPengumumanController;
+use App\Http\Controllers\Admin\AdminTutorialController;
+use App\Http\Controllers\Admin\AdminLaporanController;
 
 // =======================
 // ROOT REDIRECT
@@ -31,7 +36,11 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-        // Route admin lainnya di sini
+        Route::get('/desa', [AdminDesaController::class, 'index'])->name('desa.index');
+        Route::get('/penilaian', [AdminPenilaianController::class, 'index'])->name('penilaian.index');
+        Route::get('/pengumuman', [AdminPengumumanController::class, 'index'])->name('pengumuman.index');
+        Route::get('/tutorial', [AdminTutorialController::class, 'index'])->name('tutorial.index');
+        Route::get('/laporan', [AdminLaporanController::class, 'index'])->name('laporan.index');
     });
 
 // =======================
