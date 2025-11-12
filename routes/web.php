@@ -7,6 +7,7 @@ use App\Http\Controllers\Desa\DesaController;
 use App\Http\Controllers\Desa\PenilaianController;
 use App\Http\Controllers\Desa\PengumumanController;
 use App\Http\Controllers\Desa\TutorialController;
+use App\Http\Controllers\Desa\SettingsController;
 use App\Http\Controllers\Kecamatan\KecamatanDashboardController;
 
 // =======================
@@ -49,6 +50,7 @@ Route::middleware(['auth', 'role:desa'])
         Route::get('/template/download/{indikator}', [PenilaianController::class, 'downloadTemplate'])->name('template.download');
         Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman');
         Route::get('/tutorial', [TutorialController::class, 'index'])->name('tutorial');
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 
     });
 

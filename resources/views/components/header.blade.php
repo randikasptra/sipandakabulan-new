@@ -11,21 +11,27 @@
         {{-- Navigasi --}}
         <div class="flex items-center gap-6">
             <a href="{{ route('desa.dashboard') }}"
-               class="flex items-center gap-2 hover:text-blue-200 smooth-transition font-medium">
+                class="flex items-center gap-2 hover:text-blue-200 smooth-transition font-medium">
                 <i class="bi bi-speedometer2"></i>
                 Dashboard
             </a>
 
             <a href="{{ route('desa.tutorial') }}"
-               class="flex items-center gap-2 hover:text-blue-200 smooth-transition font-medium">
+                class="flex items-center gap-2 hover:text-blue-200 smooth-transition font-medium">
                 <i class="bi bi-journal-code"></i>
                 Tutorial
             </a>
 
             <a href="{{ route('desa.pengumuman') }}"
-               class="flex items-center gap-2 hover:text-blue-200 smooth-transition font-medium">
+                class="flex items-center gap-2 hover:text-blue-200 smooth-transition font-medium">
                 <i class="bi bi-megaphone-fill"></i>
                 Pengumuman
+            </a>
+
+            <a href="{{ route('desa.settings') }}"
+                class="flex items-center gap-2 hover:text-blue-200 smooth-transition font-medium">
+                <i class="bi bi-gear-fill"></i>
+                Settings
             </a>
 
             {{-- Tombol Logout --}}
@@ -38,5 +44,6 @@
                 </button>
             </form>
         </div>
+
     </div>
 </header>
