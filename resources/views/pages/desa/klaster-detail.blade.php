@@ -22,6 +22,7 @@
         </div>
     @endif
 
+    {{-- FORM PENILAIAN --}}
     <form action="{{ route('desa.penilaian.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
@@ -63,13 +64,12 @@
                         <div class="d-flex flex-wrap gap-3">
                             @foreach ($indikator->opsiNilai as $opsi)
                                 <div class="form-check card-option">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="indikator_{{ $indikator->id }}"
-                                           id="opsi_{{ $opsi->id }}"
-                                           value="{{ $opsi->poin }}"
-                                           @checked(optional($penilaian)->nilai == $opsi->poin)
-                                           {{ $isApproved ? 'disabled' : '' }}>
+                                    <input class="form-check-input" type="radio"
+                                        name="indikator_{{ $indikator->id }}"
+                                        id="opsi_{{ $opsi->id }}"
+                                        value="{{ $opsi->poin }}"
+                                        @checked(optional($penilaian)->nilai == $opsi->poin)
+                                        {{ $isApproved ? 'disabled' : '' }}>
                                     <label class="form-check-label fw-medium" for="opsi_{{ $opsi->id }}">
                                         {{ $opsi->label }}
                                     </label>
@@ -82,7 +82,7 @@
                     @if ($indikator->template_excel)
                         <div class="mb-4">
                             <a href="{{ asset('templates/' . $indikator->template_excel) }}"
-                               class="btn btn-success btn-sm px-3 py-2 rounded-pill">
+                                class="btn btn-success btn-sm px-3 py-2 rounded-pill">
                                 <i class="bi bi-download me-2"></i>
                                 Download Template Excel
                             </a>
@@ -90,7 +90,7 @@
                     @endif
 
                     {{-- UPLOAD DOKUMEN --}}
-                    @if(count($indikator->kategoriUploads) > 0)
+                    @if (count($indikator->kategoriUploads) > 0)
                         <div class="upload-section">
                             <h6 class="fw-semibold text-dark mb-3">
                                 <i class="bi bi-cloud-upload me-2 text-primary"></i>
@@ -100,12 +100,12 @@
                             @foreach ($indikator->kategoriUploads as $upload)
                                 @php
                                     $berkas = \App\Models\BerkasUpload::whereHas('penilaian', function ($q) use ($indikator) {
-                                        $q->where('indikator_id', $indikator->id)
-                                          ->where('desa_id', Auth::user()->desa_id)
-                                          ->where('tahun', now()->year);
-                                    })
-                                    ->where('kategori_upload_id', $upload->id)
-                                    ->first();
+                                            $q->where('indikator_id', $indikator->id)
+                                                ->where('desa_id', Auth::user()->desa_id)
+                                                ->where('tahun', now()->year);
+                                        })
+                                        ->where('kategori_upload_id', $upload->id)
+                                        ->first();
                                 @endphp
 
                                 <div class="mb-4 p-3 border rounded-3 bg-light">
@@ -120,8 +120,7 @@
                                                 <i class="bi bi-check-circle-fill text-success me-2"></i>
                                                 <span class="fw-medium">Sudah diunggah:</span>
                                                 <a href="{{ env('SUPABASE_URL') }}/storage/v1/object/public/{{ env('SUPABASE_STORAGE_BUCKET') }}/{{ $berkas->path_file }}"
-                                                   target="_blank"
-                                                   class="text-decoration-none ms-2 fw-medium">
+                                                    target="_blank" class="text-decoration-none ms-2 fw-medium">
                                                     {{ basename($berkas->path_file) }}
                                                 </a>
                                             </div>
@@ -129,9 +128,7 @@
                                     @endif
 
                                     @if (!$isApproved)
-                                        <input type="file"
-                                               name="file_{{ $upload->id }}"
-                                               class="form-control border-primary border-opacity-25">
+                                        <input type="file" name="file_{{ $upload->id }}" class="form-control border-primary border-opacity-25">
                                     @else
                                         <input type="file" class="form-control" disabled>
                                     @endif
@@ -139,10 +136,12 @@
                             @endforeach
                         </div>
                     @endif
+
                 </div>
             </div>
         @endforeach
 
+        {{-- Tombol Simpan --}}
         <div class="text-center mt-5">
             <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm fw-bold">
                 <i class="bi bi-save me-2"></i>
@@ -150,74 +149,96 @@
             </button>
         </div>
     </form>
+
+    {{-- Tombol Batalkan Pengiriman Seluruh Klaster --}}
+    @php
+        $hasPending = $penilaians->where('status', 'pending')->count() > 0;
+        $hasApproved = $penilaians->where('status', 'approved')->count() > 0;
+    @endphp
+
+    @if ($hasPending && !$hasApproved)
+        <form action="{{ route('desa.penilaian.cancelKlaster', $klaster->id) }}" method="POST"
+            onsubmit="return confirm('Yakin ingin membatalkan semua penilaian di klaster ini? Semua data & berkas akan dihapus!')">
+            @csrf
+            @method('DELETE')
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-warning px-4 py-2 rounded-pill fw-semibold">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Batalkan Pengiriman Seluruh Klaster
+                </button>
+            </div>
+        </form>
+    @endif
+
 </div>
 
+{{-- STYLE --}}
 <style>
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%) !important;
-}
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%) !important;
+    }
 
-.card-option {
-    padding: 12px 16px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
+    .card-option {
+        padding: 12px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
 
-.card-option:hover {
-    border-color: #3498db;
-    background-color: #f8f9fa;
-}
+    .card-option:hover {
+        border-color: #3498db;
+        background-color: #f8f9fa;
+    }
 
-.card-option .form-check-input:checked {
-    background-color: #3498db;
-    border-color: #3498db;
-}
+    .card-option .form-check-input:checked {
+        background-color: #3498db;
+        border-color: #3498db;
+    }
 
-.upload-section .border {
-    border-color: #e9ecef !important;
-    transition: all 0.3s ease;
-}
+    .upload-section .border {
+        border-color: #e9ecef !important;
+        transition: all 0.3s ease;
+    }
 
-.upload-section .border:hover {
-    border-color: #3498db !important;
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
-}
+    .upload-section .border:hover {
+        border-color: #3498db !important;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+    }
 
-.btn-primary {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    border: none;
-    transition: all 0.3s ease;
-}
+    .btn-primary {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
 
-.btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-}
+    .btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    }
 
-.btn-success {
-    background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
-    border: none;
-    transition: all 0.3s ease;
-}
+    .btn-success {
+        background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
 
-.btn-success:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
-}
+    .btn-success:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+    }
 
-.alert {
-    border-radius: 10px;
-}
+    .alert {
+        border-radius: 10px;
+    }
 
-.card {
-    border-radius: 12px;
-    overflow: hidden;
-}
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
 
-.form-control:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
-}
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    }
 </style>
 @endsection

@@ -15,33 +15,34 @@ use Illuminate\Support\Str;
 
 class PenilaianController extends Controller
 {
+    /**
+     * Simpan atau update penilaian.
+     */
     public function store(Request $request)
     {
         $desaId = Auth::user()->desa_id;
         $userId = Auth::id();
 
-        // Validasi user harus punya desa
         if (!$desaId) {
             return back()->with('error', '❌ Akun belum terhubung ke desa.');
         }
 
         $savedCount = 0;
 
-        // ====== 1) SIMPAN NILAI INDIKATOR ======
+        // ==============================
+        // 1️⃣ SIMPAN NILAI INDIKATOR
+        // ==============================
         foreach ($request->all() as $key => $value) {
-            // Skip jika bukan input indikator
             if (!Str::startsWith($key, 'indikator_')) {
                 continue;
             }
 
             $indikatorId = (int) Str::after($key, 'indikator_');
             $indikator = IndikatorKlaster::find($indikatorId);
-
             if (!$indikator) {
                 continue;
             }
 
-            // Cek apakah sudah approved
             $existing = Penilaian::where([
                 'desa_id' => $desaId,
                 'klaster_id' => $indikator->klaster_id,
@@ -50,10 +51,9 @@ class PenilaianController extends Controller
             ])->first();
 
             if ($existing && $existing->status === 'approved') {
-                continue; // Skip jika sudah approved
+                continue;
             }
 
-            // Simpan atau update penilaian
             Penilaian::updateOrCreate(
                 [
                     'desa_id' => $desaId,
@@ -72,7 +72,9 @@ class PenilaianController extends Controller
             $savedCount++;
         }
 
-        // ====== 2) UPLOAD BERKAS KE SUPABASE ======
+        // ==============================
+        // 2️⃣ UPLOAD BERKAS KE SUPABASE
+        // ==============================
         foreach ($request->files as $key => $file) {
             if (!Str::startsWith($key, 'file_') || $file === null) {
                 continue;
@@ -80,7 +82,6 @@ class PenilaianController extends Controller
 
             $kategoriId = (int) Str::after($key, 'file_');
             $kategori = KategoriUpload::find($kategoriId);
-
             if (!$kategori) {
                 continue;
             }
@@ -110,7 +111,7 @@ class PenilaianController extends Controller
                 continue;
             }
 
-            // Simpan info berkas ke database
+            // Simpan ke database
             $penilaianId = Penilaian::where([
                 'desa_id' => $desaId,
                 'indikator_id' => $kategori->indikator_id,
@@ -133,4 +134,62 @@ class PenilaianController extends Controller
 
         return back()->with('success', "✅ {$savedCount} penilaian berhasil disimpan!");
     }
+
+    /**
+     * Batalkan / hapus pengiriman penilaian sebelum disetujui.
+     */
+    public function cancelByKlaster($klasterId)
+    {
+        $user = Auth::user();
+
+        // Ambil semua penilaian untuk klaster ini
+        $penilaians = Penilaian::where('desa_id', $user->desa_id)
+            ->where('klaster_id', $klasterId)
+            ->where('tahun', now()->year)
+            ->get();
+
+        if ($penilaians->isEmpty()) {
+            return back()->with('error', 'Tidak ada penilaian untuk klaster ini.');
+        }
+
+        // Cek kalau ada yang sudah disetujui (approved)
+        if ($penilaians->contains(fn ($p) => $p->status === 'approved')) {
+            return back()->with('error', 'Tidak bisa membatalkan karena ada penilaian yang sudah disetujui.');
+        }
+
+        try {
+            foreach ($penilaians as $penilaian) {
+                $berkasList = BerkasUpload::where('penilaian_id', $penilaian->id)->get();
+
+                foreach ($berkasList as $berkas) {
+                    try {
+                        // Hapus file dari Supabase
+                        $url = env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_STORAGE_BUCKET') . '/' . $berkas->path_file;
+                        Http::withHeaders([
+                            'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_ROLE_KEY'),
+                        ])->delete($url);
+
+                        $berkas->delete();
+                    } catch (\Exception $e) {
+                        Log::error('Gagal hapus file Supabase', [
+                            'path' => $berkas->path_file,
+                            'error' => $e->getMessage(),
+                        ]);
+                    }
+                }
+
+                // Hapus penilaian
+                $penilaian->delete();
+            }
+
+            return back()->with('success', '🗑️ Semua penilaian dan berkas di klaster ini berhasil dibatalkan & dihapus.');
+        } catch (\Throwable $th) {
+            Log::error('Gagal membatalkan klaster', [
+                'error' => $th->getMessage(),
+                'klaster_id' => $klasterId,
+            ]);
+            return back()->with('error', 'Terjadi kesalahan saat membatalkan klaster.');
+        }
+    }
+
 }

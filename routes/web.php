@@ -42,6 +42,8 @@ Route::middleware(['auth', 'role:desa'])
         Route::get('/klaster/{slug}', [DesaController::class, 'showKlaster'])->name('klaster.detail');
         Route::get('/klaster/{klaster}/{indikator}', [DesaController::class, 'showIndikator'])->name('indikator.detail');
         Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
+        Route::delete('/penilaian/klaster/{klasterId}/cancel', [PenilaianController::class, 'cancelByKlaster'])
+        ->name('penilaian.cancelKlaster');
         Route::get('/template/download/{indikator}', [PenilaianController::class, 'downloadTemplate'])->name('template.download');
 
     });
