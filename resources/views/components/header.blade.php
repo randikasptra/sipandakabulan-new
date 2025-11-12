@@ -3,7 +3,7 @@
         <h1 class="font-bold text-xl flex items-center gap-3">
             <i class="bi bi-house-check-fill text-2xl"></i>
             <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-white">
-                Desa SIPANDAKABULAN
+                SIPANDAKABULAN
             </span>
         </h1>
         <div class="flex items-center gap-6">
