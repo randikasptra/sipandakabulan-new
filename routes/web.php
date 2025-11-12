@@ -48,7 +48,14 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/desa', [AdminDesaController::class, 'index'])->name('desa');
         Route::get('/pengumuman', [AdminPengumumanController::class, 'index'])->name('pengumuman');
         Route::get('/tutorial', [AdminTutorialController::class, 'index'])->name('tutorial');
-        Route::get('/laporan', [AdminLaporanController::class, 'index'])->name('laporan');
+        Route::prefix('laporan')->name('laporan.')->group(function () {
+            Route::get('/', [AdminLaporanController::class, 'index'])->name('index');
+            Route::get('/{desa}', [AdminLaporanController::class, 'showDesa'])->name('desa');
+            Route::get('/export/excel', [AdminLaporanController::class, 'exportExcel'])->name('exportExcel');
+            Route::get('/export/pdf', [AdminLaporanController::class, 'exportPdf'])->name('exportPdf');
+        });
+
+
     });
 // =======================
 // DESA ROUTES

@@ -34,7 +34,7 @@
                 <i class="bi bi-journal-code"></i> <span>Tutorial</span>
             </a>
 
-            <a href="{{ route('admin.laporan') }}"
+            <a href="{{ route('admin.laporan.index') }}"
                 class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-blue-800 {{ request()->routeIs('admin.laporan') ? 'bg-blue-800' : '' }}">
                 <i class="bi bi-bar-chart-line"></i> <span>Laporan</span>
             </a>

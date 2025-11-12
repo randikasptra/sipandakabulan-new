@@ -3,11 +3,83 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Desa;
+use App\Models\Klaster;
+use App\Models\Penilaian;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminLaporanController extends Controller
 {
-    public function index()
+    /**
+     * 📊 Level 1: Rekap semua desa
+     */
+    public function index(Request $request)
     {
-        return view('pages.admin.laporan');
+        $tahun = $request->get('tahun', now()->year);
+        $bulan = $request->get('bulan', now()->format('F')); // 🔥 pakai nama bulan
+
+        $desas = Desa::withCount([
+            'penilaians as total_pending' => fn ($q) => $q->where('status', 'pending')->where('tahun', $tahun)->where('bulan', $bulan),
+            'penilaians as total_approved' => fn ($q) => $q->where('status', 'approved')->where('tahun', $tahun)->where('bulan', $bulan),
+            'penilaians as total_rejected' => fn ($q) => $q->where('status', 'rejected')->where('tahun', $tahun)->where('bulan', $bulan),
+        ])
+        ->with(['penilaians' => fn ($q) => $q->where('tahun', $tahun)->where('bulan', $bulan)->where('status', 'approved')])
+        ->get()
+        ->map(function ($desa) {
+            $totalNilai = $desa->penilaians->sum('nilai');
+            $jumlahPenilaian = $desa->penilaians->count();
+            $desa->rata_rata = $jumlahPenilaian > 0 ? round($totalNilai / $jumlahPenilaian, 2) : 0;
+            return $desa;
+        });
+
+        return view('pages.admin.laporan', compact('desas', 'tahun', 'bulan'));
+    }
+
+    public function showDesa(Desa $desa, Request $request)
+    {
+        $tahun = $request->get('tahun', now()->year);
+        $bulan = $request->get('bulan', now()->format('F'));
+
+        $klasters = Klaster::with(['indikators.penilaians' => function ($q) use ($desa, $tahun, $bulan) {
+            $q->where('desa_id', $desa->id)
+              ->where('tahun', $tahun)
+              ->where('bulan', $bulan);
+        }])->get();
+
+        $klasters = $klasters->map(function ($klaster) {
+            $penilaian = $klaster->indikators->flatMap->penilaians;
+            $approved = $penilaian->where('status', 'approved');
+            $rejected = $penilaian->where('status', 'rejected');
+            $pending  = $penilaian->where('status', 'pending');
+
+            $avg = $approved->count() > 0 ? round($approved->avg('nilai'), 2) : 0;
+            $klaster->approved = $approved->count();
+            $klaster->pending  = $pending->count();
+            $klaster->rejected = $rejected->count();
+            $klaster->rata_rata = $avg;
+            return $klaster;
+        });
+
+        return view('pages.admin.laporan-detail', compact('desa', 'klasters', 'tahun', 'bulan'));
+    }
+
+
+    /**
+     * 📤 Tahap 3: Export Excel (simulasi dulu)
+     */
+    public function exportExcel(Request $request)
+    {
+        // Placeholder dulu, nanti kita pakai Laravel Excel
+        return back()->with('success', '✅ Fitur export Excel akan segera aktif!');
+    }
+
+    /**
+     * 📄 Tahap 3: Export PDF (simulasi dulu)
+     */
+    public function exportPdf(Request $request)
+    {
+        // Placeholder, nanti pakai DomPDF
+        return back()->with('success', '✅ Fitur export PDF akan segera aktif!');
     }
 }
