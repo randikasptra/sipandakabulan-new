@@ -1,38 +1,51 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin | SIPANDAKABULAN')</title>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Tailwind + Bootstrap + Icons --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    {{-- Font --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+
+        main {
+            margin-left: 16rem;
+            /* 64 Tailwind = 16rem */
+            padding: 2rem;
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
 
-    <!-- NAVBAR -->
-    <header class="bg-blue-800 text-white shadow">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="font-bold text-lg">🛠️ Admin SIPANDAKABULAN</h1>
-            <div class="flex items-center gap-4">
-                <a href="{{ route('admin.dashboard') }}" class="hover:underline">Dashboard</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="bg-red-500 px-3 py-1 rounded hover:bg-red-600">Logout</button>
-                </form>
-            </div>
+<body class="bg-gray-50">
+
+    {{-- ✅ Sidebar kiri --}}
+    @include('components.admin.sidebar')
+
+    {{-- ✅ Konten utama --}}
+    <main>
+        <div class="content-container">
+            @yield('content')
         </div>
-    </header>
-
-    <!-- CONTENT WRAPPER -->
-    <main class="max-w-7xl mx-auto px-6 py-6">
-        @yield('content')
     </main>
 
-    <!-- FOOTER -->
-    <footer class="text-center py-4 text-sm text-gray-600">
-        &copy; {{ date('Y') }} Dinas Sosial Kabupaten Tasikmalaya
-    </footer>
-
 </body>
+
 </html>
