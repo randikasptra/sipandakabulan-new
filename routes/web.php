@@ -60,7 +60,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/desa/{desa}/users/{user}', [AdminDesaController::class, 'deleteUser'])->name('desa.deleteUser');
 
         // AJAX
-        Route::get('/desa/{desa}/detail', [AdminDesaController::class, 'ajaxDetail'])->name('desa.detail');
+        Route::get(
+            '/desa/{desa}/ajax-detail',
+            [AdminDesaController::class, 'ajaxDetail']
+        )->name('desa.ajax.detail');
         Route::get('/desa/{desa}/edit-modal', [AdminDesaController::class, 'ajaxEdit'])->name('desa.edit.modal');
 
         // PENGUMUMAN, TUTORIAL, LAPORAN

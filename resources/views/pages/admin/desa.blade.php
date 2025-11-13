@@ -36,8 +36,8 @@
                         <th style="width: 50px;">No</th>
                         <th>Nama Desa</th>
                         <th>Kode Desa</th>
-                        <th>Kepala Desa</th>
                         <th>No. Telepon</th>
+                        <th>Alamat Kantor</th>
                         <th style="width: 100px;">Jumlah User</th>
                         <th style="width: 150px;">Aksi</th>
                     </tr>
@@ -51,17 +51,25 @@
                                 <small class="text-muted">{{ $desa->alamat_kantor ?? '-' }}</small>
                             </td>
                             <td><code>{{ $desa->kode_desa }}</code></td>
-                            <td>{{ $desa->nama_kades ?? '-' }}</td>
                             <td>{{ $desa->no_telp ?? '-' }}</td>
+                            <td>{{ $desa->alamat_kantor ?? '-' }}</td>
                             <td class="text-center">
                                 <span class="badge bg-info">{{ $desa->users_count }} user</span>
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm">
+
+                                    <!-- DETAIL BUTTON -->
+                                    <button type="button" class="btn btn-info text-white"
+                                        onclick="openDetail({{ $desa->id }})" title="Detail">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
                                     <a href="{{ route('admin.desa.edit', $desa->id) }}" class="btn btn-warning"
                                         title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
+
                                     <button type="button" class="btn btn-danger"
                                         onclick="confirmDelete({{ $desa->id }})" title="Hapus">
                                         <i class="bi bi-trash"></i>
@@ -74,6 +82,7 @@
                                     @method('DELETE')
                                 </form>
                             </td>
+
                         </tr>
                     @empty
                         <tr>
@@ -147,6 +156,16 @@
             </div>
         </div>
     @endif
+
+    <!-- Modal Detail Desa -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" id="detailContent">
+                <!-- AJAX content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('styles')
@@ -203,6 +222,18 @@
             navigator.clipboard.writeText(text).then(() => {
                 toastr.success('Berhasil disalin!');
             });
+        }
+
+        function openDetail(id) {
+            fetch(`/admin/desa/${id}/ajax-detail`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('detailContent').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('detailModal')).show();
+                })
+                .catch(err => {
+                    toastr.error("Gagal memuat detail desa");
+                });
         }
     </script>
 @endsection

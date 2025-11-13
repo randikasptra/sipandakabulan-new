@@ -19,6 +19,7 @@ class AdminDesaController extends Controller
     public function index()
     {
         $desas = Desa::with('users')
+            ->withCount('users')
             ->withCount('penilaians')
             ->latest()
             ->paginate(10);
@@ -33,6 +34,14 @@ class AdminDesaController extends Controller
     {
         return view('pages.admin.desa-create');
     }
+
+    public function ajaxDetail(Desa $desa)
+    {
+        $desa->load('users');
+
+        return view('components.admin.desa.detail', compact('desa'));
+    }
+
 
     /**
      * Store a newly created desa
@@ -251,11 +260,6 @@ class AdminDesaController extends Controller
     // AJAX METHODS (untuk modal jika perlu)
     // ========================================
 
-    public function ajaxDetail(Desa $desa)
-    {
-        $desa->load('users');
-        return view('components.admin.desa.detail-content', compact('desa'));
-    }
 
     public function ajaxEdit(Desa $desa)
     {
