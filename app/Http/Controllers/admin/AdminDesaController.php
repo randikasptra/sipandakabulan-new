@@ -6,31 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Desa;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminDesaController extends Controller
 {
-    /**
-     * List semua desa
-     */
     public function index()
     {
         $desas = Desa::with('users')->get();
         return view('pages.admin.desa', compact('desas'));
     }
 
-    /**
-     * Form tambah desa
-     */
-    public function create()
-    {
-        return view('pages.admin.desa-create');
-    }
-
-    /**
-     * Simpan desa + auto create user
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -41,19 +27,12 @@ class AdminDesaController extends Controller
             'no_telp' => 'nullable|string|max:30',
         ]);
 
-        // 1) SIMPAN DESA
-        $desa = Desa::create($request->only([
-            'nama_desa', 'kode_desa', 'alamat_kantor', 'nama_kades', 'no_telp'
-        ]));
+        $desa = Desa::create($request->all());
 
-        // 2) GENERATE EMAIL
         $email = Str::slug($desa->nama_desa) . '@tasikdesa.com';
-
-        // 3) GENERATE PASSWORD RANDOM
         $password = 'desa-' . rand(1000, 9999);
 
-        // 4) SIMPAN USER DESA
-        $user = User::create([
+        User::create([
             'name' => $desa->nama_desa,
             'email' => $email,
             'password' => Hash::make($password),
@@ -61,34 +40,13 @@ class AdminDesaController extends Controller
             'desa_id' => $desa->id,
         ]);
 
-        // 5) KIRIM PASSWORD KE VIEW
-        return redirect()->route('desa.index')->with([
-        'success' => 'Desa & User berhasil dibuat!',
-        'desa_user_email' => $email,
-        'desa_user_password' => $password,
-    ]);
+        return back()->with([
+            'success' => 'Desa berhasil ditambahkan',
+            'desa_user_email' => $email,
+            'desa_user_password' => $password,
+        ]);
     }
 
-    /**
-     * Detail desa
-     */
-    public function show(Desa $desa)
-    {
-        $desa->load('users');
-        return view('pages.admin.desa-detail', compact('desa'));
-    }
-
-    /**
-     * Form edit desa
-     */
-    public function edit(Desa $desa)
-    {
-        return view('pages.admin.desa-edit', compact('desa'));
-    }
-
-    /**
-     * Update desa
-     */
     public function update(Request $request, Desa $desa)
     {
         $request->validate([
@@ -101,20 +59,37 @@ class AdminDesaController extends Controller
 
         $desa->update($request->all());
 
-        return redirect()->route('desa.index')->with('success', 'Desa berhasil diupdate!');
+        return back()->with('success', 'Desa berhasil diperbarui');
     }
 
-    /**
-     * Hapus desa + hapus user (SARAN TERBAIK)
-     */
     public function destroy(Desa $desa)
     {
-        // Hapus semua user desa
         User::where('desa_id', $desa->id)->delete();
-
-        // Hapus desa
         $desa->delete();
 
-        return redirect()->route('desa.index')->with('success', 'Desa dan pengguna desa berhasil dihapus.');
+        return back()->with('success', 'Desa dan user terkait berhasil dihapus');
     }
+
+    // ========== AJAX DETAIL MODAL ==========
+    public function ajaxDetail(Desa $desa)
+    {
+        $desa->load('users');
+        return view('components.admin.desa.detail-content', compact('desa'));
+    }
+
+    // ========== AJAX EDIT MODAL ==========
+    public function ajaxEdit(Desa $desa)
+    {
+        return view('components.admin.desa.edit-content', compact('desa'));
+    }
+    public function create()
+    {
+        return view('pages.admin.desa-create');
+    }
+
+    public function edit(Desa $desa)
+    {
+        return view('pages.admin.desa-edit', compact('desa'));
+    }
+
 }

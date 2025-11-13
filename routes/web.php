@@ -45,7 +45,27 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('/penilaian/{penilaian}/reject', [AdminPenilaianController::class, 'reject'])->name('penilaian.reject');
 
         // Route lainnya
+        // LIST DESA
         Route::get('/desa', [AdminDesaController::class, 'index'])->name('desa');
+
+        // STORE DESA (tambah)
+        Route::post('/desa/store', [AdminDesaController::class, 'store'])->name('desa.store');
+
+        // UPDATE DESA
+        Route::put('/desa/{desa}/update', [AdminDesaController::class, 'update'])->name('desa.update');
+
+        // DELETE DESA
+        Route::delete('/desa/{desa}/delete', [AdminDesaController::class, 'destroy'])->name('desa.destroy');
+
+        // AJAX DETAIL DESA
+        Route::get('/desa/{desa}/ajax-detail', [AdminDesaController::class, 'ajaxDetail'])
+            ->name('desa.ajax.detail');
+
+        Route::get('/desa/create', [AdminDesaController::class, 'create'])->name('desa.create');
+
+        // AJAX EDIT DESA
+        Route::get('/desa/{desa}/ajax-edit', [AdminDesaController::class, 'ajaxEdit'])
+            ->name('desa.ajax.edit');
         Route::get('/pengumuman', [AdminPengumumanController::class, 'index'])->name('pengumuman');
         Route::get('/tutorial', [AdminTutorialController::class, 'index'])->name('tutorial');
         Route::prefix('laporan')->name('laporan.')->group(function () {

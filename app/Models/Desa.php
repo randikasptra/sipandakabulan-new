@@ -18,11 +18,12 @@ class Desa extends Model
     ];
 
     /**
-     * Relasi ke user (operator desa)
+     * Relasi ke users (operator desa)
+     * Satu desa bisa punya banyak user
      */
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(User::class, 'desa_id');
     }
 
     /**
@@ -32,5 +33,35 @@ class Desa extends Model
     public function penilaians()
     {
         return $this->hasMany(Penilaian::class, 'desa_id');
+    }
+
+    /**
+     * Relasi ke kecamatan (opsional)
+     */
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
+    }
+
+    /**
+     * Accessor untuk mendapatkan status kelengkapan data
+     */
+    public function getKelengkapanDataAttribute()
+    {
+        // Hitung berapa cluster yang sudah diisi
+        $totalCluster = 6; // Kelembagaan + 5 Cluster
+        $clusterTerisi = $this->penilaians()
+            ->distinct('jenis_cluster')
+            ->count();
+
+        return round(($clusterTerisi / $totalCluster) * 100, 2);
+    }
+
+    /**
+     * Scope untuk filter desa berdasarkan kecamatan
+     */
+    public function scopeByKecamatan($query, $kecamatanId)
+    {
+        return $query->where('kecamatan_id', $kecamatanId);
     }
 }
