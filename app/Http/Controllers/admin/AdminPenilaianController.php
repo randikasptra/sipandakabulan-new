@@ -70,25 +70,14 @@ class AdminPenilaianController extends Controller
     }
 
     // 📋 Level 3: List indikator dalam klaster tertentu
-    public function showKlaster(Desa $desa, Klaster $klaster, Request $request)
+    public function showKlaster(Desa $desa, Klaster $klaster)
     {
-        $tahun = $request->get('tahun', now()->year);
-        $bulan = $request->get('bulan', now()->format('F')); // ✅ Perbaikan: hapus duplikasi
-        $status = $request->get('status');
-
-        $query = Penilaian::with(['indikator.opsiNilai', 'berkasUploads']) // ✅ Tambah opsiNilai
+        $penilaians = Penilaian::with(['indikator', 'berkasUploads'])
             ->where('desa_id', $desa->id)
             ->where('klaster_id', $klaster->id)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan);
+            ->get();
 
-        if ($status) {
-            $query->where('status', $status);
-        }
-
-        $penilaians = $query->get();
-
-        return view('pages.admin.penilaian-detail', compact('desa', 'klaster', 'penilaians', 'tahun', 'bulan', 'status'));
+        return view('pages.admin.penilaian-detail', compact('desa', 'klaster', 'penilaians'));
     }
 
     // ✅ Approve
