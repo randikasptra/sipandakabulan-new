@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Desa extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'nama_desa',
@@ -16,6 +18,8 @@ class Desa extends Model
         'nama_kades',
         'no_telp',
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Relasi ke users (operator desa)
@@ -28,7 +32,6 @@ class Desa extends Model
 
     /**
      * Relasi ke penilaians
-     * Satu desa bisa punya banyak penilaian
      */
     public function penilaians()
     {
@@ -36,32 +39,18 @@ class Desa extends Model
     }
 
     /**
-     * Relasi ke kecamatan (opsional)
+     * Get slug untuk email generation
      */
-    public function kecamatan()
+    public function getSlugAttribute()
     {
-        return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
+        return \Illuminate\Support\Str::slug($this->nama_desa);
     }
 
     /**
-     * Accessor untuk mendapatkan status kelengkapan data
+     * Get auto-generated email
      */
-    public function getKelengkapanDataAttribute()
+    public function getAutoEmailAttribute()
     {
-        // Hitung berapa cluster yang sudah diisi
-        $totalCluster = 6; // Kelembagaan + 5 Cluster
-        $clusterTerisi = $this->penilaians()
-            ->distinct('jenis_cluster')
-            ->count();
-
-        return round(($clusterTerisi / $totalCluster) * 100, 2);
-    }
-
-    /**
-     * Scope untuk filter desa berdasarkan kecamatan
-     */
-    public function scopeByKecamatan($query, $kecamatanId)
-    {
-        return $query->where('kecamatan_id', $kecamatanId);
+        return $this->slug . '@tasikdesa.com';
     }
 }

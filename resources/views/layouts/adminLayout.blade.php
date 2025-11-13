@@ -47,10 +47,12 @@
 
     {{-- Sidebar --}}
     @include('components.admin.sidebar')
+    {{-- Navbar --}}
+    @include('components.admin.navbar')
 
     {{-- Main Content --}}
     <main>
-        <div class="content-container">
+        <div class="content-container mt-24">
             @yield('content')
         </div>
     </main>
