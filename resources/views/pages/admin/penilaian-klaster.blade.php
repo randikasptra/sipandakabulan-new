@@ -16,9 +16,9 @@
                     <th>#</th>
                     <th>Nama Klaster</th>
                     <th>Total Indikator</th>
-                    <th>Approved</th>
-                    <th>Pending</th>
-                    <th>Rejected</th>
+                    <th>Di Setujui</th>
+                    <th>Menunggu</th>
+                    <th>Ditolak</th>
                     <th>Aksi</th>
                 </tr>
             </thead>

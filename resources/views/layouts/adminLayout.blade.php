@@ -32,6 +32,15 @@
             margin: 0 auto;
         }
     </style>
+
+    <style>
+        canvas {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 10px;
+        }
+    </style>
+
 </head>
 
 <body class="bg-gray-50">
