@@ -23,37 +23,47 @@
 
         main {
             margin-left: 16rem;
-            /* 64 Tailwind = 16rem */
-            padding: 2rem;
+            /* Sidebar width */
+            padding: 2rem 2.5rem;
         }
 
         .content-container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
         }
-    </style>
 
-    <style>
+        /* Canvas Chart */
         canvas {
-            background: #f8f9fa;
-            border-radius: 12px;
+            background: #ffffff;
+            border-radius: 14px;
             padding: 10px;
         }
     </style>
 
+    @stack('styles')
 </head>
 
 <body class="bg-gray-50">
 
-    {{-- ✅ Sidebar kiri --}}
+    {{-- Sidebar --}}
     @include('components.admin.sidebar')
 
-    {{-- ✅ Konten utama --}}
+    {{-- Main Content --}}
     <main>
         <div class="content-container">
             @yield('content')
         </div>
     </main>
+
+    {{-- JS Library --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- Chart.js ditempatkan di sini, bukan di <head> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {{-- Script tambahan dari setiap halaman --}}
+    @yield('scripts')
 
 </body>
 

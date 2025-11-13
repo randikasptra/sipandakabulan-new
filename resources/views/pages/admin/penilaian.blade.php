@@ -2,11 +2,13 @@
 @section('title', 'Verifikasi Penilaian | Daftar Desa')
 
 @section('content')
-    <h2 class="text-2xl font-bold mb-6">
+    <h2 class="text-2xl font-bold mb-4">
         🏘️ Daftar Desa ({{ request('bulan', now()->format('F')) }} {{ request('tahun', now()->year) }})
     </h2>
 
-    {{-- 🔍 FILTER FORM --}}
+    {{-- ================================
+        🎯 FILTER FORM
+    ================================= --}}
     <form method="GET" class="row g-3 align-items-center mb-4">
         {{-- Tahun --}}
         <div class="col-md-2">
@@ -49,7 +51,44 @@
         </div>
     </form>
 
-    {{-- 🔢 TABEL DESA --}}
+    {{-- ================================
+        📈 MINI GRAFIK STATUS
+    ================================= --}}
+    <div class="bg-white shadow rounded-4 p-4 mb-4">
+        <h5 class="fw-bold text-primary mb-3">📊 Status Penilaian Bulan Ini</h5>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <canvas id="chartStatus" height="180"></canvas>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group small">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ✅ Disetujui
+                        <span class="badge bg-success rounded-pill">{{ $totalApproved ?? 0 }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ⚠️ Menunggu
+                        <span class="badge bg-warning text-dark rounded-pill">{{ $totalPending ?? 0 }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ❌ Ditolak
+                        <span class="badge bg-danger rounded-pill">{{ $totalRejected ?? 0 }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {{-- ================================
+        🔎 SEARCH BAR
+    ================================= --}}
+    <div class="d-flex justify-content-end mb-3">
+        <input type="text" id="searchDesa" class="form-control w-50" placeholder="🔍 Cari nama desa...">
+    </div>
+
+    {{-- ================================
+        📋 TABEL DESA
+    ================================= --}}
     <div class="bg-white shadow rounded-xl p-4">
         <table id="tableDesa" class="table table-striped align-middle table-hover">
             <thead class="table-light">
@@ -99,34 +138,108 @@
                     @endif
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-4">Tidak ada data desa ditemukan.</td>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Tidak ada data desa ditemukan.
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
-    {{-- 📊 DataTables --}}
+    {{-- ================================
+        📊 SCRIPTS
+    ================================= --}}
+@endsection
+
+
+@section('scripts')
+    {{-- DataTables --}}
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
     <script>
         $(document).ready(() => {
-            $('#tableDesa').DataTable({
+            const table = $('#tableDesa').DataTable({
                 language: {
-                    search: "Cari Desa:",
+                    search: "Cari:",
                     lengthMenu: "Tampilkan _MENU_ entri",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ desa",
+                    info: "Menampilkan _START_ - _END_ dari _TOTAL_ desa",
+                    zeroRecords: "Tidak ada hasil ditemukan.",
                     paginate: {
                         next: "Selanjutnya",
                         previous: "Sebelumnya"
-                    },
-                    zeroRecords: "Tidak ada hasil ditemukan."
+                    }
                 },
                 pageLength: 10,
                 order: [
                     [1, 'asc']
                 ]
             });
+
+            // Custom Search Desa
+            $('#searchDesa').on('keyup', function() {
+                table.search(this.value).draw();
+            });
         });
+
+
+        // ================================
+        // 📊 DOUGHNUT CHART
+        // ================================
+        const canvas = document.getElementById('chartStatus');
+
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Disetujui', 'Menunggu', 'Ditolak'],
+                    datasets: [{
+                        data: [
+                            {{ $totalApproved ?? 0 }},
+                            {{ $totalPending ?? 0 }},
+                            {{ $totalRejected ?? 0 }},
+                        ],
+                        backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
+                        borderWidth: 2,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    }
+                }
+            });
+        }
     </script>
+
+    <style>
+        /* Mini Chart */
+        #chartStatus {
+            max-width: 180px;
+            /* ukuran kecil */
+            max-height: 180px;
+            /* batas tinggi */
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+
+
+    <style>
+        canvas {
+            background: #ffffff !important;
+            border-radius: 14px;
+            padding: 8px;
+        }
+    </style>
 @endsection

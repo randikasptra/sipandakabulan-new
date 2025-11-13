@@ -13,9 +13,12 @@ class AdminPenilaianController extends Controller
     // 🏘️ Level 1: List semua desa
     public function index(Request $request)
     {
+        // Ambil filter tahun & bulan dari request (default: bulan dan tahun sekarang)
         $tahun = $request->get('tahun', now()->year);
         $bulan = $request->get('bulan', now()->format('F'));
+        $status = $request->get('status');
 
+        // Ambil semua desa dengan count status penilaiannya
         $desas = Desa::withCount([
             'penilaians as total_pending' => fn ($q) =>
                 $q->where('status', 'pending')->where('tahun', $tahun)->where('bulan', $bulan),
@@ -25,8 +28,23 @@ class AdminPenilaianController extends Controller
                 $q->where('status', 'rejected')->where('tahun', $tahun)->where('bulan', $bulan),
         ])->get();
 
-        return view('pages.admin.penilaian', compact('desas', 'tahun', 'bulan'));
+        // Hitung total keseluruhan untuk mini chart
+        $totalApproved = $desas->sum('total_approved');
+        $totalPending  = $desas->sum('total_pending');
+        $totalRejected = $desas->sum('total_rejected');
+
+        // Kirim ke view
+        return view('pages.admin.penilaian', compact(
+            'desas',
+            'tahun',
+            'bulan',
+            'status',
+            'totalApproved',
+            'totalPending',
+            'totalRejected'
+        ));
     }
+
 
     // 📊 Level 2: List klaster per desa
     public function showDesa(Desa $desa)
