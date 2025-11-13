@@ -63,7 +63,9 @@ class AdminPenilaianController extends Controller
     public function showKlaster(Desa $desa, Klaster $klaster, Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
-        $bulan = $request->get('bulan', now()->format('F'));
+        // $bulan = $request->get('bulan', now()->format('F'));
+        $bulan = $request->get('bulan', now()->month);
+
         $status = $request->get('status');
 
         $query = Penilaian::with(['indikator', 'berkasUploads'])
