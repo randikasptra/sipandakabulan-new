@@ -60,13 +60,12 @@
                                     {{ Str::limit(strip_tags($item->isi), 80) }}
                                 </div>
                                 @if ($item->file)
-                                    <a href="{{ env('SUPABASE_URL') }}/storage/v1/object/public/{{ env('SUPABASE_STORAGE_BUCKET') }}/{{ $item->file }}"
-                                        target="_blank"
+                                    <a href="{{ $item->file_url }}" target="_blank"
                                         class="text-blue-600 hover:text-blue-800 text-xs flex items-center gap-1 mt-1">
-                                        <i class="bi bi-paperclip"></i>
-                                        Lihat File
+                                        <i class="bi bi-paperclip"></i> Lihat File
                                     </a>
                                 @endif
+
                             </td>
 
                             <td class="py-4 px-6 text-gray-600 text-sm">

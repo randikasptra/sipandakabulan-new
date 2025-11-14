@@ -15,29 +15,46 @@ class Pengumuman extends Model
         'desa_ids',
     ];
 
-    // ✅ CRITICAL: Cast JSON ke array
     protected $casts = [
         'desa_ids' => 'array',
     ];
 
-    // Relasi ke Desa (untuk ditampilkan di UI)
-    public function desas()
+    protected $appends = ['file_url'];
+
+    // URL download dari Supabase
+    public function getFileUrlAttribute()
     {
-        return $this->belongsToMany(Desa::class, 'desa_ids', 'id', 'id');
+        if (!$this->file) {
+            return null;
+        }
+
+        return rtrim(env('SUPABASE_URL'), '/')
+            . '/storage/v1/object/public/'
+            . env('SUPABASE_STORAGE_BUCKET')
+            . '/'
+            . ltrim($this->file, '/');
     }
 
-    // Helper untuk cek apakah desa tertentu menerima pengumuman ini
+    // Cek apakah pengumuman ditujukan untuk desa tertentu
     public function isForDesa($desaId)
     {
-        return in_array($desaId, $this->desa_ids ?? []);
+        $arr = $this->desa_ids ?? [];
+        foreach ($arr as $value) {
+            if ((int)$value === (int)$desaId) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    // ✅ Custom Scope untuk filter by desa
-    public function scopeForDesa($query, $desaId)
+    // Query helper
+    public function scopeForDesa($q, $desaId)
     {
-        return $query->whereRaw(
-            'JSON_CONTAINS(desa_ids, ?)',
-            [json_encode((int)$desaId)]
-        );
+        $id = (int) $desaId;
+
+        return $q->where(function ($q) use ($id) {
+            $q->whereRaw("JSON_CONTAINS(desa_ids, ?)", [json_encode($id)])
+              ->orWhereRaw("JSON_CONTAINS(desa_ids, '\"{$id}\"')");
+        });
     }
 }

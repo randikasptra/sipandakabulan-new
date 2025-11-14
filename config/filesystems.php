@@ -60,6 +60,18 @@ return [
             'report' => false,
         ],
 
+        'supabase' => [
+            'driver' => 's3', // supabase compatible dengan driver S3
+            'key' => env('SUPABASE_SERVICE_ROLE_KEY'),
+            'secret' => env('SUPABASE_SERVICE_ROLE_KEY'),
+            'region' => 'us-east-1', // apapun tidak masalah
+            'bucket' => env('SUPABASE_STORAGE_BUCKET'),
+            'url' => env('SUPABASE_URL') . '/storage/v1/object/public/' . env('SUPABASE_STORAGE_BUCKET'),
+            'endpoint' => env('SUPABASE_URL') . '/storage/v1/s3',
+            'use_path_style_endpoint' => true,
+        ],
+
+
     ],
 
     /*
