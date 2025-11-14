@@ -29,7 +29,7 @@ class AdminPengumumanController extends Controller
             'isi' => 'required',
             'desa_ids' => 'required|array|min:1',
             'desa_ids.*' => 'exists:desas,id',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120', // 5MB
+            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
         ]);
 
         // Upload file ke Supabase (jika ada)
@@ -37,16 +37,17 @@ class AdminPengumumanController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileName = time() . '_' . $file->getClientOriginalName();
-
-            // Upload ke Supabase Storage
             $filePath = 'pengumuman/' . $fileName;
             Storage::disk('supabase')->put($filePath, file_get_contents($file));
         }
 
+        // ✅ FIX: Convert desa_ids ke array of strings untuk konsistensi
+        $desaIds = array_map('strval', $validated['desa_ids']);
+
         Pengumuman::create([
             'judul' => $validated['judul'],
             'isi' => $validated['isi'],
-            'desa_ids' => $validated['desa_ids'], // Auto-cast ke JSON
+            'desa_ids' => $desaIds, // Simpan sebagai array string
             'file' => $filePath,
         ]);
 

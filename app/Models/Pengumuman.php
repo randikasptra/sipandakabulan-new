@@ -31,4 +31,13 @@ class Pengumuman extends Model
     {
         return in_array($desaId, $this->desa_ids ?? []);
     }
+
+    // ✅ Custom Scope untuk filter by desa
+    public function scopeForDesa($query, $desaId)
+    {
+        return $query->whereRaw(
+            'JSON_CONTAINS(desa_ids, ?)',
+            [json_encode((int)$desaId)]
+        );
+    }
 }
