@@ -32,6 +32,9 @@ Route::get('/', function () {
 // ADMIN ROUTES
 // =======================
 // web.php - FULL CLEAN VERSION
+// =======================
+// ADMIN ROUTES
+// =======================
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -45,13 +48,13 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('/penilaian/{penilaian}/approve', [AdminPenilaianController::class, 'approve'])->name('penilaian.approve');
         Route::patch('/penilaian/{penilaian}/reject', [AdminPenilaianController::class, 'reject'])->name('penilaian.reject');
 
-        // DESA MANAGEMENT (CLEAN VERSION)
+        // DESA MANAGEMENT
         Route::get('/desa', [AdminDesaController::class, 'index'])->name('desa');
         Route::get('/desa/create', [AdminDesaController::class, 'create'])->name('desa.create');
-        Route::post('/desa', [AdminDesaController::class, 'store'])->name('desa.store'); // ← UBAH INI
+        Route::post('/desa', [AdminDesaController::class, 'store'])->name('desa.store');
         Route::get('/desa/{desa}/edit', [AdminDesaController::class, 'edit'])->name('desa.edit');
-        Route::put('/desa/{desa}', [AdminDesaController::class, 'update'])->name('desa.update'); // ← UBAH INI
-        Route::delete('/desa/{desa}', [AdminDesaController::class, 'destroy'])->name('desa.destroy'); // ← UBAH INI
+        Route::put('/desa/{desa}', [AdminDesaController::class, 'update'])->name('desa.update');
+        Route::delete('/desa/{desa}', [AdminDesaController::class, 'destroy'])->name('desa.destroy');
 
         // USER MANAGEMENT
         Route::post('/desa/{desa}/users', [AdminDesaController::class, 'addUser'])->name('desa.addUser');
@@ -60,16 +63,21 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/desa/{desa}/users/{user}', [AdminDesaController::class, 'deleteUser'])->name('desa.deleteUser');
 
         // AJAX
-        Route::get(
-            '/desa/{desa}/ajax-detail',
-            [AdminDesaController::class, 'ajaxDetail']
-        )->name('desa.ajax.detail');
+        Route::get('/desa/{desa}/ajax-detail', [AdminDesaController::class, 'ajaxDetail'])->name('desa.ajax.detail');
         Route::get('/desa/{desa}/edit-modal', [AdminDesaController::class, 'ajaxEdit'])->name('desa.edit.modal');
 
-        // PENGUMUMAN, TUTORIAL, LAPORAN
+        // ✅ PENGUMUMAN (CLEAN VERSION)
         Route::get('/pengumuman', [AdminPengumumanController::class, 'index'])->name('pengumuman');
+        Route::get('/pengumuman/create', [AdminPengumumanController::class, 'create'])->name('pengumuman.create');
+        Route::post('/pengumuman', [AdminPengumumanController::class, 'store'])->name('pengumuman.store');
+        Route::get('/pengumuman/{pengumuman}/edit', [AdminPengumumanController::class, 'edit'])->name('pengumuman.edit');
+        Route::put('/pengumuman/{pengumuman}', [AdminPengumumanController::class, 'update'])->name('pengumuman.update');
+        Route::delete('/pengumuman/{pengumuman}', [AdminPengumumanController::class, 'destroy'])->name('pengumuman.destroy');
+
+        // TUTORIAL
         Route::get('/tutorial', [AdminTutorialController::class, 'index'])->name('tutorial');
 
+        // LAPORAN
         Route::prefix('laporan')->name('laporan.')->group(function () {
             Route::get('/', [AdminLaporanController::class, 'index'])->name('index');
             Route::get('/{desa}', [AdminLaporanController::class, 'showDesa'])->name('desa');
