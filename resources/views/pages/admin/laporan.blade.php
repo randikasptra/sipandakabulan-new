@@ -43,15 +43,109 @@
 
     </div>
 
+    {{-- 🎨 Grafik Statistik --}}
+    <div class="bg-white shadow rounded-4 p-4 mb-4">
+        <h5 class="fw-bold mb-3 text-primary">📊 Visualisasi Penilaian Bulan {{ $bulan }} {{ $tahun }}</h5>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="nilaiChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    {{-- CDN Chart.js --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ==== 1️⃣ Doughnut Chart: Status Penilaian ====
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Approved', 'Pending', 'Rejected'],
+                    datasets: [{
+                        data: [{{ $totalApproved }}, {{ $totalPending }}, {{ $totalRejected }}],
+                        backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
+                        borderWidth: 2,
+                        hoverOffset: 10,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    }
+                }
+            });
+
+            // ==== 2️⃣ Polar Area Chart: Rata-rata Nilai per Desa ====
+            const ctxNilai = document.getElementById('nilaiChart').getContext('2d');
+            new Chart(ctxNilai, {
+                type: 'polarArea',
+                data: {
+                    labels: {!! json_encode($desas->pluck('nama_desa')) !!},
+                    datasets: [{
+                        label: 'Rata-rata Nilai',
+                        data: {!! json_encode($desas->pluck('rata_rata')) !!},
+                        backgroundColor: [
+                            '#3498db', '#9b59b6', '#1abc9c', '#f39c12', '#e74c3c',
+                            '#16a085', '#2ecc71', '#f1c40f', '#8e44ad', '#27ae60'
+                        ],
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            ticks: {
+                                stepSize: 10
+                            },
+                            grid: {
+                                color: '#eee'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 13
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+
     <div class="bg-white shadow-sm rounded-4 p-4">
         <table id="tableLaporan" class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>#</th>
+                    <th>No</th>
                     <th>Nama Desa</th>
-                    <th>Approved</th>
-                    <th>Pending</th>
-                    <th>Rejected</th>
+                    <th>Disetujui</th>
+                    <th>Menunggu</th>
+                    <th>Ditolak</th>
                     <th>Rata-rata Nilai</th>
                     <th>Aksi</th>
                 </tr>

@@ -15,11 +15,11 @@
         <table id="tableKlaster" class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>#</th>
+                    <th>No</th>
                     <th>Klaster</th>
-                    <th>Approved</th>
-                    <th>Pending</th>
-                    <th>Rejected</th>
+                    <th>Disetujui</th>
+                    <th>Menunggu</th>
+                    <th>Ditolak</th>
                     <th>Rata-rata Nilai</th>
                     <th>Status Klaster</th>
                 </tr>

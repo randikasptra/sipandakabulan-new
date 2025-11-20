@@ -20,24 +20,24 @@ class AdminLaporanController extends Controller
     public function index(Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
-        $bulan = $request->get('bulan', now()->format('F')); // 🔥 pakai nama bulan
+        $bulan = $request->get('bulan', now()->format('F'));
 
-        $desas = Desa::withCount([
+        $desas = \App\Models\Desa::withCount([
             'penilaians as total_pending' => fn ($q) => $q->where('status', 'pending')->where('tahun', $tahun)->where('bulan', $bulan),
             'penilaians as total_approved' => fn ($q) => $q->where('status', 'approved')->where('tahun', $tahun)->where('bulan', $bulan),
             'penilaians as total_rejected' => fn ($q) => $q->where('status', 'rejected')->where('tahun', $tahun)->where('bulan', $bulan),
         ])
-        ->with(['penilaians' => fn ($q) => $q->where('tahun', $tahun)->where('bulan', $bulan)->where('status', 'approved')])
-        ->get()
-        ->map(function ($desa) {
-            $totalNilai = $desa->penilaians->sum('nilai');
-            $jumlahPenilaian = $desa->penilaians->count();
-            $desa->rata_rata = $jumlahPenilaian > 0 ? round($totalNilai / $jumlahPenilaian, 2) : 0;
-            return $desa;
-        });
+        ->withAvg(['penilaians as rata_rata' => fn ($q) => $q->where('tahun', $tahun)->where('bulan', $bulan)], 'nilai')
+        ->get();
 
-        return view('pages.admin.laporan', compact('desas', 'tahun', 'bulan'));
+        // Total keseluruhan untuk chart doughnut
+        $totalApproved = $desas->sum('total_approved');
+        $totalPending = $desas->sum('total_pending');
+        $totalRejected = $desas->sum('total_rejected');
+
+        return view('pages.admin.laporan', compact('desas', 'tahun', 'bulan', 'totalApproved', 'totalPending', 'totalRejected'));
     }
+
 
     public function showDesa(Desa $desa, Request $request)
     {
