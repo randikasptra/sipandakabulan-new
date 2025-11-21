@@ -26,7 +26,7 @@ class Klaster4Seeder extends Seeder
         // Data indikator klaster 4
         $indikators = [
             [
-                'judul' => '1. Tersedia Fasilitas Informasi Layak Anak (Total Nilai 45)',
+                'judul' => 'Tersedia Fasilitas Informasi Layak Anak (Total Nilai 45)',
                 'slug' => 'fasilitas_informasi',
                 'nilai' => 45,
                 'template_excel' => 'FasilitasInformasi.xlsx',
@@ -43,7 +43,7 @@ class Klaster4Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '2. Ada Kelompok Anak (Termasuk FAD) (Total Nilai 40)',
+                'judul' => 'Ada Kelompok Anak (Termasuk FAD) (Total Nilai 40)',
                 'slug' => 'kelompok_anak',
                 'nilai' => 40,
                 'template_excel' => 'KelompokAnak.xlsx',
@@ -57,7 +57,7 @@ class Klaster4Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '3. Partisipasi Anak Usia Dini (Total Nilai 30)',
+                'judul' => 'Partisipasi Anak Usia Dini (Total Nilai 30)',
                 'slug' => 'partisipasi_dini',
                 'nilai' => 30,
                 'template_excel' => null,
@@ -71,7 +71,7 @@ class Klaster4Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '4. Presentasi Belajar 12 Tahun (Total Nilai 50)',
+                'judul' => 'Presentasi Belajar 12 Tahun (Total Nilai 50)',
                 'slug' => 'belajar_12_tahun',
                 'nilai' => 50,
                 'template_excel' => null,
@@ -86,7 +86,7 @@ class Klaster4Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '5. Sekolah Ramah Anak (Total Nilai 20)',
+                'judul' => 'Sekolah Ramah Anak (Total Nilai 20)',
                 'slug' => 'sekolah_ramah_anak',
                 'nilai' => 20,
                 'template_excel' => null,
@@ -103,7 +103,7 @@ class Klaster4Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '6. Fasilitas Kreativitas Anak di Luar Sekolah (Total Nilai 45)',
+                'judul' => 'Fasilitas Kreativitas Anak di Luar Sekolah (Total Nilai 45)',
                 'slug' => 'fasilitas_kreativitas',
                 'nilai' => 45,
                 'template_excel' => null,
@@ -118,7 +118,7 @@ class Klaster4Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '7. Program Sarana & Prasarana Perjalanan Anak Sekolah (Total Nilai 40)',
+                'judul' => 'Program Sarana & Prasarana Perjalanan Anak Sekolah (Total Nilai 40)',
                 'slug' => 'program_perjalanan',
                 'nilai' => 40,
                 'template_excel' => null,

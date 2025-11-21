@@ -26,7 +26,7 @@ class Klaster3Seeder extends Seeder
         // Data indikator klaster 3
         $indikators = [
             [
-                'judul' => '1. Kematian Bayi AKB (Total Nilai 30)',
+                'judul' => 'Kematian Bayi AKB (Total Nilai 30)',
                 'slug' => 'kematian_bayi',
                 'nilai' => 30,
                 'template_excel' => 'KematianBayi.xlsx',
@@ -48,7 +48,7 @@ class Klaster3Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '2. Prevalensi Kekurangan Gizi pada Balita (Total Nilai 30)',
+                'judul' => 'Prevalensi Kekurangan Gizi pada Balita (Total Nilai 30)',
                 'slug' => 'gizi_balita',
                 'nilai' => 30,
                 'template_excel' => 'GiziBalita.xlsx',
@@ -65,7 +65,7 @@ class Klaster3Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '3. ASI Eksklusif (Total Nilai 15)',
+                'judul' => 'ASI Eksklusif (Total Nilai 15)',
                 'slug' => 'asi_eksklusif',
                 'nilai' => 15,
                 'template_excel' => null,
@@ -80,7 +80,7 @@ class Klaster3Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '4. Pojok ASI pada Fasilitas Umum Desa (Total Nilai 15)',
+                'judul' => 'Pojok ASI pada Fasilitas Umum Desa (Total Nilai 15)',
                 'slug' => 'pojok_asi',
                 'nilai' => 15,
                 'template_excel' => null,
@@ -94,7 +94,7 @@ class Klaster3Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '5. Pusat Kesehatan Reproduksi Remaja (Total Nilai 30)',
+                'judul' => 'Pusat Kesehatan Reproduksi Remaja (Total Nilai 30)',
                 'slug' => 'pusat_kespro',
                 'nilai' => 30,
                 'template_excel' => null,
@@ -108,7 +108,7 @@ class Klaster3Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '6. Imunisasi Dasar Lengkap Bagi Anak (Total Nilai 20)',
+                'judul' => 'Imunisasi Dasar Lengkap Bagi Anak (Total Nilai 20)',
                 'slug' => 'imunisasi_anak',
                 'nilai' => 20,
                 'template_excel' => null,
@@ -122,7 +122,7 @@ class Klaster3Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '7. Anak Keluarga Miskin Dapat Layanan Pengentasan Kemiskinan (Total Nilai 20)',
+                'judul' => 'Anak Keluarga Miskin Dapat Layanan Pengentasan Kemiskinan (Total Nilai 20)',
                 'slug' => 'layanan_anak_miskin',
                 'nilai' => 20,
                 'template_excel' => null,
@@ -136,7 +136,7 @@ class Klaster3Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '8. Kawasan Tanpa Rokok (Total Nilai 20)',
+                'judul' => 'Kawasan Tanpa Rokok (Total Nilai 20)',
                 'slug' => 'kawasan_tanpa_rokok',
                 'nilai' => 20,
                 'template_excel' => null,

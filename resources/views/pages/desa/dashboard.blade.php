@@ -3,11 +3,13 @@
 @section('content')
     <div class="max-w-7xl mx-auto px-4 py-8">
 
-        {{-- 🔰 INFO LOGIN USER --}}
         <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-2xl shadow-lg p-6 mb-8">
+
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
 
+                {{-- LEFT: INFO USER --}}
                 <div class="flex items-start gap-4">
+
                     <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
                         <i class="bi bi-person-check text-2xl text-white"></i>
                     </div>
@@ -17,8 +19,9 @@
                             Selamat Datang, {{ Auth::user()->name }}
                         </h2>
 
-                        {{-- Dibuat vertikal --}}
+                        {{-- INFO USER VERTICAL --}}
                         <div class="flex flex-col gap-2 text-sm">
+
                             <div class="flex items-center gap-2">
                                 <i class="bi bi-person-badge text-blue-200"></i>
                                 <span class="text-blue-100">Role:</span>
@@ -50,14 +53,60 @@
                             @endif
                         </div>
                     </div>
+
                 </div>
 
+                {{-- MIDDLE: TANGGAL --}}
                 <div class="flex items-center gap-2 bg-white/10 rounded-xl p-3">
                     <i class="bi bi-calendar-check text-blue-200 text-xl"></i>
                     <div class="text-right">
                         <div class="text-blue-100 text-sm">Tanggal</div>
                         <div class="font-semibold text-white">{{ now()->format('d F Y') }}</div>
                     </div>
+                </div>
+
+                {{-- RIGHT: EVALUASI BERLANGSUNG --}}
+                <div
+                    class="bg-gradient-to-br from-blue-800 to-blue-600 shadow-xl rounded-2xl p-6 border border-blue-500/30 w-full lg:w-1/3">
+
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="bi bi-speedometer2 text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-white font-semibold text-lg">Evaluasi Berlangsung</h3>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full text-sm font-bold bg-white/20 text-white">
+                            {{ number_format($totalProgress, 0) }}%
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-white/20 h-3 rounded-full overflow-hidden mb-5">
+                        <div class="h-3 bg-white rounded-full transition-all duration-700"
+                            style="width: {{ $totalProgress }}%"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="bi bi-stars text-white/80"></i>
+                                <span class="text-white/90 text-sm font-medium">Nilai EM</span>
+                            </div>
+                            <p class="text-xl font-bold text-white">{{ number_format($totalEm, 2) }}</p>
+                        </div>
+
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="bi bi-bullseye text-white/80"></i>
+                                <span class="text-white/90 text-sm font-medium">Maksimal</span>
+                            </div>
+                            <p class="text-xl font-bold text-white">{{ number_format($totalMax, 0) }}</p>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
