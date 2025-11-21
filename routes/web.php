@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Desa\DesaController;
+use App\Http\Controllers\Desa\DesaDashboardController;
 use App\Http\Controllers\Desa\PenilaianController;
 use App\Http\Controllers\Desa\DesaPengumumanController;
 use App\Http\Controllers\Desa\TutorialController;
@@ -95,7 +96,7 @@ Route::middleware(['auth', 'role:desa'])
     ->name('desa.')
     ->group(function () {
         // Dashboard & Klaster
-        Route::get('/dashboard', [DesaController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DesaDashboardController::class, 'index'])->name('dashboard');
         Route::get('/klaster/{slug}', [DesaController::class, 'showKlaster'])->name('klaster.detail');
         Route::get('/klaster/{klaster}/{indikator}', [DesaController::class, 'showIndikator'])->name('indikator.detail');
 

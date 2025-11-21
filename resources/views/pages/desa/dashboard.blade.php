@@ -59,6 +59,7 @@
                         <div class="font-semibold text-white">{{ now()->format('d F Y') }}</div>
                     </div>
                 </div>
+
             </div>
         </div>
 
