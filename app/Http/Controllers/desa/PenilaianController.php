@@ -22,6 +22,8 @@ class PenilaianController extends Controller
     {
         $desaId = Auth::user()->desa_id;
         $userId = Auth::id();
+        $bulan = now()->format('F');
+        $tahun = now()->year;
 
         if (!$desaId) {
             return back()->with('error', '❌ Akun belum terhubung ke desa.');
@@ -30,7 +32,7 @@ class PenilaianController extends Controller
         $savedCount = 0;
 
         // ==============================
-        // 1️⃣ SIMPAN NILAI INDIKATOR
+        // 1️⃣ SIMPAN NILAI INDIKATOR (PER BULAN)
         // ==============================
         foreach ($request->all() as $key => $value) {
             if (!Str::startsWith($key, 'indikator_')) {
@@ -43,13 +45,16 @@ class PenilaianController extends Controller
                 continue;
             }
 
+            // Cari existing penilaian PER BULAN
             $existing = Penilaian::where([
                 'desa_id' => $desaId,
                 'klaster_id' => $indikator->klaster_id,
                 'indikator_id' => $indikatorId,
-                'tahun' => now()->year,
+                'bulan' => $bulan,
+                'tahun' => $tahun,
             ])->first();
 
+            // Jika bulan ini sudah APPROVED → tidak boleh edit
             if ($existing && $existing->status === 'approved') {
                 continue;
             }
@@ -59,22 +64,21 @@ class PenilaianController extends Controller
                     'desa_id' => $desaId,
                     'klaster_id' => $indikator->klaster_id,
                     'indikator_id' => $indikatorId,
-                    'tahun' => now()->year,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
                 ],
                 [
                     'user_id' => $userId,
                     'nilai' => $value,
-                    'bulan' => now()->format('F'),
                     'status' => 'pending',
                 ]
             );
-
 
             $savedCount++;
         }
 
         // ==============================
-        // 2️⃣ UPLOAD BERKAS KE SUPABASE
+        // 2️⃣ UPLOAD BERKAS PER BULAN KE SUPABASE
         // ==============================
         foreach ($request->files as $key => $file) {
             if (!Str::startsWith($key, 'file_') || $file === null) {
@@ -87,11 +91,16 @@ class PenilaianController extends Controller
                 continue;
             }
 
-            $filename = time() . '_' . $file->getClientOriginalName();
+            // Naming file lebih rapi
+            $filename = time() . '_' . Str::slug($file->getClientOriginalName(), '_');
+
             $indikator = IndikatorKlaster::find($kategori->indikator_id);
             $klaster = $indikator?->klaster;
+
             $klasterSlug = $klaster ? Str::slug($klaster->slug ?? $klaster->title, '-') : 'unknown';
-            $path = "desa/{$klasterSlug}/{$filename}";
+
+            // Path per klaster / tahun / bulan
+            $path = "desa/{$klasterSlug}/{$tahun}/{$bulan}/{$filename}";
 
             // Upload ke Supabase
             $response = Http::withHeaders([
@@ -112,11 +121,12 @@ class PenilaianController extends Controller
                 continue;
             }
 
-            // Simpan ke database
+            // Simpan ke database sesuai bulan & indikator
             $penilaianId = Penilaian::where([
                 'desa_id' => $desaId,
                 'indikator_id' => $kategori->indikator_id,
-                'tahun' => now()->year,
+                'bulan' => $bulan,
+                'tahun' => $tahun,
             ])->value('id');
 
             if ($penilaianId) {
@@ -133,39 +143,44 @@ class PenilaianController extends Controller
             }
         }
 
-        return back()->with('success', "✅ {$savedCount} penilaian berhasil disimpan!");
+        return back()->with('success', "✅ {$savedCount} penilaian bulan {$bulan} berhasil disimpan!");
     }
 
     /**
-     * Batalkan / hapus pengiriman penilaian sebelum disetujui.
+     * Batalkan penilaian 1 klaster (bulan berjalan saja)
      */
     public function cancelByKlaster($klasterId)
     {
         $user = Auth::user();
+        $bulan = now()->format('F');
+        $tahun = now()->year;
 
-        // Ambil semua penilaian untuk klaster ini
+        // Ambil penilaian bulan ini
         $penilaians = Penilaian::where('desa_id', $user->desa_id)
             ->where('klaster_id', $klasterId)
-            ->where('tahun', now()->year)
+            ->where('bulan', $bulan)
+            ->where('tahun', $tahun)
             ->get();
 
         if ($penilaians->isEmpty()) {
-            return back()->with('error', 'Tidak ada penilaian untuk klaster ini.');
+            return back()->with('error', 'Tidak ada penilaian bulan ini untuk klaster ini.');
         }
 
-        // Cek kalau ada yang sudah disetujui (approved)
+        // Cek jika sudah approved
         if ($penilaians->contains(fn ($p) => $p->status === 'approved')) {
-            return back()->with('error', 'Tidak bisa membatalkan karena ada penilaian yang sudah disetujui.');
+            return back()->with('error', 'Tidak bisa membatalkan karena penilaian bulan ini sudah disetujui.');
         }
 
         try {
             foreach ($penilaians as $penilaian) {
+                // Hapus berkas
                 $berkasList = BerkasUpload::where('penilaian_id', $penilaian->id)->get();
 
                 foreach ($berkasList as $berkas) {
                     try {
-                        // Hapus file dari Supabase
-                        $url = env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_STORAGE_BUCKET') . '/' . $berkas->path_file;
+                        $url = env('SUPABASE_URL') . '/storage/v1/object/' .
+                            env('SUPABASE_STORAGE_BUCKET') . '/' . $berkas->path_file;
+
                         Http::withHeaders([
                             'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_ROLE_KEY'),
                         ])->delete($url);
@@ -183,14 +198,14 @@ class PenilaianController extends Controller
                 $penilaian->delete();
             }
 
-            return back()->with('success', '🗑️ Semua penilaian dan berkas di klaster ini berhasil dibatalkan & dihapus.');
+            return back()->with('success', '🗑️ Penilaian bulan ini untuk klaster ini berhasil dibatalkan.');
         } catch (\Throwable $th) {
             Log::error('Gagal membatalkan klaster', [
                 'error' => $th->getMessage(),
                 'klaster_id' => $klasterId,
             ]);
-            return back()->with('error', 'Terjadi kesalahan saat membatalkan klaster.');
+
+            return back()->with('error', 'Terjadi kesalahan saat membatalkan.');
         }
     }
-
 }

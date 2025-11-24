@@ -60,6 +60,14 @@
                                 @else
                                     <span class="badge bg-secondary">Belum Diisi</span>
                                 @endif
+                                @if ($penilaian && $penilaian->status === 'rejected' && $penilaian->rejection_reason)
+                                    <div
+                                        class="alert alert-danger border-0 bg-danger bg-opacity-10 d-flex align-items-center mb-4 mt-2">
+                                        <i class="bi bi-info-circle-fill text-danger me-2"></i>
+                                        <span class="fw-medium">Alasan penolakan: {{ $penilaian->rejection_reason }}</span>
+                                    </div>
+                                @endif
+
                             </div>
 
                             <span class="badge bg-light text-primary fs-6">

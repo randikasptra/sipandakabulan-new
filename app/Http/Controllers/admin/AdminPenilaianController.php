@@ -83,14 +83,29 @@ class AdminPenilaianController extends Controller
     // ✅ Approve
     public function approve(Penilaian $penilaian)
     {
-        $penilaian->update(['status' => 'approved']);
-        return response()->json(['success' => true, 'message' => '✅ Penilaian disetujui.']);
+        $penilaian->update([
+            'status' => 'approved',
+            'rejection_reason' => null
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => '✅ Penilaian disetujui.'
+        ]);
     }
 
     // ❌ Reject
-    public function reject(Penilaian $penilaian)
+    public function reject(Request $request, Penilaian $penilaian)
     {
-        $penilaian->update(['status' => 'rejected']);
-        return response()->json(['success' => true, 'message' => '❌ Penilaian ditolak.']);
+        $penilaian->update([
+            'status' => 'rejected',
+            'rejection_reason' => $request->reason, // ⬅️ Simpan alasan
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => '❌ Penilaian ditolak beserta alasannya.'
+        ]);
     }
+
 }
