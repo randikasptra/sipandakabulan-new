@@ -26,7 +26,7 @@ class Klaster5Seeder extends Seeder
         // Data indikator klaster 5
         $indikators = [
             [
-                'judul' => '1. Laporan Kekerasan Terhadap Anak yang Dilayani dan Diselesaikan (Total Nilai 40)',
+                'judul' => 'Laporan Kekerasan Terhadap Anak yang Dilayani dan Diselesaikan (Total Nilai 40)',
                 'slug' => 'laporan_kekerasan_anak',
                 'nilai' => 40,
                 'template_excel' => 'LaporanKekerasanAnak.xlsx',
@@ -46,7 +46,7 @@ class Klaster5Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '2. Apakah Ada Mekanisme Penanggulangan Bencana (Total Nilai 20)',
+                'judul' => 'Apakah Ada Mekanisme Penanggulangan Bencana (Total Nilai 20)',
                 'slug' => 'mekanisme_penanggulangan_bencana',
                 'nilai' => 20,
                 'template_excel' => null,
@@ -59,7 +59,7 @@ class Klaster5Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '3. Adakah Program Pencegahan Kekerasan pada Anak yang Dilaksanakan (Total Nilai 30)',
+                'judul' => 'Adakah Program Pencegahan Kekerasan pada Anak yang Dilaksanakan (Total Nilai 30)',
                 'slug' => 'program_pencegahan_kekerasan',
                 'nilai' => 30,
                 'template_excel' => null,
@@ -72,7 +72,7 @@ class Klaster5Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '4. Apakah Ada Program Pencegahan Pekerjaan Anak (Total Nilai 40)',
+                'judul' => 'Apakah Ada Program Pencegahan Pekerjaan Anak (Total Nilai 40)',
                 'slug' => 'program_pencegahan_pekerjaan_anak',
                 'nilai' => 40,
                 'template_excel' => null,

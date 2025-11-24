@@ -9,6 +9,7 @@ use App\Models\Penilaian;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LaporanExport;
+use App\Exports\LaporanDesaExport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
@@ -20,25 +21,27 @@ class AdminLaporanController extends Controller
     public function index(Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
-        $bulan = $request->get('bulan', now()->format('F')); // 🔥 pakai nama bulan
+        $bulan = $request->get('bulan', now()->format('F'));
 
         $desas = Desa::withCount([
             'penilaians as total_pending' => fn ($q) => $q->where('status', 'pending')->where('tahun', $tahun)->where('bulan', $bulan),
             'penilaians as total_approved' => fn ($q) => $q->where('status', 'approved')->where('tahun', $tahun)->where('bulan', $bulan),
             'penilaians as total_rejected' => fn ($q) => $q->where('status', 'rejected')->where('tahun', $tahun)->where('bulan', $bulan),
         ])
-        ->with(['penilaians' => fn ($q) => $q->where('tahun', $tahun)->where('bulan', $bulan)->where('status', 'approved')])
-        ->get()
-        ->map(function ($desa) {
-            $totalNilai = $desa->penilaians->sum('nilai');
-            $jumlahPenilaian = $desa->penilaians->count();
-            $desa->rata_rata = $jumlahPenilaian > 0 ? round($totalNilai / $jumlahPenilaian, 2) : 0;
-            return $desa;
-        });
+        ->withAvg(['penilaians as rata_rata' => fn ($q) => $q->where('status', 'approved')->where('tahun', $tahun)->where('bulan', $bulan)], 'nilai')
+        ->get();
 
-        return view('pages.admin.laporan', compact('desas', 'tahun', 'bulan'));
+        // Total keseluruhan untuk chart
+        $totalApproved = $desas->sum('total_approved');
+        $totalPending = $desas->sum('total_pending');
+        $totalRejected = $desas->sum('total_rejected');
+
+        return view('pages.admin.laporan', compact('desas', 'tahun', 'bulan', 'totalApproved', 'totalPending', 'totalRejected'));
     }
 
+    /**
+     * 📋 Level 2: Detail per desa
+     */
     public function showDesa(Desa $desa, Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
@@ -67,33 +70,74 @@ class AdminLaporanController extends Controller
         return view('pages.admin.laporan-detail', compact('desa', 'klasters', 'tahun', 'bulan'));
     }
 
-
     /**
-     * 📤 Tahap 3: Export Excel (simulasi dulu)
+     * 📤 Export Excel - All Desa (Approved Only)
      */
     public function exportExcel(Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
         $bulan = $request->get('bulan', now()->format('F'));
+        $desaId = $request->get('desa_id');
 
-        $fileName = "Laporan_Penilaian_{$bulan}_{$tahun}.xlsx";
+        $fileName = $desaId
+            ? "Laporan_Desa_{$desaId}_{$bulan}_{$tahun}.xlsx"
+            : "Laporan_Penilaian_Semua_Desa_{$bulan}_{$tahun}.xlsx";
+
+        if ($desaId) {
+            return Excel::download(new LaporanDesaExport($desaId, $tahun, $bulan), $fileName);
+        }
+
         return Excel::download(new LaporanExport($tahun, $bulan), $fileName);
     }
 
+    /**
+     * 📄 Export PDF
+     */
     public function exportPdf(Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
         $bulan = $request->get('bulan', now()->format('F'));
+        $desaId = $request->get('desa_id');
 
-        $penilaians = \App\Models\Penilaian::with(['desa', 'klaster', 'indikator'])
+        if ($desaId) {
+            // Export PDF untuk 1 desa
+            $desa = Desa::findOrFail($desaId);
+
+            $klasters = Klaster::with(['indikators.penilaians' => function ($q) use ($desa, $tahun, $bulan) {
+                $q->where('desa_id', $desa->id)
+                  ->where('tahun', $tahun)
+                  ->where('bulan', $bulan)
+                  ->where('status', 'approved');
+            }])->get();
+
+            $klasters = $klasters->map(function ($klaster) {
+                $penilaian = $klaster->indikators->flatMap->penilaians;
+                $approved = $penilaian->where('status', 'approved');
+
+                $avg = $approved->count() > 0 ? round($approved->avg('nilai'), 2) : 0;
+                $klaster->approved = $approved->count();
+                $klaster->rata_rata = $avg;
+                return $klaster;
+            });
+
+            $pdf = Pdf::loadView('exports.laporan-desa-pdf', compact('desa', 'klasters', 'tahun', 'bulan'))
+                      ->setPaper('a4', 'portrait');
+
+            return $pdf->download("Laporan_{$desa->nama_desa}_{$bulan}_{$tahun}.pdf");
+        }
+
+        // Export PDF untuk semua desa
+        $penilaians = Penilaian::with(['desa', 'klaster', 'indikator'])
             ->where('tahun', $tahun)
             ->where('bulan', $bulan)
             ->where('status', 'approved')
+            ->orderBy('desa_id')
+            ->orderBy('klaster_id')
             ->get();
 
         $pdf = Pdf::loadView('exports.laporan-pdf', compact('penilaians', 'tahun', 'bulan'))
                   ->setPaper('a4', 'landscape');
 
-        return $pdf->download("Laporan_Penilaian_{$bulan}_{$tahun}.pdf");
+        return $pdf->download("Laporan_Penilaian_Semua_Desa_{$bulan}_{$tahun}.pdf");
     }
 }

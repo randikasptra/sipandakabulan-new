@@ -14,7 +14,7 @@ class KlasterSeeder extends Seeder
                 'title' => 'Kelembagaan',
                 'slug' => 'kelembagaan',
                 'nilai_em' => 0,
-                'nilai_maksimal' => 100,
+                'nilai_maksimal' => 220,
                 'progres' => 0,
             ],
             [
@@ -35,21 +35,21 @@ class KlasterSeeder extends Seeder
                 'title' => 'Klaster III: Kesehatan Dasar dan Kesejahteraan',
                 'slug' => 'klaster3',
                 'nilai_em' => 0,
-                'nilai_maksimal' => 160,
+                'nilai_maksimal' => 180,
                 'progres' => 0,
             ],
             [
                 'title' => 'Klaster IV: Pendidikan, Waktu Luang dan Budaya',
                 'slug' => 'klaster4',
                 'nilai_em' => 0,
-                'nilai_maksimal' => 140,
+                'nilai_maksimal' => 270,
                 'progres' => 0,
             ],
             [
                 'title' => 'Klaster V: Perlindungan Khusus',
                 'slug' => 'klaster5',
                 'nilai_em' => 0,
-                'nilai_maksimal' => 180,
+                'nilai_maksimal' => 130,
                 'progres' => 0,
             ],
         ]);
