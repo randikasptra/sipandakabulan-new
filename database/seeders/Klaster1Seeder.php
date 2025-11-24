@@ -26,7 +26,7 @@ class Klaster1Seeder extends Seeder
         // Data indikator klaster 1
         $indikators = [
             [
-                'judul' => '1. Anak Yang Memiliki Akta Kelahiran (Total Nilai 60)',
+                'judul' => 'Anak Yang Memiliki Akta Kelahiran (Total Nilai 60)',
                 'slug' => 'anak_akta_kelahiran',
                 'nilai' => 60,
                 'template_excel' => 'AnakAktaKelahiran.xlsx',
@@ -45,7 +45,7 @@ class Klaster1Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => '2. Anak Yang Memiliki Kartu Identitas Anak (Total Nilai 60)',
+                'judul' => 'Anak Yang Memiliki Kartu Identitas Anak (Total Nilai 60)',
                 'slug' => 'anak_kartu_identitas',
                 'nilai' => 60,
                 'template_excel' => null,

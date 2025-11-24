@@ -50,7 +50,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-4">
             <div class="flex items-center justify-between">
                 <div>
@@ -86,6 +86,18 @@
                 </div>
             </div>
         </div>
+
+        <div class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-2xl p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-red-600 text-sm font-semibold">Total Ditolak</p>
+                    <p class="text-2xl font-bold text-red-800">{{ $klasters->sum('total_rejected') }}</p>
+                </div>
+                <div class="w-12 h-12 bg-red-200 rounded-full flex items-center justify-center">
+                    <i class="bi bi-x-circle text-red-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Table -->
@@ -94,25 +106,25 @@
             <table id="tableKlaster" class="w-full">
                 <thead class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
                     <tr>
-                        <th class="py-4 px-6 text-left font-semibold rounded-tl-2xl whitespace-nowrap">
+                        <th class="py-4 px-6 text-left font-semibold rounded-tl-2xl whitespace-nowrap w-16">
                             No
                         </th>
                         <th class="py-4 px-6 text-left font-semibold whitespace-nowrap">
                             <i class="bi bi-layers mr-2"></i>Nama Klaster
                         </th>
-                        <th class="py-4 px-6 text-center font-semibold whitespace-nowrap">
-                            <i class="bi bi-list-check mr-2"></i>Total Indikator
+                        <th class="py-4 px-6 text-center font-semibold whitespace-nowrap w-32">
+                            <i class="bi bi-list-check mr-2"></i>Total<br />Indikator
                         </th>
-                        <th class="py-4 px-6 text-center font-semibold whitespace-nowrap">
+                        <th class="py-4 px-6 text-center font-semibold whitespace-nowrap w-28">
                             <i class="bi bi-check-circle mr-2"></i>Disetujui
                         </th>
-                        <th class="py-4 px-6 text-center font-semibold whitespace-nowrap">
+                        <th class="py-4 px-6 text-center font-semibold whitespace-nowrap w-28">
                             <i class="bi bi-clock mr-2"></i>Menunggu
                         </th>
-                        <th class="py-4 px-6 text-center font-semibold whitespace-nowrap">
+                        <th class="py-4 px-6 text-center font-semibold whitespace-nowrap w-28">
                             <i class="bi bi-x-circle mr-2"></i>Ditolak
                         </th>
-                        <th class="py-4 px-6 text-center font-semibold rounded-tr-2xl whitespace-nowrap">
+                        <th class="py-4 px-6 text-center font-semibold rounded-tr-2xl whitespace-nowrap w-40">
                             <i class="bi bi-gear mr-2"></i>Aksi
                         </th>
                     </tr>
@@ -120,7 +132,7 @@
                 <tbody class="divide-y divide-gray-200">
                     @foreach ($klasters as $i => $k)
                         <tr class="hover:bg-blue-50 transition-all duration-200">
-                            <td class="py-4 px-6 text-gray-600 font-medium whitespace-nowrap">
+                            <td class="py-4 px-6 text-gray-600 font-medium whitespace-nowrap text-center">
                                 {{ $i + 1 }}
                             </td>
                             <td class="py-4 px-6">
@@ -128,29 +140,25 @@
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <span
-                                    class="inline-flex items-center gap-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                                    <i class="bi bi-list-check"></i>
+                                    class="inline-flex items-center justify-center min-w-[3rem] bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-base font-bold">
                                     {{ $k->total_indikator }}
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <span
-                                    class="inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
-                                    <i class="bi bi-check-circle"></i>
+                                    class="inline-flex items-center justify-center min-w-[3rem] bg-green-100 text-green-800 px-4 py-2 rounded-full text-base font-bold">
                                     {{ $k->total_approved }}
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <span
-                                    class="inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
-                                    <i class="bi bi-clock"></i>
+                                    class="inline-flex items-center justify-center min-w-[3rem] bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-base font-bold">
                                     {{ $k->total_pending }}
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <span
-                                    class="inline-flex items-center gap-1 bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
-                                    <i class="bi bi-x-circle"></i>
+                                    class="inline-flex items-center justify-center min-w-[3rem] bg-red-100 text-red-800 px-4 py-2 rounded-full text-base font-bold">
                                     {{ $k->total_rejected }}
                                 </span>
                             </td>
@@ -158,7 +166,7 @@
                                 <a href="{{ route('admin.penilaian.klaster', [$desa->id, $k->id]) }}?tahun={{ request('tahun') }}&bulan={{ request('bulan') }}"
                                     class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 font-semibold text-sm">
                                     <i class="bi bi-eye"></i>
-                                    Lihat Indikator
+                                    Lihat Detail
                                 </a>
                             </td>
                         </tr>
@@ -214,6 +222,7 @@
             border: none;
             font-weight: 600;
             font-size: 0.875rem;
+            line-height: 1.3;
         }
 
         #tableKlaster td {
@@ -223,6 +232,16 @@
 
         #tableKlaster tbody tr:last-child td {
             border-bottom: none;
+        }
+
+        /* Badge styling - larger and bolder */
+        #tableKlaster tbody td span {
+            font-size: 1rem;
+            font-weight: 700;
+            min-height: 2.5rem;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         /* Responsive adjustments */
@@ -236,7 +255,19 @@
                 padding: 0.5rem 0.25rem;
             }
 
-            .grid-cols-3 {
+            #tableKlaster tbody td span {
+                font-size: 0.875rem;
+                padding: 0.25rem 0.75rem;
+                min-height: 2rem;
+            }
+
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid-cols-4 {
                 grid-template-columns: 1fr;
             }
         }
@@ -259,6 +290,16 @@
         /* Smooth transitions */
         .transition-all {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Hover effect untuk badge */
+        #tableKlaster tbody td span {
+            transition: all 0.2s ease;
+        }
+
+        #tableKlaster tbody tr:hover td span {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
     </style>
 @endsection

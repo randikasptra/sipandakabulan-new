@@ -58,8 +58,6 @@
         </div>
     </div>
 
-    <!-- Stats Cards -->
-
     <!-- Table -->
     <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
         <div class="overflow-x-auto">
@@ -99,6 +97,19 @@
                                 <div class="font-semibold text-gray-800 text-sm lg:text-base">
                                     {{ $p->indikator->nama_indikator }}
                                 </div>
+
+                                <!-- Tampilkan alasan reject jika ada -->
+                                @if ($p->status == 'rejected' && $p->rejection_reason)
+                                    <div class="mt-2 p-3 bg-red-50 border-l-4 border-red-400 rounded">
+                                        <div class="flex items-start gap-2">
+                                            <i class="bi bi-exclamation-triangle-fill text-red-500 mt-0.5"></i>
+                                            <div>
+                                                <p class="text-xs font-semibold text-red-800 mb-1">Alasan Penolakan:</p>
+                                                <p class="text-xs text-red-700">{{ $p->rejection_reason }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <span
@@ -241,6 +252,9 @@
                                         popup: 'rounded-2xl'
                                     }
                                 });
+                                // Reset button
+                                this.innerHTML = '<i class="bi bi-check-lg"></i>';
+                                this.disabled = false;
                             }
                         }
                     });
@@ -254,24 +268,83 @@
                     const row = document.querySelector(`#row-${id}`);
 
                     Swal.fire({
-                        title: 'Tolak Penilaian?',
-                        text: "Anda akan menolak penilaian ini",
+                        title: 'Tolak Penilaian',
+                        html: `
+                            <div class="text-left">
+                                <label class="block mb-2 font-semibold text-gray-700">Pilih Alasan Penolakan:</label>
+                                <select id="reject_reason_select" class="swal2-input w-full">
+                                    <option value="">-- Pilih alasan --</option>
+                                    <option value="Data tidak lengkap">Data tidak lengkap</option>
+                                    <option value="Format dokumen salah">Format dokumen salah</option>
+                                    <option value="Bukti tidak valid">Bukti tidak valid</option>
+                                    <option value="Nilai tidak sesuai">Nilai tidak sesuai</option>
+                                    <option value="other">Lainnya...</option>
+                                </select>
+
+                                <textarea id="reject_reason_manual" class="swal2-textarea w-full mt-2" placeholder="Tulis alasan lainnya..." style="display:none" rows="4"></textarea>
+                            </div>
+                        `,
                         icon: 'warning',
                         showCancelButton: true,
+                        confirmButtonText: 'Tolak',
+                        cancelButtonText: 'Batal',
                         confirmButtonColor: '#ef4444',
                         cancelButtonColor: '#6b7280',
-                        confirmButtonText: 'Ya, Tolak!',
-                        cancelButtonText: 'Batal',
-                        background: '#fff',
                         customClass: {
                             popup: 'rounded-2xl'
+                        },
+                        preConfirm: () => {
+                            const dropdown = document.getElementById(
+                                'reject_reason_select').value;
+                            const manual = document.getElementById(
+                                'reject_reason_manual').value;
+
+                            // Validasi: harus ada salah satu yang diisi
+                            if (dropdown === "" && manual.trim() === "") {
+                                Swal.showValidationMessage(
+                                    'Harap pilih atau isi alasan penolakan');
+                                return false;
+                            }
+
+                            // Jika pilih "Lainnya" tapi tidak isi manual
+                            if (dropdown === 'other' && manual.trim() === "") {
+                                Swal.showValidationMessage(
+                                    'Harap isi alasan penolakan');
+                                return false;
+                            }
+
+                            // Return alasan yang dipilih
+                            if (dropdown === 'other') {
+                                return manual.trim();
+                            }
+
+                            return dropdown || manual.trim();
+                        },
+                        didOpen: () => {
+                            const select = document.getElementById(
+                                'reject_reason_select');
+                            const manual = document.getElementById(
+                                'reject_reason_manual');
+
+                            select.addEventListener('change', () => {
+                                manual.style.display = select.value ===
+                                    'other' ? 'block' : 'none';
+                                if (select.value !== 'other') {
+                                    manual.value = '';
+                                }
+                            });
                         }
                     }).then(async (result) => {
-                        if (result.isConfirmed) {
-                            // Show loading state
-                            this.innerHTML =
-                                '<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>';
-                            this.disabled = true;
+                        if (result.isConfirmed && result.value) {
+                            // Show loading
+                            Swal.fire({
+                                title: 'Memproses...',
+                                html: 'Mohon tunggu sebentar',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
 
                             try {
                                 const res = await fetch(
@@ -279,34 +352,43 @@
                                         method: 'PATCH',
                                         headers: {
                                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'Content-Type': 'application/json',
                                             'Accept': 'application/json'
-                                        }
+                                        },
+                                        body: JSON.stringify({
+                                            reason: result.value
+                                        })
                                     });
+
                                 const data = await res.json();
 
                                 if (data.success) {
                                     Swal.fire({
                                         title: '❌ Ditolak!',
-                                        text: data.message,
-                                        icon: 'warning',
-                                        confirmButtonColor: '#ef4444',
-                                        background: '#fff',
+                                        text: 'Penilaian telah ditolak beserta alasannya.',
+                                        icon: 'success',
+                                        confirmButtonColor: '#22c55e',
                                         customClass: {
                                             popup: 'rounded-2xl'
                                         }
                                     });
+
                                     // Remove row with fade out effect
                                     row.style.opacity = '0';
                                     row.style.transform = 'translateX(-100px)';
                                     setTimeout(() => row.remove(), 300);
+                                } else {
+                                    throw new Error(data.message ||
+                                        'Gagal menolak penilaian');
                                 }
+
                             } catch (error) {
                                 Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Terjadi kesalahan saat memproses',
                                     icon: 'error',
+                                    title: 'Error',
+                                    text: error.message ||
+                                        'Terjadi kesalahan saat memproses',
                                     confirmButtonColor: '#ef4444',
-                                    background: '#fff',
                                     customClass: {
                                         popup: 'rounded-2xl'
                                     }
@@ -328,7 +410,7 @@
             }
 
             window.addEventListener('resize', handleTableResponsive);
-            handleTableResponsive(); // Initial call
+            handleTableResponsive();
         });
     </script>
 
@@ -364,16 +446,6 @@
             #tableIndikator td {
                 padding: 0.5rem 0.25rem;
             }
-
-            .grid-cols-4 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 640px) {
-            .grid-cols-4 {
-                grid-template-columns: 1fr;
-            }
         }
 
         /* Custom scrollbar */
@@ -399,6 +471,20 @@
         /* Animation for row removal */
         #tableIndikator tbody tr {
             transition: all 0.3s ease;
+        }
+
+        /* Rejection reason box styling */
+        .swal2-input,
+        .swal2-textarea {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+
+        .swal2-input:focus,
+        .swal2-textarea:focus {
+            border-color: #3b82f6;
+            outline: none;
         }
     </style>
 @endsection

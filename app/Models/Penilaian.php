@@ -21,6 +21,7 @@ class Penilaian extends Model
         'bulan',
         'total_nilai',
         'status',
+        'rejection_reason',
     ];
 
     // Relasi

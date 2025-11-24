@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Desa\DesaController;
+use App\Http\Controllers\Desa\DesaDashboardController;
 use App\Http\Controllers\Desa\PenilaianController;
 use App\Http\Controllers\Desa\DesaPengumumanController;
 use App\Http\Controllers\Desa\TutorialController;
@@ -94,20 +95,29 @@ Route::middleware(['auth', 'role:desa'])
     ->prefix('desa')
     ->name('desa.')
     ->group(function () {
-        Route::get('/dashboard', [DesaController::class, 'index'])->name('dashboard');
+        // Dashboard & Klaster
+        Route::get('/dashboard', [DesaDashboardController::class, 'index'])->name('dashboard');
         Route::get('/klaster/{slug}', [DesaController::class, 'showKlaster'])->name('klaster.detail');
         Route::get('/klaster/{klaster}/{indikator}', [DesaController::class, 'showIndikator'])->name('indikator.detail');
+
+        // Penilaian
         Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
-        Route::delete('/penilaian/klaster/{klasterId}/cancel', [PenilaianController::class, 'cancelByKlaster'])
-        ->name('penilaian.cancelKlaster');
+        Route::delete('/penilaian/klaster/{klasterId}/cancel', [PenilaianController::class, 'cancelByKlaster'])->name('penilaian.cancelKlaster');
         Route::get('/template/download/{indikator}', [PenilaianController::class, 'downloadTemplate'])->name('template.download');
+
+        // Pengumuman
         Route::get('/pengumuman', [DesaPengumumanController::class, 'index'])->name('pengumuman');
         Route::get('/pengumuman/{pengumuman}', [DesaPengumumanController::class, 'show'])->name('pengumuman.show');
+
+        // Tutorial
         Route::get('/tutorial', [TutorialController::class, 'index'])->name('tutorial');
+
+        // Settings
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
-
+        Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
+        Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+        Route::put('/settings/desa', [SettingsController::class, 'updateDesa'])->name('settings.desa');
     });
-
 // =======================
 // KECAMATAN ROUTES
 // =======================
