@@ -57,164 +57,183 @@
         </a>
     </div>
 </div>
-
 <!-- Table -->
 <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
     <div class="overflow-x-auto">
-        <table id="tableIndikator" class="w-full">
+        <table id="tableIndikator" class="w-full table-fixed text-sm">
             <thead class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
                 <tr>
-                    <th class="py-4 px-6 text-left font-semibold rounded-tl-2xl whitespace-nowrap">
-                        <i class="bi bi-hash mr-2"></i>No
-                    </th>
-                    <th class="py-4 px-6 text-left font-semibold whitespace-nowrap">
+                    <th class="w-14 py-4 px-4 text-left font-semibold">No</th>
+
+                    <th class="w-[28rem] py-4 px-6 text-left font-semibold">
                         <i class="bi bi-card-checklist mr-2"></i>Indikator
                     </th>
-                    <th class="py-4 px-6 text-center font-semibold whitespace-nowrap">
+
+                    <th class="w-24 py-4 px-4 text-center font-semibold">
                         <i class="bi bi-star mr-2"></i>Nilai
                     </th>
-                    <th class="py-4 px-6 text-left font-semibold whitespace-nowrap">
+
+                    <th class="w-56 py-4 px-6 text-left font-semibold">
                         <i class="bi bi-ui-radios mr-2"></i>Opsi Dipilih
                     </th>
-                    <th class="py-4 px-6 text-center font-semibold whitespace-nowrap">
+
+                    <th class="w-32 py-4 px-4 text-center font-semibold">
                         <i class="bi bi-flag mr-2"></i>Status
                     </th>
-                    <th class="py-4 px-6 text-center">
-                        <i class="bi bi-journal-text"></i>
+
+                    <th class="w-28 py-4 px-4 text-center font-semibold">
+                        <i class="bi bi-journal-text mr-1"></i>Catatan
                     </th>
 
-                    <th class="py-4 px-6 text-left font-semibold whitespace-nowrap">
+                    <th class="w-72 py-4 px-6 text-left font-semibold">
                         <i class="bi bi-files mr-2"></i>Dokumen
                     </th>
-                    <th class="py-4 px-6 text-center font-semibold rounded-tr-2xl whitespace-nowrap">
+
+                    <th class="w-32 py-4 px-4 text-center font-semibold">
                         <i class="bi bi-gear mr-2"></i>Aksi
                     </th>
                 </tr>
             </thead>
+
             <tbody class="divide-y divide-gray-200">
                 @foreach ($penilaians as $i => $p)
-                <tr id="row-{{ $p->id }}" class="hover:bg-blue-50 transition-all duration-200">
-                    <td class="py-4 px-6 text-gray-600 font-medium whitespace-nowrap">
+                <tr id="row-{{ $p->id }}" class="hover:bg-blue-50 transition">
+                    <!-- NO -->
+                    <td class="px-4 py-4 text-gray-600 font-medium">
                         {{ $i + 1 }}
                     </td>
-                    <td class="py-4 px-6">
-                        <div class="font-semibold text-gray-800 text-sm lg:text-base">
-                            {{ $p->indikator->nama_indikator }}
-                        </div>
 
-                        <!-- Tampilkan alasan reject jika ada -->
+                    <!-- INDIKATOR -->
+                    <td class="px-6 py-4 align-top">
+                        <p class="font-semibold text-gray-800 leading-relaxed break-words">
+                            {{ $p->indikator->nama_indikator }}
+                        </p>
+
                         @if ($p->status == 'rejected' && $p->rejection_reason)
-                        <div class="mt-2 p-3 bg-red-50 border-l-4 border-red-400 rounded">
-                            <div class="flex items-start gap-2">
-                                <i class="bi bi-exclamation-triangle-fill text-red-500 mt-0.5"></i>
-                                <div>
-                                    <p class="text-xs font-semibold text-red-800 mb-1">Alasan Penolakan:</p>
-                                    <p class="text-xs text-red-700">{{ $p->rejection_reason }}</p>
-                                </div>
-                            </div>
+                        <div class="mt-3 p-3 bg-red-50 border-l-4 border-red-400 rounded-lg">
+                            <p class="text-xs font-semibold text-red-800 mb-1">
+                                <i class="bi bi-exclamation-triangle-fill mr-1"></i>
+                                Alasan Penolakan
+                            </p>
+                            <p class="text-xs text-red-700 leading-relaxed">
+                                {{ $p->rejection_reason }}
+                            </p>
                         </div>
                         @endif
                     </td>
-                    <td class="py-4 px-6 text-center">
+
+                    <!-- NILAI -->
+                    <td class="px-4 py-4 text-center">
                         <span
-                            class="inline-flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-800 rounded-full font-bold text-lg">
+                            class="inline-flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-800 rounded-full font-bold">
                             {{ $p->nilai ?? '-' }}
                         </span>
                     </td>
-                    <td class="py-4 px-6">
+
+                    <!-- OPSI -->
+                    <td class="px-6 py-4">
                         @php
-                        $opsiDipilih = $p->indikator->opsiNilai->firstWhere('poin', $p->nilai);
+                            $opsiDipilih = $p->indikator->opsiNilai->firstWhere('poin', $p->nilai);
                         @endphp
+
                         @if ($opsiDipilih)
-                        <span class="text-gray-600 text-sm italic bg-gray-100 px-3 py-1 rounded-lg">
+                        <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-xs">
                             {{ $opsiDipilih->label }}
                         </span>
                         @else
-                        <span class="text-gray-400 text-sm">-</span>
-                        @endif
-                    </td>
-                    <td class="py-4 px-6 text-center">
-                        <span
-                            class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold
-                                    @if ($p->status == 'approved') bg-green-100 text-green-800
-                                    @elseif($p->status == 'pending') bg-yellow-100 text-yellow-800
-                                    @else bg-red-100 text-red-800 @endif">
-                            <i
-                                class="bi
-                                        @if ($p->status == 'approved') bi-check-circle
-                                        @elseif($p->status == 'pending') bi-clock
-                                        @else bi-x-circle @endif">
-                            </i>
-                            {{ ucfirst($p->status) }}
-                        </span>
-                    </td>
-                    <td class="py-4 px-6 text-center">
-                        @if ($p->catatan)
-                        <button
-                            onclick="toggleCatatan({{ $p->id }})"
-                            class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm hover:bg-blue-200">
-                            <i class="bi bi-eye"></i>
-                            Lihat
-                        </button>
-                        @else
-                        <span class="text-gray-400 text-xs italic">-</span>
+                        <span class="text-gray-400 italic">-</span>
                         @endif
                     </td>
 
-                    <td class="py-4 px-6">
+                    <!-- STATUS -->
+                    <td class="px-4 py-4 text-center">
+                        <span
+                            class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold
+                                @if ($p->status == 'approved') bg-green-100 text-green-800
+                                @elseif ($p->status == 'pending') bg-yellow-100 text-yellow-800
+                                @else bg-red-100 text-red-800 @endif">
+                            <i class="bi
+                                @if ($p->status == 'approved') bi-check-circle
+                                @elseif ($p->status == 'pending') bi-clock
+                                @else bi-x-circle @endif"></i>
+                            {{ ucfirst($p->status) }}
+                        </span>
+                    </td>
+
+                    <!-- CATATAN -->
+                    <td class="px-4 py-4 text-center">
+                        @if ($p->catatan)
+                        <button
+                            onclick="toggleCatatan({{ $p->id }})"
+                            class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs hover:bg-blue-200">
+                            <i class="bi bi-eye mr-1"></i>Lihat
+                        </button>
+                        @else
+                        <span class="text-gray-400 italic text-xs">-</span>
+                        @endif
+                    </td>
+
+                    <!-- DOKUMEN -->
+                    <td class="px-6 py-4">
                         <div class="space-y-1">
                             @forelse ($p->berkasUploads as $b)
                             <a href="{{ env('SUPABASE_URL') }}/storage/v1/object/public/{{ env('SUPABASE_STORAGE_BUCKET') }}/{{ $b->path_file }}"
                                 target="_blank"
-                                class="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors text-sm">
+                                class="flex items-center gap-2 text-blue-600 hover:text-blue-800 text-xs">
                                 <i class="bi bi-file-earmark-text"></i>
-                                <span class="truncate max-w-xs">{{ basename($b->path_file) }}</span>
+                                <span class="truncate max-w-[14rem]">
+                                    {{ basename($b->path_file) }}
+                                </span>
                             </a>
                             @empty
-                            <span class="text-gray-400 text-sm">Tidak ada dokumen</span>
+                            <span class="text-gray-400 text-xs italic">
+                                Tidak ada dokumen
+                            </span>
                             @endforelse
                         </div>
                     </td>
-                    <td class="py-4 px-6 text-center">
+
+                    <!-- AKSI -->
+                    <td class="px-4 py-4 text-center">
                         @if ($p->status == 'pending')
                         <div class="flex justify-center gap-2">
                             <button
-                                class="w-10 h-10 bg-green-500 text-white rounded-lg flex items-center justify-center hover:bg-green-600 transition-all duration-200 transform hover:scale-105 btn-approve"
-                                data-id="{{ $p->id }}" title="Setujui">
+                                class="w-9 h-9 bg-green-500 text-white rounded-lg hover:bg-green-600 transition btn-approve"
+                                data-id="{{ $p->id }}">
                                 <i class="bi bi-check-lg"></i>
                             </button>
                             <button
-                                class="w-10 h-10 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition-all duration-200 transform hover:scale-105 btn-reject"
-                                data-id="{{ $p->id }}" title="Tolak">
+                                class="w-9 h-9 bg-red-500 text-white rounded-lg hover:bg-red-600 transition btn-reject"
+                                data-id="{{ $p->id }}">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         </div>
                         @else
-                        <span class="text-gray-400 text-sm">Tidak ada aksi</span>
+                        <span class="text-gray-400 text-xs italic">
+                            Tidak ada aksi
+                        </span>
                         @endif
                     </td>
                 </tr>
 
+                <!-- DETAIL CATATAN -->
                 @if ($p->catatan)
                 <tr id="catatan-{{ $p->id }}" class="hidden bg-blue-50">
-                    <td colspan="8" class="px-8 py-4">
+                    <td colspan="8" class="px-8 py-5">
                         <div class="flex gap-4">
                             <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center">
                                 <i class="bi bi-chat-left-text"></i>
                             </div>
-
-                            <div class="flex-1">
+                            <div>
                                 <p class="font-semibold text-blue-900 mb-1">
                                     Catatan dari Desa
                                 </p>
-
                                 <p class="text-gray-700 text-sm leading-relaxed">
                                     {{ $p->catatan->catatan }}
                                 </p>
-
                                 <p class="text-xs text-gray-500 mt-2">
-                                    Oleh {{ $p->catatan->user->name }}
-                                    • {{ $p->catatan->updated_at->format('d M Y H:i') }}
+                                    Oleh {{ $p->catatan->user->name }} •
+                                    {{ $p->catatan->updated_at->format('d M Y H:i') }}
                                 </p>
                             </div>
                         </div>
@@ -227,6 +246,7 @@
         </table>
     </div>
 </div>
+
 @endsection
 
 @section('scripts')

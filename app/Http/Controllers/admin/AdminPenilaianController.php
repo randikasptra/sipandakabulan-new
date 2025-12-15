@@ -13,33 +13,55 @@ class AdminPenilaianController extends Controller
     // 🏘️ Level 1: List semua desa
     public function index(Request $request)
     {
-        $tahun = $request->get('tahun', now()->year);
-        $bulan = $request->get('bulan', now()->format('F')); // "November"
+        $tahun  = $request->get('tahun', now()->year);
+        $bulan  = $request->get('bulan', now()->format('F'));
         $status = $request->get('status');
+        $search = $request->get('search');
 
-        $desas = Desa::withCount([
-            'penilaians as total_pending' => fn ($q) =>
-                $q->where('status', 'pending')->where('tahun', $tahun)->where('bulan', $bulan),
-            'penilaians as total_approved' => fn ($q) =>
-                $q->where('status', 'approved')->where('tahun', $tahun)->where('bulan', $bulan),
-            'penilaians as total_rejected' => fn ($q) =>
-                $q->where('status', 'rejected')->where('tahun', $tahun)->where('bulan', $bulan),
-        ])->get();
+        $desas = Desa::query()
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($qq) use ($search) {
+                    $qq->where('nama_desa', 'like', "%{$search}%")
+                        ->orWhere('kode_desa', 'like', "%{$search}%");
+                });
+            })
+            ->withCount([
+                'penilaians as total_pending' => fn($q) =>
+                $q->where('status', 'pending')
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulan),
 
-        $totalApproved = $desas->sum('total_approved');
-        $totalPending  = $desas->sum('total_pending');
-        $totalRejected = $desas->sum('total_rejected');
+                'penilaians as total_approved' => fn($q) =>
+                $q->where('status', 'approved')
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulan),
+
+                'penilaians as total_rejected' => fn($q) =>
+                $q->where('status', 'rejected')
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulan),
+            ])
+            ->when($status, function ($q) use ($status, $tahun, $bulan) {
+                $q->whereHas('penilaians', function ($qq) use ($status, $tahun, $bulan) {
+                    $qq->where('status', $status)
+                        ->where('tahun', $tahun)
+                        ->where('bulan', $bulan);
+                });
+            })
+            ->orderBy('nama_desa')
+            ->paginate(20)
+            ->withQueryString();
 
         return view('pages.admin.penilaian', compact(
             'desas',
             'tahun',
             'bulan',
             'status',
-            'totalApproved',
-            'totalPending',
-            'totalRejected'
+            'search'
         ));
     }
+
+
 
     // 📊 Level 2: List klaster per desa
     public function showDesa(Desa $desa, Request $request)
@@ -49,21 +71,21 @@ class AdminPenilaianController extends Controller
 
         $klasters = Klaster::withCount([
             'indikators as total_indikator',
-            'penilaians as total_pending' => fn ($q) =>
-                $q->where('desa_id', $desa->id)
-                  ->where('status', 'pending')
-                  ->where('tahun', $tahun)
-                  ->where('bulan', $bulan),
-            'penilaians as total_approved' => fn ($q) =>
-                $q->where('desa_id', $desa->id)
-                  ->where('status', 'approved')
-                  ->where('tahun', $tahun)
-                  ->where('bulan', $bulan),
-            'penilaians as total_rejected' => fn ($q) =>
-                $q->where('desa_id', $desa->id)
-                  ->where('status', 'rejected')
-                  ->where('tahun', $tahun)
-                  ->where('bulan', $bulan),
+            'penilaians as total_pending' => fn($q) =>
+            $q->where('desa_id', $desa->id)
+                ->where('status', 'pending')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+            'penilaians as total_approved' => fn($q) =>
+            $q->where('desa_id', $desa->id)
+                ->where('status', 'approved')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+            'penilaians as total_rejected' => fn($q) =>
+            $q->where('desa_id', $desa->id)
+                ->where('status', 'rejected')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
         ])->get();
 
         return view('pages.admin.penilaian-klaster', compact('desa', 'klasters', 'tahun', 'bulan'));
@@ -107,5 +129,4 @@ class AdminPenilaianController extends Controller
             'message' => '❌ Penilaian ditolak beserta alasannya.'
         ]);
     }
-
 }

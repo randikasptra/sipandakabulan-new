@@ -16,16 +16,24 @@ class AdminDesaController extends Controller
     /**
      * Display a listing of desa
      */
-    public function index()
+    public function index(Request $request)
     {
-        $desas = Desa::with('users')
-            ->withCount('users')
-            ->withCount('penilaians')
-            ->latest()
-            ->paginate(10);
+        $search = $request->get('search');
 
-        return view('pages.admin.desa', compact('desas'));
+        $desas = Desa::withCount('users')
+            ->when($search, function ($q) use ($search) {
+                $q->where('nama_desa', 'like', "%{$search}%")
+                    ->orWhere('kode_desa', 'like', "%{$search}%")
+                    ->orWhere('alamat_kantor', 'like', "%{$search}%")
+                    ->orWhere('no_telp', 'like', "%{$search}%");
+            })
+            ->orderBy('nama_desa')
+            ->paginate(50)
+            ->withQueryString(); // ⬅️ PENTING
+
+        return view('pages.admin.desa', compact('desas', 'search'));
     }
+
 
     /**
      * Show the form for creating a new desa
@@ -85,7 +93,6 @@ class AdminDesaController extends Controller
                     'email' => $email,
                     'password' => $password,
                 ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()
@@ -125,7 +132,6 @@ class AdminDesaController extends Controller
             $desa->update($validated);
 
             return back()->with('success', 'Data desa berhasil diperbarui');
-
         } catch (\Exception $e) {
             return back()
                 ->withInput()
@@ -144,7 +150,6 @@ class AdminDesaController extends Controller
             return redirect()
                 ->route('admin.desa')
                 ->with('success', 'Desa berhasil dihapus');
-
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menghapus desa: ' . $e->getMessage());
         }
@@ -181,7 +186,6 @@ class AdminDesaController extends Controller
                     'email' => $validated['email'],
                     'password' => 'password123',
                 ]);
-
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menambahkan user: ' . $e->getMessage());
         }
@@ -205,7 +209,6 @@ class AdminDesaController extends Controller
             $user->update($validated);
 
             return back()->with('success', 'User berhasil diperbarui');
-
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal memperbarui user: ' . $e->getMessage());
         }
@@ -230,7 +233,6 @@ class AdminDesaController extends Controller
                     'email' => $user->email,
                     'password' => $newPassword,
                 ]);
-
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal reset password: ' . $e->getMessage());
         }
@@ -250,7 +252,6 @@ class AdminDesaController extends Controller
             $user->delete();
 
             return back()->with('success', 'User berhasil dihapus');
-
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menghapus user: ' . $e->getMessage());
         }

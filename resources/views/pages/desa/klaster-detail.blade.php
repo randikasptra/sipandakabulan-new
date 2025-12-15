@@ -264,7 +264,7 @@
                                                class="form-control"
                                                x-model="custom.nama"
                                                :name="'custom_kategori_nama_' + indikatorId + '_' + idx"
-                                               placeholder="Contoh: SK Tambahan XYZ"
+                                               placeholder="Contoh: SK Tambahan"
                                                required>
                                     </div>
                                     <div>
