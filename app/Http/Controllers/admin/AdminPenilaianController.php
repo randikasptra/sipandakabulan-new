@@ -18,6 +18,7 @@ class AdminPenilaianController extends Controller
         $status = $request->get('status');
         $search = $request->get('search');
 
+        // Query untuk tabel desa (dengan filter status jika ada)
         $desas = Desa::query()
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($qq) use ($search) {
@@ -52,22 +53,46 @@ class AdminPenilaianController extends Controller
             ->paginate(20)
             ->withQueryString();
 
+        // ✅ PENTING: Query terpisah untuk chart - TANPA filter status
+        // Ini memastikan chart selalu menampilkan total semua status
+        $allDesas = Desa::withCount([
+            'penilaians as total_pending' => fn($q) =>
+            $q->where('status', 'pending')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+
+            'penilaians as total_approved' => fn($q) =>
+            $q->where('status', 'approved')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+
+            'penilaians as total_rejected' => fn($q) =>
+            $q->where('status', 'rejected')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+        ])->get();
+
+        $totalApproved = $allDesas->sum('total_approved');
+        $totalPending  = $allDesas->sum('total_pending');
+        $totalRejected = $allDesas->sum('total_rejected');
+
         return view('pages.admin.penilaian', compact(
             'desas',
             'tahun',
             'bulan',
             'status',
-            'search'
+            'search',
+            'totalApproved',  // ✅ Kirim ke view
+            'totalPending',   // ✅ Kirim ke view
+            'totalRejected'   // ✅ Kirim ke view
         ));
     }
-
-
 
     // 📊 Level 2: List klaster per desa
     public function showDesa(Desa $desa, Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
-        $bulan = $request->get('bulan', now()->format('F')); // Konsisten dengan index()
+        $bulan = $request->get('bulan', now()->format('F'));
 
         $klasters = Klaster::withCount([
             'indikators as total_indikator',
@@ -121,7 +146,7 @@ class AdminPenilaianController extends Controller
     {
         $penilaian->update([
             'status' => 'rejected',
-            'rejection_reason' => $request->reason, // ⬅️ Simpan alasan
+            'rejection_reason' => $request->reason,
         ]);
 
         return response()->json([

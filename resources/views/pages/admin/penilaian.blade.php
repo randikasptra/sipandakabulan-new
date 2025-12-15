@@ -7,8 +7,7 @@
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
             <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3">
-                <div
-                    class="w-10 h-10 bg-gradient-to-r from-blue-900 to-blue-700 rounded-lg flex items-center justify-center">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-900 to-blue-700 rounded-lg flex items-center justify-center">
                     <i class="bi bi-clipboard-check text-white text-lg"></i>
                 </div>
                 Verifikasi Penilaian Desa
@@ -44,8 +43,7 @@
             <select name="bulan"
                 class="w-full p-3 bg-white/90 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-200">
                 @foreach (['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $b)
-                <option value="{{ $b }}"
-                    {{ request('bulan', now()->format('F')) === $b ? 'selected' : '' }}>
+                <option value="{{ $b }}" {{ request('bulan', now()->format('F')) === $b ? 'selected' : '' }}>
                     {{ $b }}
                 </option>
                 @endforeach
@@ -60,9 +58,9 @@
             <select name="status"
                 class="w-full p-3 bg-white/90 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-200">
                 <option value="">Semua Status</option>
-                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
-                <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Menunggu</option>
+                <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Disetujui</option>
+                <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Ditolak</option>
             </select>
         </div>
 
@@ -133,7 +131,6 @@
     </div>
 </div>
 
-
 {{-- ================================
         🔎 SEARCH BAR
     ================================= --}}
@@ -144,28 +141,19 @@
 
     <div class="relative flex-1">
         <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-        <input
-            type="text"
-            name="search"
-            value="{{ $search }}"
-            placeholder="Cari nama desa..."
-            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl
-                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama desa..."
+            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
     </div>
 
-    <button
-        type="submit"
-        class="px-5 py-3 bg-blue-600 text-white rounded-xl
-               hover:bg-blue-700 transition font-semibold flex items-center gap-2">
+    <button type="submit"
+        class="px-5 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-semibold flex items-center gap-2">
         <i class="bi bi-search"></i>
         Cari
     </button>
 </form>
 
-
-
 {{-- ================================
-        📋 TABEL DESA (DIUBAH)
+        📋 TABEL DESA
     ================================= --}}
 <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
     <div class="overflow-x-auto">
@@ -250,7 +238,6 @@
 @endsection
 
 @section('scripts')
-@section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -262,21 +249,10 @@
         if (canvas) {
             const ctx = canvas.getContext('2d');
 
-            const totalApproved = {
-                {
-                    $totalApproved ?? 0
-                }
-            };
-            const totalPending = {
-                {
-                    $totalPending ?? 0
-                }
-            };
-            const totalRejected = {
-                {
-                    $totalRejected ?? 0
-                }
-            };
+            // PERBAIKAN: Syntax yang benar untuk mengambil data dari Blade
+            const totalApproved = {{ $totalApproved ?? 0 }};
+            const totalPending = {{ $totalPending ?? 0 }};
+            const totalRejected = {{ $totalRejected ?? 0 }};
             const totalData = totalApproved + totalPending + totalRejected;
 
             new Chart(ctx, {
@@ -385,48 +361,19 @@
     }
 
     /* Progress Bar Styling */
-    .relative.h-6.bg-gray-200 {
+    .relative.h-5.bg-gray-200 {
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
     }
 
-    .relative.h-6.bg-gray-200 div[class*="absolute h-full"] {
-        transition: all 0.3s ease;
-        transform-origin: center;
-    }
-
-    /* Status indicator circles */
-    .w-3.h-3.rounded-full {
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
     /* Table row hover effect */
-    #tableDesa tbody tr:hover {
+    table tbody tr:hover {
         background-color: #f0f7ff;
     }
 
-    #tableDesa tbody tr:hover .relative.h-6.bg-gray-200 {
-        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-
     /* Smooth transitions for table */
-    #tableDesa tbody tr {
+    table tbody tr {
         transition: all 0.3s ease;
-    }
-
-    /* Animation for newly shown rows */
-    #tableDesa tbody tr.data-row {
-        opacity: 1;
-        transition: opacity 0.5s ease;
-    }
-
-    /* Load More Button Animation */
-    #loadMoreBtn:hover {
-        transform: translateY(-2px);
-    }
-
-    #loadMoreBtn:active {
-        transform: translateY(0);
     }
 
     /* Custom scrollbar for table */
@@ -446,21 +393,13 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
-        #tableDesa {
+        table {
             font-size: 0.875rem;
         }
 
-        #tableDesa th,
-        #tableDesa td {
+        table th,
+        table td {
             padding: 0.75rem 0.5rem;
-        }
-
-        #tableDesa tbody td .flex.flex-col.gap-3 {
-            gap: 0.5rem;
-        }
-
-        #tableDesa tbody td .relative.h-6 {
-            height: 1rem;
         }
     }
 </style>
