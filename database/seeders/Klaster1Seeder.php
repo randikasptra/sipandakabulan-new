@@ -37,11 +37,7 @@ class Klaster1Seeder extends Seeder
                     60 => '80% – 100%',
                 ],
                 'uploads' => [
-                    '0 – 60 hari',
-                    '61 hari - 1 tahun',
-                    '1 - < 5 tahun',
-                    '5 - < 12 tahun',
-                    '12 - < 18 tahun',
+                 
                 ],
             ],
             [
@@ -56,7 +52,6 @@ class Klaster1Seeder extends Seeder
                     60 => '80% – 100%',
                 ],
                 'uploads' => [
-                    'Dokumen Kartu Identitas Anak',
                 ],
             ],
         ];

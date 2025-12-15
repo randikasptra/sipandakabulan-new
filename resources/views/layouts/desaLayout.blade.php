@@ -91,7 +91,7 @@
         }
     </style>
 
-    {{-- Vite --}}
+    {{-- ✅ Vite (Alpine.js di-load disini) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -138,6 +138,9 @@
             });
         });
     </script>
+
+    {{-- ✅ CRITICAL: Stack scripts HARUS di bawah Vite --}}
+    @stack('scripts')
 
 </body>
 

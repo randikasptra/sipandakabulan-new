@@ -36,13 +36,6 @@ class Klaster5Seeder extends Seeder
                     40 => '> 50%',
                 ],
                 'uploads' => [
-                    'Jumlah Anak Yang mendapatkan Kekerasan seksual',
-                    'Jumlah Anak Yang Mendapatkan Kekerasan Fisik',
-                    'Jumlah Perkawinan anak (dibawah 18 thn)',
-                    'Jumlah Anak yang bekerja',
-                    'Jumlah Anak yang berhadapan dengan hukum',
-                    'Jumlah kasus anak yang diselesaikan',
-                    'Jumlah Anak Keluarga Miskin Yang mendapat layanan program',
                 ],
             ],
             [
@@ -55,7 +48,6 @@ class Klaster5Seeder extends Seeder
                     20 => 'Ada dan Disosialisasikan',
                 ],
                 'uploads' => [
-                    'Dokumen Mekanisme Penanggulangan Bencana',
                 ],
             ],
             [
@@ -68,7 +60,6 @@ class Klaster5Seeder extends Seeder
                     30 => 'Ada dan Disosialisasikan',
                 ],
                 'uploads' => [
-                    'Dokumen Program Pencegahan Kekerasan pada Anak',
                 ],
             ],
             [
@@ -82,7 +73,6 @@ class Klaster5Seeder extends Seeder
                     40 => '4 – 5 Program',
                 ],
                 'uploads' => [
-                    'Dokumen Program Pencegahan Pekerjaan Anak',
                 ],
             ],
         ];

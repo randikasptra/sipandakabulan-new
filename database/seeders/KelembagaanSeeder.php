@@ -18,7 +18,7 @@ class KelembagaanSeeder extends Seeder
             [
                 'title' => 'Kelembagaan',
                 'nilai_em' => 0,
-                'nilai_maksimal' => 220, // 60+50+40+50+20
+                'nilai_maksimal' => 220, // 60+50+80+50+20
                 'progres' => 0,
             ]
         );
@@ -61,65 +61,29 @@ class KelembagaanSeeder extends Seeder
                     35 => '11–20%',
                     50 => '≥30%'
                 ],
-                'uploads' => [
-                    'Penguatan Kelembagaan',
-                    'Hak Sipil dan Kebebasan',
-                    'Lingkungan Keluarga dan Pengasuhan Alternatif',
-                    'Kesehatan Dasar dan Kesejahteraan',
-                    'Pendidikan, Pemanfaatan Waktu Luang dan Kegiatan Budaya',
-                    'Perlindungan Khusus',
-                ],
+                'uploads' => [], // ❌ Tidak ada kategori default, user tambah sendiri
             ],
             [
                 'judul' => 'Ada Forum Anak Desa',
                 'slug' => 'forum_anak',
-                'nilai' => 40,
+                'nilai' => 80,
                 'template_excel' => null,
                 'opsi' => [
                     0 => 'Tidak ada',
-                    13 => 'Ada tapi tidak aktif',
-                    26 => 'Ada, aktif sesekali',
-                    40 => 'Ada dan aktif rutin'
+                    80 => 'Ada'
                 ],
-                'uploads' => [
-                    'Dokumen Forum Anak Desa',
-                ],
+                'uploads' => [], // ❌ Tidak ada kategori default, user tambah sendiri
             ],
             [
-                'judul' => 'Ada Data Terpilah mencakup 5 klaster',
+                'judul' => 'Apakah desa sudah memiliki profil desa yang memuat data terpilah',
                 'slug' => 'data_terpilah',
                 'nilai' => 50,
                 'template_excel' => 'data_terpilah.xlsx',
                 'opsi' => [
                     0 => 'Tidak ada',
-                    15 => '1 Klaster',
-                    30 => '2–3 Klaster',
-                    40 => '4 Klaster',
-                    50 => '5 Klaster'
+                    50 => 'Ada'
                 ],
-                'uploads' => [
-                    'Jumlah Anak berumur 0 - 18 tahun',
-                    'Jumlah Anak Yang Memiliki Akta Kelahiran',
-                    'Jumlah Anak Yang Memiliki KIA',
-                    'Jumlah Anak yang Tidak Memiliki Akta Kelahiran',
-                    'Jumlah Anak Yang Tidak Memiliki KIA',
-                    'Jumlah Anak Yang Bersekolah',
-                    'Jumlah Anak Putus Sekolah',
-                    'Jumlah Anak Yang Bekerja',
-                    'Jumlah Anak Yang Menikah dibawah 18 tahun',
-                    'Jumlah Anak Yang Stunting',
-                    'Jumlah Anak Yang kelebihan gizi (obesitas)',
-                    'Jumlah Anak penderita Gizi Buruk',
-                    'Jumlah Anak bersekolah SD/MI/SLB',
-                    'Jumlah Anak bersekolah SMP/MTs/SMPLB',
-                    'Jumlah Anak bersekolah SMA/MA/SMALB',
-                    'Jumlah Anak Korban Kekerasan',
-                    'Jumlah Kasus Anak Berhadapan Dengan Hukum',
-                    'Jumlah Anak Yang diadopsi',
-                    'Jumlah anak yang diasuh oleh keluarga lain',
-                    'Jumlah anak yang mengikuti Kejar Paket',
-                    'Jumlah anak Keluarga Miskin yang mendapatkan layanan program pengentasan kemiskinan',
-                ],
+                'uploads' => [], // ❌ Tidak ada kategori default, user tambah sendiri
             ],
             [
                 'judul' => 'Adakah dunia usaha di lingkungan desa yang memiliki keterlibatan dalam pemenuhan hak anak',
@@ -132,21 +96,20 @@ class KelembagaanSeeder extends Seeder
                     15 => '3 usaha',
                     20 => '≥4 usaha'
                 ],
-                'uploads' => [
-                    'Dokumen Dunia Usaha Peduli Anak',
-                ],
+                'uploads' => [], // ❌ Tidak ada kategori default, user tambah sendiri
             ],
         ];
 
         foreach ($indikators as $indikatorData) {
             $indikator = IndikatorKlaster::create([
                 'klaster_id' => $klaster->id,
-                'nama_indikator' => $indikatorData['judul'], // ✅ Ubah dari 'nama'
+                'nama_indikator' => $indikatorData['judul'],
                 'slug' => $indikatorData['slug'],
                 'total_nilai' => $indikatorData['nilai'],
                 'template_excel' => $indikatorData['template_excel'],
             ]);
 
+            // Simpan opsi nilai
             foreach ($indikatorData['opsi'] as $poin => $label) {
                 IndikatorOpsiNilai::create([
                     'indikator_id' => $indikator->id,
@@ -155,11 +118,16 @@ class KelembagaanSeeder extends Seeder
                 ]);
             }
 
-            foreach ($indikatorData['uploads'] as $uploadName) {
-                KategoriUpload::create([
-                    'indikator_id' => $indikator->id,
-                    'nama_kategori' => $uploadName,
-                ]);
+            // Simpan kategori upload (hanya jika ada)
+            if (!empty($indikatorData['uploads'])) {
+                foreach ($indikatorData['uploads'] as $uploadName) {
+                    KategoriUpload::create([
+                        'indikator_id' => $indikator->id,
+                        'nama_kategori' => $uploadName,
+                        'is_custom' => false, // ✅ Kategori default dari seeder
+                        'desa_id' => null,    // ✅ Null karena ini kategori global
+                    ]);
+                }
             }
         }
     }

@@ -37,11 +37,6 @@ class Klaster2Seeder extends Seeder
                     25 => '> 20%',
                 ],
                 'uploads' => [
-                    'KUA',
-                    'Organisasi Agama',
-                    'Catatan Sipil',
-                    'Lembaga Adat',
-                    'Pengadilan Agama',
                 ],
             ],
             [
@@ -55,7 +50,6 @@ class Klaster2Seeder extends Seeder
                     45 => '≥ 4 Program',
                 ],
                 'uploads' => [
-                    'Dokumen Program Pencegahan Pernikahan Anak',
                 ],
             ],
             [
@@ -69,13 +63,6 @@ class Klaster2Seeder extends Seeder
                     30 => '≥ 5 Lembaga',
                 ],
                 'uploads' => [
-                    'Jumlah BKB HI',
-                    'Jumlah BKR',
-                    'Jumlah Posyandu HI',
-                    'Jumlah Posyandu Remaja',
-                    'Jumlah Posbindu',
-                    'Jumlah Lembaga Kesejahteraan Sosial Anak / Panti',
-                    'Jumlah PAUD HI',
                 ],
             ],
         ];

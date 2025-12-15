@@ -36,38 +36,19 @@ class Klaster4Seeder extends Seeder
                     45 => 'Lebih dari 4 jenis',
                 ],
                 'uploads' => [
-                    'Jumlah Ruang Baca/pojok baca yang ada di lingkungan desa',
-                    'Jumlah Gerobak baca',
-                    'Jumlah perpustakaan desa/perpustakaan anak',
-                    'Fasilitas internet gratis',
                 ],
             ],
-            [
-                'judul' => 'Ada Kelompok Anak (Termasuk FAD) (Total Nilai 40)',
-                'slug' => 'kelompok_anak',
-                'nilai' => 40,
-                'template_excel' => 'KelompokAnak.xlsx',
-                'opsi' => [
-                    0 => 'Tidak ada',
-                    20 => 'Kurang lebih satu kelompok anak',
-                    40 => '≥ 3 kelompok anak',
-                ],
-                'uploads' => [
-                    'Dokumen Kelompok Anak',
-                ],
-            ],
+            
             [
                 'judul' => 'Partisipasi Anak Usia Dini (Total Nilai 30)',
                 'slug' => 'partisipasi_dini',
                 'nilai' => 30,
                 'template_excel' => null,
                 'opsi' => [
-                    0 => 'Di bawah rata-rata nasional',
-                    15 => 'Sama dengan rata-rata nasional',
-                    30 => 'Di atas rata-rata nasional',
+                    0 => 'Tidak ada',
+                    30 => 'Ada',
                 ],
                 'uploads' => [
-                    'Dokumen Partisipasi Anak Usia Dini',
                 ],
             ],
             [
@@ -82,7 +63,6 @@ class Klaster4Seeder extends Seeder
                     50 => '100%',
                 ],
                 'uploads' => [
-                    'Dokumen Belajar 12 Tahun',
                 ],
             ],
             [
@@ -99,7 +79,6 @@ class Klaster4Seeder extends Seeder
                     20 => '9–10 komponen',
                 ],
                 'uploads' => [
-                    'Dokumen Sekolah Ramah Anak',
                 ],
             ],
             [
@@ -114,7 +93,6 @@ class Klaster4Seeder extends Seeder
                     45 => '4–5 fasilitas kreativitas',
                 ],
                 'uploads' => [
-                    'Dokumen Fasilitas Kreativitas Anak',
                 ],
             ],
             [
@@ -130,7 +108,6 @@ class Klaster4Seeder extends Seeder
                     40 => '8 program',
                 ],
                 'uploads' => [
-                    'Dokumen Program Perjalanan Anak Sekolah',
                 ],
             ],
         ];

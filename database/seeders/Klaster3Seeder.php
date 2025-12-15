@@ -26,25 +26,27 @@ class Klaster3Seeder extends Seeder
         // Data indikator klaster 3
         $indikators = [
             [
-                'judul' => 'Kematian Bayi AKB (Total Nilai 30)',
+                'judul' => 'Kematian Bayi AKB (Total Nilai 15)',
                 'slug' => 'kematian_bayi',
-                'nilai' => 30,
+                'nilai' => 15,
                 'template_excel' => 'KematianBayi.xlsx',
                 'opsi' => [
-                    0 => 'Di atas rata-rata nasional',
-                    15 => 'Sama dengan rata-rata nasional',
-                    30 => 'Di bawah rata-rata nasional',
+                    5 => 'Di bawah 40',
+                    15 => 'Di atas 40',
                 ],
                 'uploads' => [
-                    'Penyebab Kematian Bayi',
-                    'Umum',
-                    'Infeksi',
-                    'ISPA',
-                    'Tetanus',
-                    'Asfixia',
-                    'Diare',
-                    'Demam Berdarah',
-                    'Covid',
+                ],
+            ],
+            [
+                'judul' => 'Kematian Ibu (Total Nilai 15)',
+                'slug' => 'kematian_ibu',
+                'nilai' => 15,
+                'template_excel' => 'KematianIbu.xlsx',
+                'opsi' => [
+                    5 => 'Di bawah 40',
+                    15 => 'Di atas 40',
+                ],
+                'uploads' => [
                 ],
             ],
             [
@@ -53,15 +55,11 @@ class Klaster3Seeder extends Seeder
                 'nilai' => 30,
                 'template_excel' => 'GiziBalita.xlsx',
                 'opsi' => [
-                    0 => 'Di atas rata-rata nasional',
-                    15 => 'Sama dengan rata-rata nasional',
-                    30 => 'Di bawah rata-rata nasional',
+                    10 => '≥ 7',
+                    20 => '4 - 7',
+                    30 => '≤ 3',
                 ],
                 'uploads' => [
-                    'Prevalensi kekurangan gizi pada balita',
-                    'Berapa jumlah anak gizi kurang pada balita?',
-                    'Berapa jumlah gizi buruk pada balita?',
-                    'Berapa jumlah anak pendek (stunting)?',
                 ],
             ],
             [
@@ -70,13 +68,10 @@ class Klaster3Seeder extends Seeder
                 'nilai' => 15,
                 'template_excel' => null,
                 'opsi' => [
-                    0 => '0% ≤ 10%',
-                    5 => '≥ 25%',
-                    10 => '≥ 50%',
-                    15 => '100%',
+                    0 => 'Tidak ada',
+                    15 => 'Ada',
                 ],
                 'uploads' => [
-                    'Dokumen ASI Eksklusif',
                 ],
             ],
             [
@@ -86,11 +81,9 @@ class Klaster3Seeder extends Seeder
                 'template_excel' => null,
                 'opsi' => [
                     0 => 'Tidak ada',
-                    10 => 'Sedikit',
                     15 => 'Ada',
                 ],
                 'uploads' => [
-                    'Dokumen Pojok ASI',
                 ],
             ],
             [
@@ -122,17 +115,16 @@ class Klaster3Seeder extends Seeder
                 ],
             ],
             [
-                'judul' => 'Anak Keluarga Miskin Dapat Layanan Pengentasan Kemiskinan (Total Nilai 20)',
-                'slug' => 'layanan_anak_miskin',
+                'judul' => 'Anak Keluarga Kurang Mampu Dapat Layanan Pengentasan Kemiskinan (Total Nilai 20)',
+                'slug' => 'layanan_anak_kurang_mampu',
                 'nilai' => 20,
                 'template_excel' => null,
                 'opsi' => [
-                    0 => '≤ 10% dari jumlah anak keluarga miskin',
-                    10 => '≤ 25% dari jumlah anak keluarga miskin',
-                    20 => '100% dari jumlah anak keluarga miskin',
+                    0 => '≤ 10% dari jumlah anak keluarga Kurang mampu',
+                    10 => '≤ 25% dari jumlah anak keluarga Kurang mampu',
+                    20 => '100% dari jumlah anak keluarga Kurang mampu',
                 ],
                 'uploads' => [
-                    'Dokumen Layanan Anak Keluarga Miskin',
                 ],
             ],
             [

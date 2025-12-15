@@ -105,6 +105,11 @@ Route::middleware(['auth', 'role:desa'])
         Route::delete('/penilaian/klaster/{klasterId}/cancel', [PenilaianController::class, 'cancelByKlaster'])->name('penilaian.cancelKlaster');
         Route::get('/template/download/{indikator}', [PenilaianController::class, 'downloadTemplate'])->name('template.download');
 
+        // ✨ NEW: Kategori Upload Dinamis
+        Route::post('/kategori-upload/store', [PenilaianController::class, 'storeKategoriCustom'])->name('kategori.store');
+        Route::delete('/kategori-upload/{kategoriId}', [PenilaianController::class, 'deleteKategoriCustom'])->name('kategori.delete');
+        Route::get('/kategori-upload/{indikatorId}', [PenilaianController::class, 'getKategorisByIndikator'])->name('kategori.list');
+
         // Pengumuman
         Route::get('/pengumuman', [DesaPengumumanController::class, 'index'])->name('pengumuman');
         Route::get('/pengumuman/{pengumuman}', [DesaPengumumanController::class, 'show'])->name('pengumuman.show');
