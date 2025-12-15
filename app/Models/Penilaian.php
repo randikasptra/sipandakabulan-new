@@ -25,6 +25,17 @@ class Penilaian extends Model
     ];
 
     // Relasi
+
+    public function catatan()
+    {
+        return $this->hasOne(
+            CatatanIndikator::class,
+            'indikator_id',
+            'indikator_id'
+        );
+    }
+
+
     public function klaster()
     {
         return $this->belongsTo(Klaster::class);
@@ -34,6 +45,7 @@ class Penilaian extends Model
     {
         return $this->belongsTo(IndikatorKlaster::class, 'indikator_id');
     }
+
 
     public function user()
     {
@@ -48,5 +60,4 @@ class Penilaian extends Model
     {
         return $this->belongsTo(Desa::class);
     }
-
 }

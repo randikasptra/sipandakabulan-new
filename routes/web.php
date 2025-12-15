@@ -8,6 +8,7 @@ use App\Http\Controllers\Desa\PenilaianController;
 use App\Http\Controllers\Desa\DesaPengumumanController;
 use App\Http\Controllers\Desa\TutorialController;
 use App\Http\Controllers\Desa\SettingsController;
+use App\Http\Controllers\Desa\CatatanIndikatorController;
 use App\Http\Controllers\Kecamatan\KecamatanDashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDesaController;
@@ -104,6 +105,31 @@ Route::middleware(['auth', 'role:desa'])
         Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
         Route::delete('/penilaian/klaster/{klasterId}/cancel', [PenilaianController::class, 'cancelByKlaster'])->name('penilaian.cancelKlaster');
         Route::get('/template/download/{indikator}', [PenilaianController::class, 'downloadTemplate'])->name('template.download');
+
+
+        // ✨ Catatan Indikator
+        Route::prefix('catatan')->name('catatan.')->group(function () {
+            Route::get(
+                '/indikator/{indikatorId}',
+                [CatatanIndikatorController::class, 'byIndikator']
+            )->name('getByIndikator');
+
+            Route::post(
+                '/store',
+                [CatatanIndikatorController::class, 'store']
+            )->name('store');
+
+            Route::put(
+                '/{id}',
+                [CatatanIndikatorController::class, 'update']
+            )->name('update');
+
+            Route::delete(
+                '/{id}',
+                [CatatanIndikatorController::class, 'destroy']
+            )->name('destroy');
+        });
+
 
         // ✨ NEW: Kategori Upload Dinamis
         Route::post('/kategori-upload/store', [PenilaianController::class, 'storeKategoriCustom'])->name('kategori.store');
