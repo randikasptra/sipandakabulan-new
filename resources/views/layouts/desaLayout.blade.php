@@ -101,7 +101,7 @@
     @include('components.header')
 
     {{-- ✅ Content --}}
-    <main class="mt-24 max-w-7xl mx-auto px-6 py-8" data-aos="fade-up" data-aos-duration="800">
+    <main class="mt-24 max-w-24xl mx-auto px-6 py-8" data-aos="fade-up" data-aos-duration="800">
         @yield('content')
     </main>
 
