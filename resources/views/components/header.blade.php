@@ -1,14 +1,13 @@
 <header class="fixed top-0 left-0 w-full bg-gradient-header text-white shadow-md z-50">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 flex justify-between items-center">
-        {{-- Logo dan Nama Desa --}}
+        {{-- Logo dan Nama Aplikasi --}}
         <div class="flex items-center gap-2 sm:gap-3">
-             <img src="{{ asset('assets/images/LogoKKLA.png') }}" alt="Logo KKLA"
-            class="w-12 h-12 object-contain drop-shadow-md">
-            <h1 class="font-bold text-sm sm:text-base lg:text-lg">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-white hidden sm:inline">
-                     SIPANDAKABULAN
-                </span>
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-white sm:hidden">
+            <img src="{{ asset('assets/images/LogoKKLA.png') }}" alt="Logo KKLA"
+                class="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-md">
+
+            <h1 class="font-bold">
+                {{-- Mobile: Lebih kecil dan singkat --}}
+                <span class="text-xs sm:text-sm md:text-base lg:text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-white">
                     SIPANDAKABULAN
                 </span>
             </h1>
@@ -40,7 +39,7 @@
                 <span>Settings</span>
             </a>
 
-            {{-- Tombol Logout Desktop --}}
+            {{-- Logout Desktop --}}
             <form method="POST" action="{{ route('logout') }}" class="hidden lg:block">
                 @csrf
                 <button type="submit"
@@ -51,48 +50,51 @@
             </form>
         </div>
 
-        {{-- Mobile Menu Button --}}
+        {{-- Mobile Buttons --}}
         <div class="flex items-center gap-2 lg:hidden">
-            {{-- Tombol Logout Mobile (icon only) --}}
+            {{-- Logout Mobile (icon only) --}}
             <form method="POST" action="{{ route('logout') }}" class="lg:hidden">
                 @csrf
                 <button type="submit"
-                    class="flex items-center justify-center w-9 h-9 bg-red-500 rounded-md hover:bg-red-600 smooth-transition"
+                    class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-red-500 rounded-md hover:bg-red-600 smooth-transition text-sm"
                     title="Logout">
-                    <i class="bi bi-box-arrow-right"></i>
+                    <i class="bi bi-box-arrow-right text-base"></i>
                 </button>
             </form>
 
-            <button id="mobile-menu-button" class="p-1.5 rounded-md hover:bg-white/10 smooth-transition">
-                <i class="bi bi-list text-xl"></i>
+            {{-- Menu Toggle --}}
+            <button id="mobile-menu-button"
+                class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-md hover:bg-white/10 smooth-transition">
+                <i class="bi bi-list text-lg sm:text-xl"></i>
             </button>
         </div>
     </div>
 
-    {{-- Mobile Menu --}}
-    <div id="mobile-menu" class="lg:hidden hidden bg-gradient-header border-t border-white/20 px-3 py-2">
-        <div class="flex flex-col space-y-2">
+    {{-- Mobile Menu Dropdown --}}
+    <div id="mobile-menu"
+        class="lg:hidden hidden bg-gradient-header border-t border-white/20 px-4 py-3 shadow-lg">
+        <div class="flex flex-col space-y-1">
             <a href="{{ route('desa.dashboard') }}"
-                class="flex items-center gap-3 p-2.5 rounded-md hover:bg-white/10 smooth-transition font-medium text-sm">
-                <i class="bi bi-speedometer2"></i>
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 smooth-transition font-medium text-sm">
+                <i class="bi bi-speedometer2 text-base"></i>
                 <span>Dashboard</span>
             </a>
 
             <a href="{{ route('desa.tutorial') }}"
-                class="flex items-center gap-3 p-2.5 rounded-md hover:bg-white/10 smooth-transition font-medium text-sm">
-                <i class="bi bi-journal-code"></i>
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 smooth-transition font-medium text-sm">
+                <i class="bi bi-journal-code text-base"></i>
                 <span>Tutorial</span>
             </a>
 
             <a href="{{ route('desa.pengumuman') }}"
-                class="flex items-center gap-3 p-2.5 rounded-md hover:bg-white/10 smooth-transition font-medium text-sm">
-                <i class="bi bi-megaphone-fill"></i>
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 smooth-transition font-medium text-sm">
+                <i class="bi bi-megaphone-fill text-base"></i>
                 <span>Pengumuman</span>
             </a>
 
             <a href="{{ route('desa.settings') }}"
-                class="flex items-center gap-3 p-2.5 rounded-md hover:bg-white/10 smooth-transition font-medium text-sm">
-                <i class="bi bi-gear-fill"></i>
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 smooth-transition font-medium text-sm">
+                <i class="bi bi-gear-fill text-base"></i>
                 <span>Settings</span>
             </a>
         </div>
@@ -105,10 +107,10 @@
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
 
-        mobileMenuButton.addEventListener('click', function() {
+        mobileMenuButton.addEventListener('click', function(e) {
+            e.stopPropagation(); // agar tidak tertutup saat klik tombol
             mobileMenu.classList.toggle('hidden');
 
-            // Ubah icon menu
             const icon = mobileMenuButton.querySelector('i');
             if (mobileMenu.classList.contains('hidden')) {
                 icon.classList.remove('bi-x-lg');
@@ -129,7 +131,7 @@
             }
         });
 
-        // Tutup menu saat link diklik (untuk SPA-like experience)
+        // Tutup menu saat klik link di dalam menu
         mobileMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');

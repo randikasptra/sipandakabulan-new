@@ -5,12 +5,11 @@
 <div class="mb-6">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="flex flex-wrap items-center space-x-2 text-sm">
+        <ol class="flex flex-wrap items-center space-x-2 text-sm text-gray-600">
             <li>
                 <a href="{{ route('admin.dashboard') }}"
                     class="text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                    <i class="bi bi-house"></i>
-                    Dashboard
+                    <i class="bi bi-house"></i> Dashboard
                 </a>
             </li>
             <li class="flex items-center gap-2">
@@ -28,7 +27,7 @@
             </li>
             <li class="flex items-center gap-2">
                 <i class="bi bi-chevron-right text-gray-400 text-xs"></i>
-                <span class="text-gray-600">{{ $klaster->title }}</span>
+                <span class="font-medium">{{ $klaster->title }}</span>
             </li>
         </ol>
     </nav>
@@ -37,83 +36,65 @@
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
             <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3">
-                <div
-                    class="w-10 h-10 bg-gradient-to-r from-blue-900 to-blue-700 rounded-lg flex items-center justify-center">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-900 to-blue-700 rounded-lg flex items-center justify-center shadow-md">
                     <i class="bi bi-list-check text-white text-lg"></i>
                 </div>
                 Klaster "{{ $klaster->title }}"
             </h2>
-            <p class="text-gray-600 mt-2 flex items-center gap-2">
+            <p class="text-gray-600 mt-2 flex items-center gap-2 text-sm">
                 <i class="bi bi-building text-blue-500"></i>
                 Desa {{ $desa->nama_desa }} •
                 <i class="bi bi-calendar-check text-blue-500"></i>
                 {{ request('bulan', now()->format('F')) }} {{ request('tahun', now()->year) }}
             </p>
         </div>
+
         <a href="{{ route('admin.penilaian.desa', $desa->id) }}?tahun={{ request('tahun') }}&bulan={{ request('bulan') }}"
-            class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-semibold">
+            class="flex items-center gap-2 px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-semibold text-sm">
             <i class="bi bi-arrow-left"></i>
-            Kembali ke Klaster
+            Kembali ke Daftar Klaster
         </a>
     </div>
 </div>
+
 <!-- Table -->
 <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
     <div class="overflow-x-auto">
-        <table id="tableIndikator" class="w-full table-fixed text-sm">
+        <table id="tableIndikator" class="w-full text-sm">
             <thead class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
                 <tr>
-                    <th class="w-14 py-4 px-4 text-left font-semibold">No</th>
-
-                    <th class="w-[28rem] py-4 px-6 text-left font-semibold">
-                        <i class="bi bi-card-checklist mr-2"></i>Indikator
-                    </th>
-
-                    <th class="w-24 py-4 px-4 text-center font-semibold">
-                        <i class="bi bi-star mr-2"></i>Nilai
-                    </th>
-
-                    <th class="w-56 py-4 px-6 text-left font-semibold">
-                        <i class="bi bi-ui-radios mr-2"></i>Opsi Dipilih
-                    </th>
-
-                    <th class="w-32 py-4 px-4 text-center font-semibold">
-                        <i class="bi bi-flag mr-2"></i>Status
-                    </th>
-
-                    <th class="w-28 py-4 px-4 text-center font-semibold">
-                        <i class="bi bi-journal-text mr-1"></i>Catatan
-                    </th>
-
-                    <th class="w-72 py-4 px-6 text-left font-semibold">
-                        <i class="bi bi-files mr-2"></i>Dokumen
-                    </th>
-
-                    <th class="w-32 py-4 px-4 text-center font-semibold">
-                        <i class="bi bi-gear mr-2"></i>Aksi
-                    </th>
+                    <th class="py-4 px-4 text-left font-semibold min-w-12">No</th>
+                    <th class="py-4 px-6 text-left font-semibold">Indikator</th>
+                    <th class="py-4 px-4 text-center font-semibold min-w-20">Nilai</th>
+                    <th class="py-4 px-6 text-left font-semibold min-w-40">Opsi Dipilih</th>
+                    <th class="py-4 px-4 text-center font-semibold min-w-28">Status</th>
+                    <th class="py-4 px-4 text-center font-semibold min-w-24">Catatan</th>
+                    <th class="py-4 px-6 text-left font-semibold min-w-56">Dokumen (Kategori)</th>
+                    <th class="py-4 px-4 text-center font-semibold min-w-28">Aksi</th>
                 </tr>
             </thead>
 
             <tbody class="divide-y divide-gray-200">
-                @foreach ($penilaians as $i => $p)
-                <tr id="row-{{ $p->id }}" class="hover:bg-blue-50 transition">
-                    <!-- NO -->
+                @forelse ($penilaians as $i => $p)
+                @php
+                    $berkasGrouped = $p->berkasUploads->groupBy('kategori_upload_id');
+                @endphp
+                <tr id="row-{{ $p->id }}" class="hover:bg-blue-50 transition-all duration-200">
+                    <!-- No -->
                     <td class="px-4 py-4 text-gray-600 font-medium">
-                        {{ $i + 1 }}
+                        {{ $loop->iteration }}
                     </td>
 
-                    <!-- INDIKATOR -->
+                    <!-- Indikator -->
                     <td class="px-6 py-4 align-top">
                         <p class="font-semibold text-gray-800 leading-relaxed break-words">
                             {{ $p->indikator->nama_indikator }}
                         </p>
 
                         @if ($p->status == 'rejected' && $p->rejection_reason)
-                        <div class="mt-3 p-3 bg-red-50 border-l-4 border-red-400 rounded-lg">
+                        <div class="mt-3 p-3 bg-red-50 border-l-4 border-red-500 rounded-lg">
                             <p class="text-xs font-semibold text-red-800 mb-1">
-                                <i class="bi bi-exclamation-triangle-fill mr-1"></i>
-                                Alasan Penolakan
+                                <i class="bi bi-exclamation-triangle-fill mr-1"></i> Alasan Penolakan
                             </p>
                             <p class="text-xs text-red-700 leading-relaxed">
                                 {{ $p->rejection_reason }}
@@ -122,117 +103,139 @@
                         @endif
                     </td>
 
-                    <!-- NILAI -->
+                    <!-- Nilai -->
                     <td class="px-4 py-4 text-center">
-                        <span
-                            class="inline-flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-800 rounded-full font-bold">
+                        <span class="inline-flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-800 rounded-full font-bold text-lg">
                             {{ $p->nilai ?? '-' }}
                         </span>
                     </td>
 
-                    <!-- OPSI -->
+                    <!-- Opsi Dipilih -->
                     <td class="px-6 py-4">
                         @php
                             $opsiDipilih = $p->indikator->opsiNilai->firstWhere('poin', $p->nilai);
                         @endphp
-
                         @if ($opsiDipilih)
-                        <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-xs">
-                            {{ $opsiDipilih->label }}
-                        </span>
+                            <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-medium">
+                                {{ $opsiDipilih->label }}
+                            </span>
                         @else
-                        <span class="text-gray-400 italic">-</span>
+                            <span class="text-gray-400 italic text-xs">-</span>
                         @endif
                     </td>
 
-                    <!-- STATUS -->
+                    <!-- Status -->
                     <td class="px-4 py-4 text-center">
-                        <span
-                            class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold
-                                @if ($p->status == 'approved') bg-green-100 text-green-800
-                                @elseif ($p->status == 'pending') bg-yellow-100 text-yellow-800
-                                @else bg-red-100 text-red-800 @endif">
-                            <i class="bi
-                                @if ($p->status == 'approved') bi-check-circle
-                                @elseif ($p->status == 'pending') bi-clock
-                                @else bi-x-circle @endif"></i>
+                        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold
+                            {{ $p->status == 'approved' ? 'bg-green-100 text-green-800' :
+                               ($p->status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                            <i class="bi {{ $p->status == 'approved' ? 'bi-check-circle' : ($p->status == 'pending' ? 'bi-clock' : 'bi-x-circle') }}"></i>
                             {{ ucfirst($p->status) }}
                         </span>
                     </td>
 
-                    <!-- CATATAN -->
+                    <!-- Catatan -->
                     <td class="px-4 py-4 text-center">
                         @if ($p->catatan)
-                        <button
-                            onclick="toggleCatatan({{ $p->id }})"
-                            class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs hover:bg-blue-200">
-                            <i class="bi bi-eye mr-1"></i>Lihat
-                        </button>
+                            <button onclick="toggleCatatan({{ $p->id }})"
+                                class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-200 transition">
+                                <i class="bi bi-eye mr-1"></i>Lihat
+                            </button>
                         @else
-                        <span class="text-gray-400 italic text-xs">-</span>
+                            <span class="text-gray-400 italic text-xs">-</span>
                         @endif
                     </td>
 
-                    <!-- DOKUMEN -->
-                    <td class="px-6 py-4">
-                        <div class="space-y-1">
-                            @forelse ($p->berkasUploads as $b)
-                            <a href="{{ env('SUPABASE_URL') }}/storage/v1/object/public/{{ env('SUPABASE_STORAGE_BUCKET') }}/{{ $b->path_file }}"
-                                target="_blank"
-                                class="flex items-center gap-2 text-blue-600 hover:text-blue-800 text-xs">
-                                <i class="bi bi-file-earmark-text"></i>
-                                <span class="truncate max-w-[14rem]">
-                                    {{ basename($b->path_file) }}
-                                </span>
-                            </a>
-                            @empty
-                            <span class="text-gray-400 text-xs italic">
-                                Tidak ada dokumen
-                            </span>
-                            @endforelse
-                        </div>
+                    <!-- Dokumen per Kategori (Collapsible) -->
+                    <td class="px-6 py-4 align-top">
+                        @if($berkasGrouped->isNotEmpty())
+                            <div class="space-y-3">
+                                @foreach($berkasGrouped as $kategoriId => $berkasList)
+                                    @php
+                                        $kategori = $berkasList->first()->kategoriUpload ?? null;
+                                        $kategoriName = $kategori ? $kategori->nama_kategori : 'Tanpa Kategori';
+                                    @endphp
+
+                                    <div class="border border-blue-200 rounded-xl overflow-hidden bg-blue-25">
+                                        <!-- Header Kategori -->
+                                        <button
+                                            onclick="toggleKategori({{ $p->id }}, {{ $kategoriId ?? 0 }})"
+                                            class="w-full px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white flex items-center justify-between hover:from-blue-600 hover:to-blue-700 transition">
+                                            <div class="flex items-center gap-2">
+                                                <i class="bi bi-folder2"></i>
+                                                <span class="font-medium text-sm">{{ $kategoriName }}</span>
+                                                <span class="bg-white/20 px-2.5 py-1 rounded-full text-xs font-bold">
+                                                    {{ $berkasList->count() }}
+                                                </span>
+                                            </div>
+                                            <i class="bi bi-chevron-down transition-transform duration-300" id="icon-{{ $p->id }}-{{ $kategoriId ?? 0 }}"></i>
+                                        </button>
+
+                                        <!-- Daftar File -->
+                                        <div id="files-{{ $p->id }}-{{ $kategoriId ?? 0 }}" class="bg-white px-4 py-3 space-y-2 hidden">
+                                            @foreach($berkasList as $b)
+                                                @php
+                                                    $filename = basename($b->path_file);
+                                                    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                                                    $icon = match($ext) {
+                                                        'pdf' => 'bi-file-earmark-pdf text-red-600',
+                                                        'jpg','jpeg','png','gif' => 'bi-file-earmark-image text-green-600',
+                                                        'doc','docx' => 'bi-file-earmark-word text-blue-600',
+                                                        'xls','xlsx' => 'bi-file-earmark-excel text-green-700',
+                                                        default => 'bi-file-earmark text-gray-600'
+                                                    };
+                                                @endphp
+                                                <a href="{{ env('SUPABASE_URL') }}/storage/v1/object/public/{{ env('SUPABASE_STORAGE_BUCKET') }}/{{ $b->path_file }}"
+                                                   target="_blank"
+                                                   class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg hover:bg-blue-50 hover:shadow transition group">
+                                                    <i class="bi {{ $icon }} text-lg"></i>
+                                                    <span class="text-xs text-gray-700 truncate group-hover:text-blue-600 group-hover:underline">
+                                                        {{ $filename }}
+                                                    </span>
+                                                    <i class="bi bi-box-arrow-up-right text-gray-400 text-xs group-hover:text-blue-600"></i>
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <span class="text-gray-400 italic text-xs">Tidak ada dokumen</span>
+                        @endif
                     </td>
 
-                    <!-- AKSI -->
+                    <!-- Aksi -->
                     <td class="px-4 py-4 text-center">
                         @if ($p->status == 'pending')
-                        <div class="flex justify-center gap-2">
-                            <button
-                                class="w-9 h-9 bg-green-500 text-white rounded-lg hover:bg-green-600 transition btn-approve"
-                                data-id="{{ $p->id }}">
-                                <i class="bi bi-check-lg"></i>
-                            </button>
-                            <button
-                                class="w-9 h-9 bg-red-500 text-white rounded-lg hover:bg-red-600 transition btn-reject"
-                                data-id="{{ $p->id }}">
-                                <i class="bi bi-x-lg"></i>
-                            </button>
-                        </div>
+                            <div class="flex justify-center gap-3">
+                                <button class="w-10 h-10 bg-green-500 text-white rounded-xl hover:bg-green-600 transition shadow-md btn-approve"
+                                        data-id="{{ $p->id }}" title="Setujui">
+                                    <i class="bi bi-check-lg text-lg"></i>
+                                </button>
+                                <button class="w-10 h-10 bg-red-500 text-white rounded-xl hover:bg-red-600 transition shadow-md btn-reject"
+                                        data-id="{{ $p->id }}" title="Tolak">
+                                    <i class="bi bi-x-lg text-lg"></i>
+                                </button>
+                            </div>
                         @else
-                        <span class="text-gray-400 text-xs italic">
-                            Tidak ada aksi
-                        </span>
+                            <span class="text-gray-400 text-xs italic">Tidak ada aksi</span>
                         @endif
                     </td>
                 </tr>
 
-                <!-- DETAIL CATATAN -->
+                <!-- Row Catatan (Hidden by default) -->
                 @if ($p->catatan)
                 <tr id="catatan-{{ $p->id }}" class="hidden bg-blue-50">
-                    <td colspan="8" class="px-8 py-5">
+                    <td colspan="8" class="px-8 py-6">
                         <div class="flex gap-4">
-                            <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center">
-                                <i class="bi bi-chat-left-text"></i>
+                            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-chat-left-text text-xl"></i>
                             </div>
                             <div>
-                                <p class="font-semibold text-blue-900 mb-1">
-                                    Catatan dari Desa
-                                </p>
-                                <p class="text-gray-700 text-sm leading-relaxed">
-                                    {{ $p->catatan->catatan }}
-                                </p>
-                                <p class="text-xs text-gray-500 mt-2">
-                                    Oleh {{ $p->catatan->user->name }} •
+                                <p class="font-semibold text-blue-900 mb-2">Catatan dari Desa</p>
+                                <p class="text-gray-700 leading-relaxed">{{ $p->catatan->catatan }}</p>
+                                <p class="text-xs text-gray-500 mt-3">
+                                    Oleh <span class="font-medium">{{ $p->catatan->user->name }}</span> •
                                     {{ $p->catatan->updated_at->format('d M Y H:i') }}
                                 </p>
                             </div>
@@ -240,326 +243,214 @@
                     </td>
                 </tr>
                 @endif
-
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="8" class="py-16 text-center text-gray-500">
+                        <div class="flex flex-col items-center gap-4">
+                            <i class="bi bi-inbox text-5xl text-gray-300"></i>
+                            <p class="font-medium">Tidak ada data penilaian untuk klaster ini</p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
 </div>
-
 @endsection
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
+    // Toggle catatan
     function toggleCatatan(id) {
-        const el = document.getElementById('catatan-' + id);
-        if (!el) return;
-
-        el.classList.toggle('hidden');
+        const row = document.getElementById('catatan-' + id);
+        row.classList.toggle('hidden');
     }
-</script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Approve functionality
+    // Toggle kategori dokumen
+    function toggleKategori(penilaianId, kategoriId) {
+        const filesDiv = document.getElementById(`files-${penilaianId}-${kategoriId}`);
+        const icon = document.getElementById(`icon-${penilaianId}-${kategoriId}`);
+
+        filesDiv.classList.toggle('hidden');
+        if (filesDiv.classList.contains('hidden')) {
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            icon.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    // Approve & Reject functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        // Approve
         document.querySelectorAll('.btn-approve').forEach(btn => {
-            btn.addEventListener('click', async function() {
+            btn.addEventListener('click', async function () {
                 const id = this.dataset.id;
-                const row = document.querySelector(`#row-${id}`);
+                const row = document.getElementById(`row-${id}`);
 
-                Swal.fire({
+                const result = await Swal.fire({
                     title: 'Setujui Penilaian?',
-                    text: "Anda akan menyetujui penilaian ini",
+                    text: 'Penilaian ini akan disetujui dan tidak dapat diubah lagi.',
                     icon: 'question',
                     showCancelButton: true,
+                    confirmButtonText: 'Ya, Setujui',
+                    cancelButtonText: 'Batal',
                     confirmButtonColor: '#22c55e',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Ya, Setujui!',
-                    cancelButtonText: 'Batal',
-                    background: '#fff',
-                    customClass: {
-                        popup: 'rounded-2xl'
-                    }
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        // Show loading state
-                        this.innerHTML =
-                            '<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>';
-                        this.disabled = true;
-
-                        try {
-                            const res = await fetch(
-                                `/admin/penilaian/${id}/approve`, {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                        'Accept': 'application/json'
-                                    }
-                                });
-                            const data = await res.json();
-
-                            if (data.success) {
-                                Swal.fire({
-                                    title: '✅ Disetujui!',
-                                    text: data.message,
-                                    icon: 'success',
-                                    confirmButtonColor: '#22c55e',
-                                    background: '#fff',
-                                    customClass: {
-                                        popup: 'rounded-2xl'
-                                    }
-                                });
-                                // Remove row with fade out effect
-                                row.style.opacity = '0';
-                                row.style.transform = 'translateX(-100px)';
-                                setTimeout(() => row.remove(), 300);
-                            }
-                        } catch (error) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Terjadi kesalahan saat memproses',
-                                icon: 'error',
-                                confirmButtonColor: '#ef4444',
-                                background: '#fff',
-                                customClass: {
-                                    popup: 'rounded-2xl'
-                                }
-                            });
-                            // Reset button
-                            this.innerHTML = '<i class="bi bi-check-lg"></i>';
-                            this.disabled = false;
-                        }
-                    }
+                    customClass: { popup: 'rounded-2xl' }
                 });
+
+                if (result.isConfirmed) {
+                    this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>';
+                    this.disabled = true;
+
+                    try {
+                        const res = await fetch(`/admin/penilaian/${id}/approve`, {
+                            method: 'PATCH',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        });
+                        const data = await res.json();
+
+                        if (data.success) {
+                            Swal.fire('Disetujui!', data.message, 'success');
+                            row.style.opacity = '0';
+                            row.style.transform = 'translateX(-50px)';
+                            setTimeout(() => row.remove(), 400);
+                        }
+                    } catch (err) {
+                        Swal.fire('Error', 'Terjadi kesalahan sistem', 'error');
+                        this.innerHTML = '<i class="bi bi-check-lg text-lg"></i>';
+                        this.disabled = false;
+                    }
+                }
             });
         });
 
-        // Reject functionality
+        // Reject
         document.querySelectorAll('.btn-reject').forEach(btn => {
-            btn.addEventListener('click', async function() {
+            btn.addEventListener('click', async function () {
                 const id = this.dataset.id;
-                const row = document.querySelector(`#row-${id}`);
+                const row = document.getElementById(`row-${id}`);
 
-                Swal.fire({
+                const result = await Swal.fire({
                     title: 'Tolak Penilaian',
                     html: `
-                            <div class="text-left">
-                                <label class="block mb-2 font-semibold text-gray-700">Pilih Alasan Penolakan:</label>
-                                <select id="reject_reason_select" class="swal2-input w-full">
-                                    <option value="">-- Pilih alasan --</option>
-                                    <option value="Data tidak lengkap">Data tidak lengkap</option>
-                                    <option value="Format dokumen salah">Format dokumen salah</option>
-                                    <option value="Bukti tidak valid">Bukti tidak valid</option>
-                                    <option value="Nilai tidak sesuai">Nilai tidak sesuai</option>
-                                    <option value="other">Lainnya...</option>
-                                </select>
-
-                                <textarea id="reject_reason_manual" class="swal2-textarea w-full mt-2" placeholder="Tulis alasan lainnya..." style="display:none" rows="4"></textarea>
-                            </div>
-                        `,
+                        <div class="text-left space-y-3">
+                            <label class="block font-medium text-gray-700">Alasan Penolakan</label>
+                            <select id="reason-select" class="swal2-select w-full">
+                                <option value="">-- Pilih alasan --</option>
+                                <option value="Data tidak lengkap">Data tidak lengkap</option>
+                                <option value="Format dokumen salah">Format dokumen salah</option>
+                                <option value="Bukti tidak valid">Bukti tidak valid</option>
+                                <option value="Nilai tidak sesuai">Nilai tidak sesuai</option>
+                                <option value="other">Lainnya...</option>
+                            </select>
+                            <textarea id="reason-manual" class="swal2-textarea w-full" placeholder="Tulis alasan lain..." rows="4" style="display:none;"></textarea>
+                        </div>
+                    `,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Tolak',
                     cancelButtonText: 'Batal',
                     confirmButtonColor: '#ef4444',
-                    cancelButtonColor: '#6b7280',
-                    customClass: {
-                        popup: 'rounded-2xl'
-                    },
                     preConfirm: () => {
-                        const dropdown = document.getElementById(
-                            'reject_reason_select').value;
-                        const manual = document.getElementById(
-                            'reject_reason_manual').value;
-
-                        // Validasi: harus ada salah satu yang diisi
-                        if (dropdown === "" && manual.trim() === "") {
-                            Swal.showValidationMessage(
-                                'Harap pilih atau isi alasan penolakan');
+                        const select = document.getElementById('reason-select').value;
+                        const manual = document.getElementById('reason-manual').value.trim();
+                        if (!select && !manual) {
+                            Swal.showValidationMessage('Harus memilih atau mengisi alasan');
                             return false;
                         }
-
-                        // Jika pilih "Lainnya" tapi tidak isi manual
-                        if (dropdown === 'other' && manual.trim() === "") {
-                            Swal.showValidationMessage(
-                                'Harap isi alasan penolakan');
+                        if (select === 'other' && !manual) {
+                            Swal.showValidationMessage('Harus mengisi alasan lainnya');
                             return false;
                         }
-
-                        // Return alasan yang dipilih
-                        if (dropdown === 'other') {
-                            return manual.trim();
-                        }
-
-                        return dropdown || manual.trim();
+                        return select === 'other' ? manual : select;
                     },
                     didOpen: () => {
-                        const select = document.getElementById(
-                            'reject_reason_select');
-                        const manual = document.getElementById(
-                            'reject_reason_manual');
-
-                        select.addEventListener('change', () => {
-                            manual.style.display = select.value ===
-                                'other' ? 'block' : 'none';
-                            if (select.value !== 'other') {
-                                manual.value = '';
-                            }
+                        document.getElementById('reason-select').addEventListener('change', function () {
+                            const manual = document.getElementById('reason-manual');
+                            manual.style.display = this.value === 'other' ? 'block' : 'none';
                         });
-                    }
-                }).then(async (result) => {
-                    if (result.isConfirmed && result.value) {
-                        // Show loading
-                        Swal.fire({
-                            title: 'Memproses...',
-                            html: 'Mohon tunggu sebentar',
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-
-                        try {
-                            const res = await fetch(
-                                `/admin/penilaian/${id}/reject`, {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                        'Content-Type': 'application/json',
-                                        'Accept': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        reason: result.value
-                                    })
-                                });
-
-                            const data = await res.json();
-
-                            if (data.success) {
-                                Swal.fire({
-                                    title: '❌ Ditolak!',
-                                    text: 'Penilaian telah ditolak beserta alasannya.',
-                                    icon: 'success',
-                                    confirmButtonColor: '#22c55e',
-                                    customClass: {
-                                        popup: 'rounded-2xl'
-                                    }
-                                });
-
-                                // Remove row with fade out effect
-                                row.style.opacity = '0';
-                                row.style.transform = 'translateX(-100px)';
-                                setTimeout(() => row.remove(), 300);
-                            } else {
-                                throw new Error(data.message ||
-                                    'Gagal menolak penilaian');
-                            }
-
-                        } catch (error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: error.message ||
-                                    'Terjadi kesalahan saat memproses',
-                                confirmButtonColor: '#ef4444',
-                                customClass: {
-                                    popup: 'rounded-2xl'
-                                }
-                            });
-                        }
                     }
                 });
+
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Memproses...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+                    try {
+                        const res = await fetch(`/admin/penilaian/${id}/reject`, {
+                            method: 'PATCH',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ reason: result.value })
+                        });
+                        const data = await res.json();
+
+                        if (data.success) {
+                            Swal.fire('Ditolak!', 'Penilaian telah ditolak dengan alasan.', 'success');
+                            row.style.opacity = '0';
+                            row.style.transform = 'translateX(-50px)';
+                            setTimeout(() => row.remove(), 400);
+                        }
+                    } catch (err) {
+                        Swal.fire('Error', 'Gagal memproses penolakan', 'error');
+                    }
+                }
             });
         });
-
-        // Responsive table adjustments
-        function handleTableResponsive() {
-            const table = document.getElementById('tableIndikator');
-            if (window.innerWidth < 768) {
-                table.classList.add('text-sm');
-            } else {
-                table.classList.remove('text-sm');
-            }
-        }
-
-        window.addEventListener('resize', handleTableResponsive);
-        handleTableResponsive();
     });
 </script>
 
 <style>
-    /* Custom table styling */
-    #tableIndikator {
-        border-collapse: separate;
-        border-spacing: 0;
+    /* Table responsive & clean */
+    #tableIndikator th, #tableIndikator td {
+        vertical-align: top;
     }
 
-    #tableIndikator th {
-        border: none;
-        font-weight: 600;
-        font-size: 0.875rem;
+    @media (max-width: 1024px) {
+        #tableIndikator {
+            font-size: 0.8125rem;
+        }
+        #tableIndikator th, #tableIndikator td {
+            padding: 0.75rem 0.5rem;
+        }
     }
 
-    #tableIndikator td {
-        border: none;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    #tableIndikator tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* Responsive adjustments */
     @media (max-width: 768px) {
         #tableIndikator {
             font-size: 0.75rem;
         }
-
-        #tableIndikator th,
-        #tableIndikator td {
-            padding: 0.5rem 0.25rem;
+        #tableIndikator th, #tableIndikator td {
+            padding: 0.5rem 0.375rem;
+        }
+        .truncate {
+            max-width: 10rem;
         }
     }
 
     /* Custom scrollbar */
     .overflow-x-auto::-webkit-scrollbar {
-        height: 6px;
+        height: 8px;
     }
-
     .overflow-x-auto::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
+        background: #f3f4f6;
+        border-radius: 999px;
     }
-
     .overflow-x-auto::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-        border-radius: 10px;
+        background: #3b82f6;
+        border-radius: 999px;
     }
 
-    /* Smooth transitions */
-    .transition-all {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Animation for row removal */
+    /* Smooth row removal */
     #tableIndikator tbody tr {
-        transition: all 0.3s ease;
-    }
-
-    /* Rejection reason box styling */
-    .swal2-input,
-    .swal2-textarea {
-        border: 2px solid #e5e7eb;
-        border-radius: 0.5rem;
-        padding: 0.75rem;
-    }
-
-    .swal2-input:focus,
-    .swal2-textarea:focus {
-        border-color: #3b82f6;
-        outline: none;
+        transition: all 0.4s ease;
     }
 </style>
 @endsection

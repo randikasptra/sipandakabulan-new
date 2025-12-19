@@ -20,16 +20,123 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     {{-- Favicon --}}
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-sipandakabulan.png') }}">
-
-    {{-- Chart.js (dipindahkan ke head agar bisa diakses dari semua halaman) --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
     <link rel="icon" type="image/png" href="{{ asset('assets/images/LogoKKLA.png') }}">
-
 
     {{-- Custom CSS --}}
     <style>
+        /* ================================
+           🎨 GLOBAL CUSTOM COLOR VARIABLES
+           Untuk mencegah konflik dengan auto-hide flash messages
+        ================================= */
+        :root {
+            /* Status Success Colors - sama dengan green */
+            --status-success-50: #f0fdf4;
+            --status-success-100: #dcfce7;
+            --status-success-200: #bbf7d0;
+            --status-success-500: #22c55e;
+            --status-success-600: #16a34a;
+            --status-success-700: #15803d;
+            --status-success-800: #166534;
+
+            /* Status Pending Colors - sama dengan yellow */
+            --status-pending-50: #fefce8;
+            --status-pending-100: #fef9c3;
+            --status-pending-200: #fef08a;
+            --status-pending-500: #eab308;
+            --status-pending-600: #ca8a04;
+            --status-pending-700: #a16207;
+            --status-pending-800: #854d0e;
+
+            /* Status Rejected Colors - sama dengan red */
+            --status-rejected-50: #fef2f2;
+            --status-rejected-100: #fee2e2;
+            --status-rejected-200: #fecaca;
+            --status-rejected-500: #ef4444;
+            --status-rejected-600: #dc2626;
+            --status-rejected-700: #b91c1c;
+            --status-rejected-800: #991b1b;
+        }
+
+        /* Global Status Classes */
+        .status-success-bg {
+            background-color: var(--status-success-50);
+            border-color: var(--status-success-200);
+        }
+
+        .status-success-icon-bg {
+            background-color: var(--status-success-100);
+        }
+
+        .status-success-icon {
+            color: var(--status-success-600);
+        }
+
+        .status-success-text {
+            color: var(--status-success-600);
+        }
+
+        .status-success-badge {
+            background-color: var(--status-success-600);
+        }
+
+        .status-pending-bg {
+            background-color: var(--status-pending-50);
+            border-color: var(--status-pending-200);
+        }
+
+        .status-pending-icon-bg {
+            background-color: var(--status-pending-100);
+        }
+
+        .status-pending-icon {
+            color: var(--status-pending-600);
+        }
+
+        .status-pending-text {
+            color: var(--status-pending-600);
+        }
+
+        .status-pending-badge {
+            background-color: var(--status-pending-600);
+        }
+
+        .status-rejected-bg {
+            background-color: var(--status-rejected-50);
+            border-color: var(--status-rejected-200);
+        }
+
+        .status-rejected-icon-bg {
+            background-color: var(--status-rejected-100);
+        }
+
+        .status-rejected-icon {
+            color: var(--status-rejected-600);
+        }
+
+        .status-rejected-text {
+            color: var(--status-rejected-600);
+        }
+
+        .status-rejected-badge {
+            background-color: var(--status-rejected-600);
+        }
+
+        /* Progress Bar Colors */
+        .progress-success {
+            background-color: var(--status-success-500);
+        }
+
+        .progress-pending {
+            background-color: var(--status-pending-500);
+        }
+
+        .progress-rejected {
+            background-color: var(--status-rejected-500);
+        }
+
+        /* ================================
+           BASIC STYLES
+        ================================= */
         * {
             margin: 0;
             padding: 0;
@@ -118,6 +225,11 @@
                 padding: 1rem;
             }
         }
+
+        /* Flash Message specific styles - TIDAK AKAN DIHAPUS OTOMATIS */
+        .flash-message {
+            /* Flash messages akan memiliki class ini */
+        }
     </style>
 
     @stack('styles')
@@ -150,9 +262,9 @@
         </nav>
         @endif
 
-        {{-- Flash Messages --}}
+        {{-- Flash Messages - DENGAN CLASS KHUSUS --}}
         @if(session('success'))
-        <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3 fade-in">
+        <div class="flash-message mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3 fade-in">
             <i data-lucide="check-circle" class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"></i>
             <div class="flex-1">
                 <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
@@ -164,7 +276,7 @@
         @endif
 
         @if(session('error'))
-        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 fade-in">
+        <div class="flash-message mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 fade-in">
             <i data-lucide="alert-circle" class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"></i>
             <div class="flex-1">
                 <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
@@ -187,8 +299,11 @@
                 lucide.createIcons();
             }
 
-            // Auto-hide flash messages after 5 seconds
-            const flashMessages = document.querySelectorAll('[class*="bg-green-50"], [class*="bg-red-50"]');
+            // ================================
+            // 🔧 PERBAIKAN: Auto-hide HANYA flash messages
+            // Gunakan class .flash-message agar tidak menghapus elemen lain
+            // ================================
+            const flashMessages = document.querySelectorAll('.flash-message');
             flashMessages.forEach(message => {
                 setTimeout(() => {
                     message.style.transition = 'opacity 0.5s ease';
@@ -238,7 +353,10 @@
         });
     </script>
 
-    {{-- CRITICAL: Scripts section untuk Chart.js dan scripts lainnya --}}
+    {{-- Chart.js - Dipindahkan sebelum @yield('scripts') --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    {{-- CRITICAL: Scripts section untuk scripts tambahan dari halaman --}}
     @yield('scripts')
     @stack('scripts')
 </body>

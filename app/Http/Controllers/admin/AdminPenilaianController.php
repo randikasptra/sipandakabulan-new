@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class AdminPenilaianController extends Controller
 {
-    // 🏘️ Level 1: List semua desa
+    // 🏘️ Level 1: List semua desa dengan penilaian mereka
     public function index(Request $request)
     {
         $tahun  = $request->get('tahun', now()->year);
@@ -53,8 +53,7 @@ class AdminPenilaianController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        // ✅ PENTING: Query terpisah untuk chart - TANPA filter status
-        // Ini memastikan chart selalu menampilkan total semua status
+        // ✅ Query terpisah untuk chart - TANPA filter status
         $allDesas = Desa::withCount([
             'penilaians as total_pending' => fn($q) =>
             $q->where('status', 'pending')
@@ -82,9 +81,9 @@ class AdminPenilaianController extends Controller
             'bulan',
             'status',
             'search',
-            'totalApproved',  // ✅ Kirim ke view
-            'totalPending',   // ✅ Kirim ke view
-            'totalRejected'   // ✅ Kirim ke view
+            'totalApproved',
+            'totalPending',
+            'totalRejected'
         ));
     }
 
@@ -119,7 +118,14 @@ class AdminPenilaianController extends Controller
     // 📋 Level 3: List indikator dalam klaster tertentu
     public function showKlaster(Desa $desa, Klaster $klaster)
     {
-        $penilaians = Penilaian::with(['indikator', 'berkasUploads'])
+        // ✅ Load penilaian dengan eager loading kategori upload
+        $penilaians = Penilaian::with([
+            'indikator.opsiNilai',
+            'berkasUploads' => function($query) {
+                $query->with('kategoriUpload')->orderBy('kategori_upload_id');
+            },
+            'catatan.user'
+        ])
             ->where('desa_id', $desa->id)
             ->where('klaster_id', $klaster->id)
             ->get();
@@ -127,31 +133,43 @@ class AdminPenilaianController extends Controller
         return view('pages.admin.penilaian-detail', compact('desa', 'klaster', 'penilaians'));
     }
 
-    // ✅ Approve
+    // ✅ Approve penilaian
     public function approve(Penilaian $penilaian)
     {
         $penilaian->update([
             'status' => 'approved',
-            'rejection_reason' => null
+            'rejection_reason' => null,
+            'verified_at' => now(),
+            'verified_by' => auth()->id()
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => '✅ Penilaian disetujui.'
+            'message' => '✅ Penilaian berhasil disetujui.'
         ]);
     }
 
-    // ❌ Reject
+    // ❌ Reject penilaian dengan alasan
     public function reject(Request $request, Penilaian $penilaian)
     {
+        $request->validate([
+            'reason' => 'required|string|min:5|max:500'
+        ], [
+            'reason.required' => 'Alasan penolakan wajib diisi',
+            'reason.min' => 'Alasan penolakan minimal 5 karakter',
+            'reason.max' => 'Alasan penolakan maksimal 500 karakter'
+        ]);
+
         $penilaian->update([
             'status' => 'rejected',
             'rejection_reason' => $request->reason,
+            'verified_at' => now(),
+            'verified_by' => auth()->id()
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => '❌ Penilaian ditolak beserta alasannya.'
+            'message' => '❌ Penilaian berhasil ditolak beserta alasannya.'
         ]);
     }
 }

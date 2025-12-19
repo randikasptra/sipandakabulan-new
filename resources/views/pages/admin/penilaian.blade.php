@@ -96,36 +96,36 @@
             <canvas id="chartStatus" style="max-width: 250px; max-height: 250px;"></canvas>
         </div>
 
-        <!-- Status List - GUNAKAN CLASS CUSTOM DENGAN WARNA YANG SAMA -->
-        <div class="space-y-3" id="statusList" data-permanent="true">
-            <div class="flex items-center justify-between p-4 status-success-bg border rounded-xl hover:shadow-md transition-all duration-200">
+        <!-- Status List -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl hover:shadow-md transition-all duration-200">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 status-success-icon-bg rounded-lg flex items-center justify-center">
-                        <i class="bi bi-check-circle status-success-icon text-xl"></i>
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-check-circle text-green-600 text-xl"></i>
                     </div>
-                    <span class="font-semibold status-success-text text-lg">Disetujui</span>
+                    <span class="font-semibold text-green-800 text-lg">Disetujui</span>
                 </div>
-                <span class="status-success-badge text-white px-4 py-2 rounded-full text-lg font-bold min-w-[3rem] text-center">{{ $totalApproved ?? 0 }}</span>
+                <span class="bg-green-600 text-white px-4 py-2 rounded-full text-lg font-bold min-w-[3rem] text-center">{{ $totalApproved ?? 0 }}</span>
             </div>
 
-            <div class="flex items-center justify-between p-4 status-pending-bg border rounded-xl hover:shadow-md transition-all duration-200">
+            <div class="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-xl hover:shadow-md transition-all duration-200">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 status-pending-icon-bg rounded-lg flex items-center justify-center">
-                        <i class="bi bi-clock status-pending-icon text-xl"></i>
+                    <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-clock text-yellow-600 text-xl"></i>
                     </div>
-                    <span class="font-semibold status-pending-text text-lg">Menunggu</span>
+                    <span class="font-semibold text-yellow-800 text-lg">Menunggu</span>
                 </div>
-                <span class="status-pending-badge text-white px-4 py-2 rounded-full text-lg font-bold min-w-[3rem] text-center">{{ $totalPending ?? 0 }}</span>
+                <span class="bg-yellow-600 text-white px-4 py-2 rounded-full text-lg font-bold min-w-[3rem] text-center">{{ $totalPending ?? 0 }}</span>
             </div>
 
-            <div class="flex items-center justify-between p-4 status-rejected-bg border rounded-xl hover:shadow-md transition-all duration-200">
+            <div class="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-xl hover:shadow-md transition-all duration-200">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 status-rejected-icon-bg rounded-lg flex items-center justify-center">
-                        <i class="bi bi-x-circle status-rejected-icon text-xl"></i>
+                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-x-circle text-red-600 text-xl"></i>
                     </div>
-                    <span class="font-semibold status-rejected-text text-lg">Ditolak</span>
+                    <span class="font-semibold text-red-800 text-lg">Ditolak</span>
                 </div>
-                <span class="status-rejected-badge text-white px-4 py-2 rounded-full text-lg font-bold min-w-[3rem] text-center">{{ $totalRejected ?? 0 }}</span>
+                <span class="bg-red-600 text-white px-4 py-2 rounded-full text-lg font-bold min-w-[3rem] text-center">{{ $totalRejected ?? 0 }}</span>
             </div>
         </div>
     </div>
@@ -194,11 +194,11 @@
                     </td>
 
                     <td class="py-4 px-6">
-                        <div class="relative h-5 bg-gray-200 rounded-full overflow-hidden" data-permanent="true">
-                            <div class="absolute h-full progress-success transition-all duration-500 ease-out" style="width: {{ $approvedPercentage }}%"></div>
-                            <div class="absolute h-full progress-pending transition-all duration-500 ease-out"
+                        <div class="relative h-5 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="absolute h-full bg-green-500" style="width: {{ $approvedPercentage }}%"></div>
+                            <div class="absolute h-full bg-yellow-500"
                                 style="left: {{ $approvedPercentage }}%; width: {{ $pendingPercentage }}%"></div>
-                            <div class="absolute h-full progress-rejected transition-all duration-500 ease-out"
+                            <div class="absolute h-full bg-red-500"
                                 style="left: {{ $approvedPercentage + $pendingPercentage }}%; width: {{ $rejectedPercentage }}%"></div>
                         </div>
                     </td>
@@ -249,7 +249,7 @@
         if (canvas) {
             const ctx = canvas.getContext('2d');
 
-            // Data dari backend
+            // PERBAIKAN: Syntax yang benar untuk mengambil data dari Blade
             const totalApproved = {{ $totalApproved ?? 0 }};
             const totalPending = {{ $totalPending ?? 0 }};
             const totalRejected = {{ $totalRejected ?? 0 }};
@@ -264,8 +264,8 @@
                         backgroundColor: ['#22c55e', '#eab308', '#ef4444'],
                         borderWidth: 4,
                         borderColor: '#ffffff',
-                        hoverOffset: 8,
-                        hoverBorderWidth: 4
+                        hoverOffset: 15,
+                        hoverBorderWidth: 5
                     }]
                 },
                 options: {
@@ -301,8 +301,8 @@
                     animation: {
                         animateScale: true,
                         animateRotate: true,
-                        duration: 800,
-                        easing: 'easeOutQuart'
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
                     }
                 },
                 plugins: [{
@@ -339,114 +339,6 @@
 </script>
 
 <style>
-    /* ================================
-       🎨 CUSTOM COLOR VARIABLES
-       Menggunakan warna yang sama dengan Tailwind original
-       tapi dengan nama class custom untuk menghindari auto-hide
-    ================================= */
-    :root {
-        /* Status Success Colors - sama dengan green */
-        --status-success-50: #f0fdf4;
-        --status-success-100: #dcfce7;
-        --status-success-200: #bbf7d0;
-        --status-success-500: #22c55e;
-        --status-success-600: #16a34a;
-        --status-success-800: #166534;
-
-        /* Status Pending Colors - sama dengan yellow */
-        --status-pending-50: #fefce8;
-        --status-pending-100: #fef9c3;
-        --status-pending-200: #fef08a;
-        --status-pending-500: #eab308;
-        --status-pending-600: #ca8a04;
-        --status-pending-800: #854d0e;
-
-        /* Status Rejected Colors - sama dengan red */
-        --status-rejected-50: #fef2f2;
-        --status-rejected-100: #fee2e2;
-        --status-rejected-200: #fecaca;
-        --status-rejected-500: #ef4444;
-        --status-rejected-600: #dc2626;
-        --status-rejected-800: #991b1b;
-    }
-
-    /* Status Card Backgrounds */
-    .status-success-bg {
-        background-color: var(--status-success-50);
-        border-color: var(--status-success-200);
-    }
-
-    .status-success-icon-bg {
-        background-color: var(--status-success-100);
-    }
-
-    .status-success-icon {
-        color: var(--status-success-600);
-    }
-
-    .status-success-text {
-        color: var(--status-success-800);
-    }
-
-    .status-success-badge {
-        background-color: var(--status-success-600);
-    }
-
-    .status-pending-bg {
-        background-color: var(--status-pending-50);
-        border-color: var(--status-pending-200);
-    }
-
-    .status-pending-icon-bg {
-        background-color: var(--status-pending-100);
-    }
-
-    .status-pending-icon {
-        color: var(--status-pending-600);
-    }
-
-    .status-pending-text {
-        color: var(--status-pending-800);
-    }
-
-    .status-pending-badge {
-        background-color: var(--status-pending-600);
-    }
-
-    .status-rejected-bg {
-        background-color: var(--status-rejected-50);
-        border-color: var(--status-rejected-200);
-    }
-
-    .status-rejected-icon-bg {
-        background-color: var(--status-rejected-100);
-    }
-
-    .status-rejected-icon {
-        color: var(--status-rejected-600);
-    }
-
-    .status-rejected-text {
-        color: var(--status-rejected-800);
-    }
-
-    .status-rejected-badge {
-        background-color: var(--status-rejected-600);
-    }
-
-    /* Progress Bar Colors */
-    .progress-success {
-        background-color: var(--status-success-500);
-    }
-
-    .progress-pending {
-        background-color: var(--status-pending-500);
-    }
-
-    .progress-rejected {
-        background-color: var(--status-rejected-500);
-    }
-
     /* Custom chart styling */
     #chartStatus {
         max-width: 250px;
@@ -471,6 +363,7 @@
     /* Progress Bar Styling */
     .relative.h-5.bg-gray-200 {
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
     }
 
     /* Table row hover effect */
@@ -480,7 +373,7 @@
 
     /* Smooth transitions for table */
     table tbody tr {
-        transition: background-color 0.2s ease;
+        transition: all 0.3s ease;
     }
 
     /* Custom scrollbar for table */
