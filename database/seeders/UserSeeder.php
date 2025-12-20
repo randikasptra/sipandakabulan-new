@@ -2184,6 +2184,517 @@ class UserSeeder extends Seeder
                 'alamat_kantor' => 'Kec. Taraju',
                 'no_telp' => '081234560337',
             ],
+            // ===============================
+            // KECAMATAN CIKATOMAS (BARU - LENGKAP)
+            // ===============================
+            [
+                'nama_desa' => 'Desa Cayur',
+                'nama_kades' => 'Kepala Desa Cayur',
+                'kode_desa' => 'DS057',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560057',
+            ],
+            [
+                'nama_desa' => 'Desa Cilumba',
+                'nama_kades' => 'Kepala Desa Cilumba',
+                'kode_desa' => 'DS058',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560058',
+            ],
+            [
+                'nama_desa' => 'Desa Cogreg',
+                'nama_kades' => 'Kepala Desa Cogreg',
+                'kode_desa' => 'DS059',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560059',
+            ],
+            [
+                'nama_desa' => 'Desa Gunungsari',
+                'nama_kades' => 'Kepala Desa Gunungsari',
+                'kode_desa' => 'DS060',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560060',
+            ],
+            [
+                'nama_desa' => 'Desa Lengkongbarang',
+                'nama_kades' => 'Kepala Desa Lengkongbarang',
+                'kode_desa' => 'DS061',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560061',
+            ],
+            [
+                'nama_desa' => 'Desa Linggalaksana',
+                'nama_kades' => 'Kepala Desa Linggalaksana',
+                'kode_desa' => 'DS062',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560062',
+            ],
+            [
+                'nama_desa' => 'Desa Pakemitan',
+                'nama_kades' => 'Kepala Desa Pakemitan',
+                'kode_desa' => 'DS063',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560063',
+            ],
+            [
+                'nama_desa' => 'Desa Sindangasih',
+                'nama_kades' => 'Kepala Desa Sindangasih',
+                'kode_desa' => 'DS064',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560064',
+            ],
+            [
+                'nama_desa' => 'Desa Tanjungbarang',
+                'nama_kades' => 'Kepala Desa Tanjungbarang',
+                'kode_desa' => 'DS065',
+                'alamat_kantor' => 'Kec. Cikatomas',
+                'no_telp' => '081234560065',
+            ],
+
+            // ===============================
+            // KECAMATAN CINEAM (BARU - LENGKAP)
+            // ===============================
+            [
+                'nama_desa' => 'Desa Ancol',
+                'nama_kades' => 'Kepala Desa Ancol',
+                'kode_desa' => 'DS066',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560066',
+            ],
+            [
+                'nama_desa' => 'Desa Ciampanan',
+                'nama_kades' => 'Kepala Desa Ciampanan',
+                'kode_desa' => 'DS067',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560067',
+            ],
+            [
+                'nama_desa' => 'Desa Cijulang',
+                'nama_kades' => 'Kepala Desa Cijulang',
+                'kode_desa' => 'DS068',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560068',
+            ],
+            [
+                'nama_desa' => 'Desa Cikondang',
+                'nama_kades' => 'Kepala Desa Cikondang',
+                'kode_desa' => 'DS069',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560069',
+            ],
+            [
+                'nama_desa' => 'Desa Cineam',
+                'nama_kades' => 'Kepala Desa Cineam',
+                'kode_desa' => 'DS070',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560070',
+            ],
+            [
+                'nama_desa' => 'Desa Cisarua',
+                'nama_kades' => 'Kepala Desa Cisarua',
+                'kode_desa' => 'DS071',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560071',
+            ],
+            [
+                'nama_desa' => 'Desa Madiasari',
+                'nama_kades' => 'Kepala Desa Madiasari',
+                'kode_desa' => 'DS072',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560072',
+            ],
+            [
+                'nama_desa' => 'Desa Nagaratengah',
+                'nama_kades' => 'Kepala Desa Nagaratengah',
+                'kode_desa' => 'DS073',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560073',
+            ],
+            [
+                'nama_desa' => 'Desa Pasirmukti',
+                'nama_kades' => 'Kepala Desa Pasirmukti',
+                'kode_desa' => 'DS074',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560074',
+            ],
+            [
+                'nama_desa' => 'Desa Rajadatu',
+                'nama_kades' => 'Kepala Desa Rajadatu',
+                'kode_desa' => 'DS075',
+                'alamat_kantor' => 'Kec. Cineam',
+                'no_telp' => '081234560075',
+            ],
+
+            // ===============================
+            // KECAMATAN CIPATUJAH (BARU - LENGKAP)
+            // ===============================
+            [
+                'nama_desa' => 'Desa Bantarkalong',
+                'nama_kades' => 'Kepala Desa Bantarkalong',
+                'kode_desa' => 'DS076',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560076',
+            ],
+            [
+                'nama_desa' => 'Desa Ciandum',
+                'nama_kades' => 'Kepala Desa Ciandum',
+                'kode_desa' => 'DS077',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560077',
+            ],
+            [
+                'nama_desa' => 'Desa Ciheras',
+                'nama_kades' => 'Kepala Desa Ciheras',
+                'kode_desa' => 'DS078',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560078',
+            ],
+            [
+                'nama_desa' => 'Desa Cikawungading',
+                'nama_kades' => 'Kepala Desa Cikawungading',
+                'kode_desa' => 'DS079',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560079',
+            ],
+            [
+                'nama_desa' => 'Desa Cipanas',
+                'nama_kades' => 'Kepala Desa Cipanas',
+                'kode_desa' => 'DS080',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560080',
+            ],
+            [
+                'nama_desa' => 'Desa Cipatujah',
+                'nama_kades' => 'Kepala Desa Cipatujah',
+                'kode_desa' => 'DS081',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560081',
+            ],
+            [
+                'nama_desa' => 'Desa Darawati',
+                'nama_kades' => 'Kepala Desa Darawati',
+                'kode_desa' => 'DS082',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560082',
+            ],
+            [
+                'nama_desa' => 'Desa Kertasari',
+                'nama_kades' => 'Kepala Desa Kertasari',
+                'kode_desa' => 'DS083',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560083',
+            ],
+            [
+                'nama_desa' => 'Desa Nagrog',
+                'nama_kades' => 'Kepala Desa Nagrog',
+                'kode_desa' => 'DS084',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560084',
+            ],
+            [
+                'nama_desa' => 'Desa Nangelasari',
+                'nama_kades' => 'Kepala Desa Nangelasari',
+                'kode_desa' => 'DS085',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560085',
+            ],
+            [
+                'nama_desa' => 'Desa Padawaras',
+                'nama_kades' => 'Kepala Desa Padawaras',
+                'kode_desa' => 'DS086',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560086',
+            ],
+            [
+                'nama_desa' => 'Desa Pameutingan',
+                'nama_kades' => 'Kepala Desa Pameutingan',
+                'kode_desa' => 'DS087',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560087',
+            ],
+            [
+                'nama_desa' => 'Desa Sindangkerta',
+                'nama_kades' => 'Kepala Desa Sindangkerta',
+                'kode_desa' => 'DS088',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560088',
+            ],
+            [
+                'nama_desa' => 'Desa Sukahurip',
+                'nama_kades' => 'Kepala Desa Sukahurip',
+                'kode_desa' => 'DS089',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560089',
+            ],
+            [
+                'nama_desa' => 'Desa Tobongjaya',
+                'nama_kades' => 'Kepala Desa Tobongjaya',
+                'kode_desa' => 'DS090',
+                'alamat_kantor' => 'Kec. Cipatujah',
+                'no_telp' => '081234560090',
+            ],
+
+            // ===============================
+            // KECAMATAN CISAYONG (BARU - LENGKAP)
+            // ===============================
+            [
+                'nama_desa' => 'Desa Cikadu',
+                'nama_kades' => 'Kepala Desa Cikadu',
+                'kode_desa' => 'DS091',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560091',
+            ],
+            [
+                'nama_desa' => 'Desa Cileuleus',
+                'nama_kades' => 'Kepala Desa Cileuleus',
+                'kode_desa' => 'DS092',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560092',
+            ],
+            [
+                'nama_desa' => 'Desa Cisayong',
+                'nama_kades' => 'Kepala Desa Cisayong',
+                'kode_desa' => 'DS093',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560093',
+            ],
+            [
+                'nama_desa' => 'Desa Jatihurip',
+                'nama_kades' => 'Kepala Desa Jatihurip',
+                'kode_desa' => 'DS094',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560094',
+            ],
+            [
+                'nama_desa' => 'Desa Mekarwangi',
+                'nama_kades' => 'Kepala Desa Mekarwangi',
+                'kode_desa' => 'DS095',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560095',
+            ],
+            [
+                'nama_desa' => 'Desa Nusawangi',
+                'nama_kades' => 'Kepala Desa Nusawangi',
+                'kode_desa' => 'DS096',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560096',
+            ],
+            [
+                'nama_desa' => 'Desa Purwasari',
+                'nama_kades' => 'Kepala Desa Purwasari',
+                'kode_desa' => 'DS097',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560097',
+            ],
+            [
+                'nama_desa' => 'Desa Santanamekar',
+                'nama_kades' => 'Kepala Desa Santanamekar',
+                'kode_desa' => 'DS098',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560098',
+            ],
+            [
+                'nama_desa' => 'Desa Sukajadi',
+                'nama_kades' => 'Kepala Desa Sukajadi',
+                'kode_desa' => 'DS099',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560099',
+            ],
+            [
+                'nama_desa' => 'Desa Sukamukti',
+                'nama_kades' => 'Kepala Desa Sukamukti',
+                'kode_desa' => 'DS100',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560100',
+            ],
+            [
+                'nama_desa' => 'Desa Sukaraharja',
+                'nama_kades' => 'Kepala Desa Sukaraharja',
+                'kode_desa' => 'DS101',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560101',
+            ],
+            [
+                'nama_desa' => 'Desa Sukasetia',
+                'nama_kades' => 'Kepala Desa Sukasetia',
+                'kode_desa' => 'DS102',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560102',
+            ],
+            [
+                'nama_desa' => 'Desa Sukasukur',
+                'nama_kades' => 'Kepala Desa Sukasukur',
+                'kode_desa' => 'DS103',
+                'alamat_kantor' => 'Kec. Cisayong',
+                'no_telp' => '081234560103',
+            ],
+
+            // ===============================
+            // KECAMATAN CULAMEGA (BARU - LENGKAP)
+            // ===============================
+            [
+                'nama_desa' => 'Desa Bojongsari',
+                'nama_kades' => 'Kepala Desa Bojongsari',
+                'kode_desa' => 'DS104',
+                'alamat_kantor' => 'Kec. Culamega',
+                'no_telp' => '081234560104',
+            ],
+            [
+                'nama_desa' => 'Desa Cikuya',
+                'nama_kades' => 'Kepala Desa Cikuya',
+                'kode_desa' => 'DS105',
+                'alamat_kantor' => 'Kec. Culamega',
+                'no_telp' => '081234560105',
+            ],
+            [
+                'nama_desa' => 'Desa Cintabodas',
+                'nama_kades' => 'Kepala Desa Cintabodas',
+                'kode_desa' => 'DS106',
+                'alamat_kantor' => 'Kec. Culamega',
+                'no_telp' => '081234560106',
+            ],
+            [
+                'nama_desa' => 'Desa Cipicung',
+                'nama_kades' => 'Kepala Desa Cipicung',
+                'kode_desa' => 'DS107',
+                'alamat_kantor' => 'Kec. Culamega',
+                'no_telp' => '081234560107',
+            ],
+            [
+                'nama_desa' => 'Desa Mekarlaksana',
+                'nama_kades' => 'Kepala Desa Mekarlaksana',
+                'kode_desa' => 'DS108',
+                'alamat_kantor' => 'Kec. Culamega',
+                'no_telp' => '081234560108',
+            ],
+
+            // ===============================
+            // DESA TAMBAHAN UNTUK KECAMATAN YANG SUDAH ADA
+            // ===============================
+
+            // ===============================
+            // KECAMATAN CIGALONTANG (TAMBAHAN)
+            // ===============================
+            [
+                'nama_desa' => 'Desa Cidugaleun',
+                'nama_kades' => 'Kepala Desa Cidugaleun',
+                'kode_desa' => 'DS338',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560338',
+            ],
+            [
+                'nama_desa' => 'Desa Kersamaju',
+                'nama_kades' => 'Kepala Desa Kersamaju',
+                'kode_desa' => 'DS339',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560339',
+            ],
+            [
+                'nama_desa' => 'Desa Lengkongjaya',
+                'nama_kades' => 'Kepala Desa Lengkongjaya',
+                'kode_desa' => 'DS340',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560340',
+            ],
+            [
+                'nama_desa' => 'Desa Nanggerang',
+                'nama_kades' => 'Kepala Desa Nanggerang',
+                'kode_desa' => 'DS341',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560341',
+            ],
+            [
+                'nama_desa' => 'Desa Nangtang',
+                'nama_kades' => 'Kepala Desa Nangtang',
+                'kode_desa' => 'DS342',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560342',
+            ],
+            [
+                'nama_desa' => 'Desa Parentas',
+                'nama_kades' => 'Kepala Desa Parentas',
+                'kode_desa' => 'DS343',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560343',
+            ],
+            [
+                'nama_desa' => 'Desa Puspamukti',
+                'nama_kades' => 'Kepala Desa Puspamukti',
+                'kode_desa' => 'DS344',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560344',
+            ],
+            [
+                'nama_desa' => 'Desa Pusparaja',
+                'nama_kades' => 'Kepala Desa Pusparaja',
+                'kode_desa' => 'DS345',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560345',
+            ],
+            [
+                'nama_desa' => 'Desa Sirnagalih_Cigalontang',
+                'nama_kades' => 'Kepala Desa Sirnagalih',
+                'kode_desa' => 'DS346',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560346',
+            ],
+            [
+                'nama_desa' => 'Desa Sirnaputra',
+                'nama_kades' => 'Kepala Desa Sirnaputra',
+                'kode_desa' => 'DS347',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560347',
+            ],
+            [
+                'nama_desa' => 'Desa Sirnaraja',
+                'nama_kades' => 'Kepala Desa Sirnaraja',
+                'kode_desa' => 'DS348',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560348',
+            ],
+            [
+                'nama_desa' => 'Desa Sukamanah',
+                'nama_kades' => 'Kepala Desa Sukamanah',
+                'kode_desa' => 'DS349',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560349',
+            ],
+            [
+                'nama_desa' => 'Desa Tanjungkarang',
+                'nama_kades' => 'Kepala Desa Tanjungkarang',
+                'kode_desa' => 'DS350',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560350',
+            ],
+            [
+                'nama_desa' => 'Desa Tenjonagara',
+                'nama_kades' => 'Kepala Desa Tenjonagara',
+                'kode_desa' => 'DS351',
+                'alamat_kantor' => 'Kec. Cigalontang',
+                'no_telp' => '081234560351',
+            ],
+
+            // ===============================
+            // KECAMATAN LEUWISARI (TAMBAHAN)
+            // ===============================
+            [
+                'nama_desa' => 'Desa Mangunreja_Leuwisari',
+                'nama_kades' => 'Kepala Desa Mangunreja',
+                'kode_desa' => 'DS352',
+                'alamat_kantor' => 'Kec. Leuwisari',
+                'no_telp' => '081234560352',
+            ],
+
+            // ===============================
+            // KECAMATAN SINGAPARNA (TAMBAHAN)
+            // ===============================
+            [
+                'nama_desa' => 'Desa Cikadongdong_Singaparna',
+                'nama_kades' => 'Kepala Desa Cikadongdong',
+                'kode_desa' => 'DS353',
+                'alamat_kantor' => 'Kec. Singaparna',
+                'no_telp' => '081234560353',
+            ],
 
         ];
 
@@ -2194,20 +2705,27 @@ class UserSeeder extends Seeder
         $desaRecords = Desa::all();
 
         // BUAT USER DESA SEKALIGUS
-        // BUAT USER DESA SEKALIGUS
         $users = [];
         $emailTracker = []; // Untuk melacak email yang sudah dibuat
 
         foreach ($desaRecords as $desa) {
-            // Format nama desa untuk email: huruf kecil, tanpa spasi
-            $emailName = 'desa' . strtolower(str_replace(' ', '', $desa->nama_desa));
+            // Format nama desa untuk email: huruf kecil, tanpa spasi DAN tanpa underscore
+            $emailName = 'desa' . strtolower(str_replace([' ', '_'], '', $desa->nama_desa));
+            $password = str_replace('Desa ', '', $desa->nama_desa) . '@2025';
             $baseEmail = $emailName . '@tasikdesa.com';
 
             // Jika ada duplikat (contoh: Desa Ciawi di 2 kecamatan berbeda)
             if (isset($emailTracker[$baseEmail])) {
-                // Tambah nomor atau identifier kecamatan
+                // Ambil nama kecamatan tanpa "Kec. "
                 $kecamatan = strtolower(str_replace(' ', '', str_replace('Kec. ', '', $desa->alamat_kantor)));
-                $emailName = 'desa' . strtolower(str_replace(' ', '', $desa->nama_desa)) . '_' . $kecamatan;
+
+                // Gunakan nama desa ASLI (tanpa tambahan underscore) + kecamatan
+                $desaNameClean = strtolower(str_replace(' ', '', $desa->nama_desa));
+
+                // Cari dan hapus suffix kecamatan jika ada di nama desa
+                $desaNameClean = preg_replace('/_[a-z]+$/', '', $desaNameClean);
+
+                $emailName = 'desa' . $desaNameClean . '_' . $kecamatan;
                 $baseEmail = $emailName . '@tasikdesa.com';
             }
 
@@ -2216,13 +2734,13 @@ class UserSeeder extends Seeder
             $users[] = [
                 'name' => 'Operator ' . $desa->nama_desa,
                 'email' => $baseEmail,
-                'password' => Hash::make('password123'),
+                'password' => Hash::make($password),
                 'role' => 'desa',
                 'desa_id' => $desa->id,
             ];
         }
-        User::insert($users);
 
+        User::insert($users);
         // NYALAIN LAGI FK
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

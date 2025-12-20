@@ -97,7 +97,6 @@ class Klaster3Seeder extends Seeder
                     30 => 'Ada',
                 ],
                 'uploads' => [
-                    'Dokumen Pusat Kesehatan Reproduksi Remaja',
                 ],
             ],
             [
@@ -111,7 +110,6 @@ class Klaster3Seeder extends Seeder
                     20 => '100% dari jumlah anak keluarga miskin',
                 ],
                 'uploads' => [
-                    'Dokumen Imunisasi Anak',
                 ],
             ],
             [
@@ -138,7 +136,6 @@ class Klaster3Seeder extends Seeder
                     20 => 'Ada pada semua fasilitas layanan umum',
                 ],
                 'uploads' => [
-                    'Dokumen Kawasan Tanpa Rokok',
                 ],
             ],
         ];

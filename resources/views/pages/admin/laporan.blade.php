@@ -43,7 +43,7 @@
 
         <!-- Filter Form -->
         <div class="bg-gradient-to-r from-blue-900 to-blue-700 rounded-2xl shadow-lg p-6 mb-6">
-            <form method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <!-- Tahun -->
                 <div>
                     <label class="block text-white text-sm font-semibold mb-2">
@@ -69,19 +69,47 @@
                     </select>
                 </div>
 
+                <!-- Search -->
+                <div>
+                    <label class="block text-white text-sm font-semibold mb-2">
+                        <i class="bi bi-search me-1"></i>Cari Desa
+                    </label>
+                    <input type="text" name="search" value="{{ $search ?? '' }}"
+                        class="w-full p-3 bg-white/90 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-200"
+                        placeholder="Cari nama atau kode desa...">
+                </div>
+
                 <!-- Tombol -->
                 <div class="flex gap-2">
                     <button type="submit"
                         class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white text-blue-900 rounded-xl hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 font-semibold">
-                        <i class="bi bi-search"></i>
+                        <i class="bi bi-funnel"></i>
                         Terapkan Filter
                     </button>
                     <a href="{{ route('admin.laporan.index') }}"
-                        class="flex items-center justify-center gap-2 px-4 py-3 bg-white/20 text-white rounded-xl hover:bg-white/30 transition-all duration-200 font-semibold">
+                        class="flex items-center justify-center gap-2 px-4 py-3 bg-white/20 text-white rounded-xl hover:bg-white/30 transition-all duration-200 font-semibold"
+                        title="Reset Filter">
                         <i class="bi bi-arrow-clockwise"></i>
                     </a>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Search & Info Bar -->
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+        <div class="text-sm text-gray-600">
+            <i class="bi bi-info-circle mr-1"></i>
+            Menampilkan <span class="font-bold text-blue-700">{{ $desas->count() }}</span> dari 
+            <span class="font-bold text-blue-700">{{ $desas->total() }}</span> desa
+            @if($search)
+                untuk pencarian "<span class="font-bold text-blue-700">{{ $search }}</span>"
+            @endif
+        </div>
+        
+        <div class="text-sm text-gray-600">
+            Halaman <span class="font-bold">{{ $desas->currentPage() }}</span> dari 
+            <span class="font-bold">{{ $desas->lastPage() }}</span>
         </div>
     </div>
 
@@ -184,16 +212,6 @@
         </div>
     </div>
 
-    <!-- Search Bar -->
-    <div class="flex justify-end mb-4">
-        <div class="relative w-full lg:w-96">
-            <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="searchDesa"
-                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                placeholder="Cari nama desa...">
-        </div>
-    </div>
-
     <!-- Table -->
     <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
         <div class="overflow-x-auto">
@@ -228,7 +246,7 @@
                         @endphp
                         <tr class="hover:bg-blue-50 transition-all duration-200 data-row">
                             <td class="py-4 px-6 text-gray-600 font-medium whitespace-nowrap text-center">
-                                {{ $i + 1 }}
+                                {{ ($desas->currentPage() - 1) * $desas->perPage() + $loop->iteration }}
                             </td>
                             <td class="py-4 px-6">
                                 <div class="font-semibold text-gray-800 text-sm lg:text-base">{{ $desa->nama_desa }}</div>
@@ -333,7 +351,11 @@
                                 <div class="flex flex-col items-center justify-center text-gray-400">
                                     <i class="bi bi-inbox text-5xl mb-4"></i>
                                     <p class="text-lg font-medium">Tidak ada data laporan</p>
-                                    <p class="text-sm mt-1">Pilih periode waktu yang berbeda</p>
+                                    @if($search)
+                                        <p class="text-sm mt-1">Tidak ditemukan desa dengan kata kunci "{{ $search }}"</p>
+                                    @else
+                                        <p class="text-sm mt-1">Pilih periode waktu yang berbeda</p>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -341,6 +363,89 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
+        @if($desas->hasPages())
+            <div class="border-t border-gray-200 px-6 py-4">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <!-- Info Pagination -->
+                    <div class="text-sm text-gray-600">
+                        Menampilkan <span class="font-bold">{{ $desas->firstItem() }}</span> - 
+                        <span class="font-bold">{{ $desas->lastItem() }}</span> dari 
+                        <span class="font-bold">{{ $desas->total() }}</span> desa
+                    </div>
+                    
+                    <!-- Pagination Links -->
+                    <nav class="flex items-center gap-1">
+                        <!-- Previous Page Link -->
+                        @if ($desas->onFirstPage())
+                            <span class="px-3 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed">
+                                <i class="bi bi-chevron-left"></i>
+                            </span>
+                        @else
+                            <a href="{{ $desas->previousPageUrl() }}" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all duration-200">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        @endif
+
+                        <!-- Page Numbers -->
+                        @php
+                            $current = $desas->currentPage();
+                            $last = $desas->lastPage();
+                            $start = max($current - 2, 1);
+                            $end = min($current + 2, $last);
+                            
+                            if ($start > 1) {
+                                echo '<a href="' . $desas->url(1) . '" class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all duration-200">1</a>';
+                                if ($start > 2) {
+                                    echo '<span class="px-2 text-gray-400">...</span>';
+                                }
+                            }
+                            
+                            for ($page = $start; $page <= $end; $page++) {
+                                if ($page == $current) {
+                                    echo '<span class="px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold rounded-lg">' . $page . '</span>';
+                                } else {
+                                    echo '<a href="' . $desas->url($page) . '" class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all duration-200">' . $page . '</a>';
+                                }
+                            }
+                            
+                            if ($end < $last) {
+                                if ($end < $last - 1) {
+                                    echo '<span class="px-2 text-gray-400">...</span>';
+                                }
+                                echo '<a href="' . $desas->url($last) . '" class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all duration-200">' . $last . '</a>';
+                            }
+                        @endphp
+
+                        <!-- Next Page Link -->
+                        @if ($desas->hasMorePages())
+                            <a href="{{ $desas->nextPageUrl() }}" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all duration-200">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        @else
+                            <span class="px-3 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed">
+                                <i class="bi bi-chevron-right"></i>
+                            </span>
+                        @endif
+                    </nav>
+                    
+                    <!-- Page Size Selector -->
+                    <div class="text-sm text-gray-600 flex items-center gap-2">
+                        <span>Tampilkan:</span>
+                        <select id="perPageSelect" class="border border-gray-300 rounded-lg px-2 py-1 text-sm">
+                            <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                            <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                            <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                            <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                        </select>
+                        <span>per halaman</span>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection
 
@@ -389,15 +494,20 @@
                 }
             });
 
-            // Nilai Chart
+            // Nilai Chart - Hanya data yang tampil di halaman saat ini
             const ctxNilai = document.getElementById('nilaiChart').getContext('2d');
+            
+            // Ambil data dari desa yang ditampilkan di halaman saat ini
+            const desaNames = {!! json_encode($desas->pluck('nama_desa')) !!};
+            const desaAverages = {!! json_encode($desas->pluck('rata_rata')) !!};
+            
             new Chart(ctxNilai, {
                 type: 'bar',
                 data: {
-                    labels: {!! json_encode($desas->pluck('nama_desa')) !!},
+                    labels: desaNames,
                     datasets: [{
                         label: 'Rata-rata Nilai',
-                        data: {!! json_encode($desas->pluck('rata_rata')) !!},
+                        data: desaAverages,
                         backgroundColor: function(context) {
                             const value = context.raw || 0;
                             if (value >= 80) return 'rgba(34, 197, 94, 0.8)'; // Green
@@ -443,7 +553,10 @@
                             },
                             ticks: {
                                 maxRotation: 45,
-                                minRotation: 45
+                                minRotation: 45,
+                                font: {
+                                    size: desaNames.length > 5 ? 9 : 11
+                                }
                             }
                         }
                     },
@@ -472,20 +585,12 @@
                 }
             });
 
-            // Search functionality
-            const searchInput = document.getElementById('searchDesa');
-            const tableRows = document.querySelectorAll('.data-row');
-
-            searchInput.addEventListener('keyup', function() {
-                const searchTerm = this.value.toLowerCase();
-
-                tableRows.forEach(row => {
-                    const desaCell = row.querySelector('td:nth-child(2)');
-                    if (desaCell) {
-                        const desaName = desaCell.textContent.toLowerCase();
-                        row.style.display = desaName.includes(searchTerm) ? '' : 'none';
-                    }
-                });
+            // Per Page Selector
+            document.getElementById('perPageSelect').addEventListener('change', function() {
+                const perPage = this.value;
+                const url = new URL(window.location.href);
+                url.searchParams.set('per_page', perPage);
+                window.location.href = url.toString();
             });
 
             // Progress bar hover effects
@@ -512,6 +617,24 @@
     </script>
 
     <style>
+        /* Pagination Styling */
+        .pagination-link {
+            transition: all 0.2s ease;
+        }
+
+        .pagination-link:hover {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .pagination-active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         /* Progress Bar Styling */
         .relative.h-4.bg-gray-200 {
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
@@ -575,6 +698,20 @@
                 gap: 0.25rem;
                 align-items: flex-start;
             }
+
+            /* Pagination responsive */
+            .flex-col.sm\:flex-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            nav.flex.items-center.gap-1 {
+                justify-content: center;
+            }
+
+            .text-sm.text-gray-600.flex.items-center.gap-2 {
+                justify-content: center;
+            }
         }
 
         /* Custom scrollbar */
@@ -590,6 +727,17 @@
         .overflow-x-auto::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             border-radius: 10px;
+        }
+
+        /* Loading animation for pagination */
+        @keyframes pagination-loading {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .pagination-loading {
+            animation: pagination-loading 1.5s infinite;
         }
     </style>
 @endsection

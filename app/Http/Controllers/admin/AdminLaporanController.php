@@ -16,27 +16,82 @@ use Illuminate\Support\Facades\DB;
 class AdminLaporanController extends Controller
 {
     /**
-     * 📊 Level 1: Rekap semua desa
+     * 📊 Level 1: Rekap semua desa dengan pagination dan search
      */
     public function index(Request $request)
     {
         $tahun = $request->get('tahun', now()->year);
         $bulan = $request->get('bulan', now()->format('F'));
+        $search = $request->get('search', '');
 
-        $desas = Desa::withCount([
-            'penilaians as total_pending' => fn ($q) => $q->where('status', 'pending')->where('tahun', $tahun)->where('bulan', $bulan),
-            'penilaians as total_approved' => fn ($q) => $q->where('status', 'approved')->where('tahun', $tahun)->where('bulan', $bulan),
-            'penilaians as total_rejected' => fn ($q) => $q->where('status', 'rejected')->where('tahun', $tahun)->where('bulan', $bulan),
+        // Query dengan search dan pagination
+        $query = Desa::withCount([
+            'penilaians as total_pending' => fn ($q) => $q->where('status', 'pending')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+            'penilaians as total_approved' => fn ($q) => $q->where('status', 'approved')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+            'penilaians as total_rejected' => fn ($q) => $q->where('status', 'rejected')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
         ])
-        ->withAvg(['penilaians as rata_rata' => fn ($q) => $q->where('status', 'approved')->where('tahun', $tahun)->where('bulan', $bulan)], 'nilai')
-        ->get();
+        ->withAvg([
+            'penilaians as rata_rata' => fn ($q) => $q->where('status', 'approved')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan)
+        ], 'nilai');
+
+        // Tambahkan search jika ada
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nama_desa', 'like', "%{$search}%")
+                  ->orWhere('kode_desa', 'like', "%{$search}%");
+            });
+        }
+
+        // Order by nama desa
+        $query->orderBy('nama_desa', 'asc');
+
+        // Pagination dengan 10 item per halaman
+        $desas = $query->paginate(10)->withQueryString();
+
+        // Query terpisah untuk total keseluruhan (tanpa pagination)
+        $totalQuery = Desa::withCount([
+            'penilaians as total_pending' => fn ($q) => $q->where('status', 'pending')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+            'penilaians as total_approved' => fn ($q) => $q->where('status', 'approved')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+            'penilaians as total_rejected' => fn ($q) => $q->where('status', 'rejected')
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan),
+        ]);
+
+        if ($search) {
+            $totalQuery->where(function($q) use ($search) {
+                $q->where('nama_desa', 'like', "%{$search}%")
+                  ->orWhere('kode_desa', 'like', "%{$search}%");
+            });
+        }
+
+        $allDesas = $totalQuery->get();
 
         // Total keseluruhan untuk chart
-        $totalApproved = $desas->sum('total_approved');
-        $totalPending = $desas->sum('total_pending');
-        $totalRejected = $desas->sum('total_rejected');
+        $totalApproved = $allDesas->sum('total_approved');
+        $totalPending = $allDesas->sum('total_pending');
+        $totalRejected = $allDesas->sum('total_rejected');
 
-        return view('pages.admin.laporan', compact('desas', 'tahun', 'bulan', 'totalApproved', 'totalPending', 'totalRejected'));
+        return view('pages.admin.laporan', compact(
+            'desas', 
+            'tahun', 
+            'bulan', 
+            'totalApproved', 
+            'totalPending', 
+            'totalRejected',
+            'search'
+        ));
     }
 
     /**
@@ -135,7 +190,7 @@ class AdminLaporanController extends Controller
             ->orderBy('klaster_id')
             ->get();
 
-        $pdf = Pdf::loadView('exports.laporan-pdf', compact('penilaians', 'tahun', 'bulan'))
+        $pdf = Pdf::loadView('exports.laporan-pdf', compact('penilaians', 'tahun', $bulan))
                   ->setPaper('a4', 'landscape');
 
         return $pdf->download("Laporan_Penilaian_Semua_Desa_{$bulan}_{$tahun}.pdf");

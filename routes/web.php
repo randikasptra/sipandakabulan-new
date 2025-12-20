@@ -50,6 +50,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('/penilaian/{penilaian}/approve', [AdminPenilaianController::class, 'approve'])->name('penilaian.approve');
         Route::patch('/penilaian/{penilaian}/reject', [AdminPenilaianController::class, 'reject'])->name('penilaian.reject');
 
+        Route::post('/penilaian/batch-approve', [AdminPenilaianController::class, 'batchApprove'])->name('penilaian.batch.approve');
+        Route::post('/penilaian/batch-reject', [AdminPenilaianController::class, 'batchReject'])->name('penilaian.batch.reject');
         // DESA MANAGEMENT
         Route::get('/desa', [AdminDesaController::class, 'index'])->name('desa');
         Route::get('/desa/create', [AdminDesaController::class, 'create'])->name('desa.create');
