@@ -2728,7 +2728,7 @@ class UserSeeder extends Seeder
             $namaClean = strtolower(str_replace([' ', '_', '-', '.'], '', $namaTanpaDesa));
 
             // 3. Format email baru: desanamadesa@tasikdesa.com (TANPA TITIK)
-            $baseEmail = 'desa' . $namaClean . '@tasikdesa.com';
+            $baseEmail = 'desa' . $namaClean . '@evaluasikla.com';
 
             // Jika ada duplikat (contoh: Desa Ciawi di 2 kecamatan berbeda)
             if (isset($emailTracker[$baseEmail])) {
@@ -2736,7 +2736,7 @@ class UserSeeder extends Seeder
                 $kecamatan = strtolower(str_replace(' ', '', str_replace('Kec. ', '', $desa->alamat_kantor)));
                 $kecamatan = preg_replace('/[^a-z0-9]/', '', $kecamatan);
 
-                $baseEmail = 'desa' . $namaClean . $kecamatan . '@tasikdesa.com';
+                $baseEmail = 'desa' . $namaClean . $kecamatan . '@evaluasikla.com';
             }
 
             $emailTracker[$baseEmail] = true;
