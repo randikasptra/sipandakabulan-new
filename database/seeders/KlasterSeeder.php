@@ -4,17 +4,27 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Klaster;
+use Illuminate\Support\Facades\DB;
 
 class KlasterSeeder extends Seeder
 {
     public function run(): void
     {
+        // Hapus data lama terlebih dahulu
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Klaster::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        // Atau bisa juga pakai:
+        // Klaster::query()->delete();
+
+        // Insert data baru
         Klaster::insert([
             [
                 'title' => 'Kelembagaan',
                 'slug' => 'kelembagaan',
                 'nilai_em' => 0,
-                'nilai_maksimal' => 220,
+                'nilai_maksimal' => 260,
                 'progres' => 0,
             ],
             [
@@ -42,7 +52,7 @@ class KlasterSeeder extends Seeder
                 'title' => 'Klaster IV: Pendidikan, Waktu Luang dan Budaya',
                 'slug' => 'klaster4',
                 'nilai_em' => 0,
-                'nilai_maksimal' => 270,
+                'nilai_maksimal' => 230,
                 'progres' => 0,
             ],
             [

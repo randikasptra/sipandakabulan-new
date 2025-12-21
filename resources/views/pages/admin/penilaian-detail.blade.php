@@ -77,7 +77,7 @@
             <tbody class="divide-y divide-gray-200">
                 @forelse ($penilaians as $i => $p)
                 @php
-                    $berkasGrouped = $p->berkasUploads->groupBy('kategori_upload_id');
+                $berkasGrouped = $p->berkasUploads->groupBy('kategori_upload_id');
                 @endphp
                 <tr id="row-{{ $p->id }}" class="hover:bg-blue-50 transition-all duration-200">
                     <!-- No -->
@@ -113,14 +113,14 @@
                     <!-- Opsi Dipilih -->
                     <td class="px-6 py-4">
                         @php
-                            $opsiDipilih = $p->indikator->opsiNilai->firstWhere('poin', $p->nilai);
+                        $opsiDipilih = $p->indikator->opsiNilai->firstWhere('poin', $p->nilai);
                         @endphp
                         @if ($opsiDipilih)
-                            <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-medium">
-                                {{ $opsiDipilih->label }}
-                            </span>
+                        <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-medium">
+                            {{ $opsiDipilih->label }}
+                        </span>
                         @else
-                            <span class="text-gray-400 italic text-xs">-</span>
+                        <span class="text-gray-400 italic text-xs">-</span>
                         @endif
                     </td>
 
@@ -137,88 +137,79 @@
                     <!-- Catatan -->
                     <td class="px-4 py-4 text-center">
                         @if ($p->catatan)
-                            <button onclick="toggleCatatan({{ $p->id }})"
-                                class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-200 transition">
-                                <i class="bi bi-eye mr-1"></i>Lihat
-                            </button>
+                        <button onclick="toggleCatatan({{ $p->id }})"
+                            class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-200 transition">
+                            <i class="bi bi-eye mr-1"></i>Lihat
+                        </button>
                         @else
-                            <span class="text-gray-400 italic text-xs">-</span>
+                        <span class="text-gray-400 italic text-xs">-</span>
                         @endif
                     </td>
 
                     <!-- Dokumen per Kategori (Collapsible) -->
                     <td class="px-6 py-4 align-top">
                         @if($berkasGrouped->isNotEmpty())
-                            <div class="space-y-3">
-                                @foreach($berkasGrouped as $kategoriId => $berkasList)
-                                    @php
-                                        $kategori = $berkasList->first()->kategoriUpload ?? null;
-                                        $kategoriName = $kategori ? $kategori->nama_kategori : 'Tanpa Kategori';
-                                    @endphp
+                        <div class="space-y-3">
+                            @foreach($berkasGrouped as $kategoriId => $berkasList)
+                            @php
+                            $kategori = $berkasList->first()->kategoriUpload ?? null;
+                            $kategoriName = $kategori ? $kategori->nama_kategori : 'Tanpa Kategori';
+                            @endphp
 
-                                    <div class="border border-blue-200 rounded-xl overflow-hidden bg-blue-25">
-                                        <!-- Header Kategori -->
-                                        <button
-                                            onclick="toggleKategori({{ $p->id }}, {{ $kategoriId ?? 0 }})"
-                                            class="w-full px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white flex items-center justify-between hover:from-blue-600 hover:to-blue-700 transition">
-                                            <div class="flex items-center gap-2">
-                                                <i class="bi bi-folder2"></i>
-                                                <span class="font-medium text-sm">{{ $kategoriName }}</span>
-                                                <span class="bg-white/20 px-2.5 py-1 rounded-full text-xs font-bold">
-                                                    {{ $berkasList->count() }}
-                                                </span>
-                                            </div>
-                                            <i class="bi bi-chevron-down transition-transform duration-300" id="icon-{{ $p->id }}-{{ $kategoriId ?? 0 }}"></i>
-                                        </button>
-
-                                        <!-- Daftar File -->
-                                        <div id="files-{{ $p->id }}-{{ $kategoriId ?? 0 }}" class="bg-white px-4 py-3 space-y-2 hidden">
-                                            @foreach($berkasList as $b)
-                                                @php
-                                                    $filename = basename($b->path_file);
-                                                    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-                                                    $icon = match($ext) {
-                                                        'pdf' => 'bi-file-earmark-pdf text-red-600',
-                                                        'jpg','jpeg','png','gif' => 'bi-file-earmark-image text-green-600',
-                                                        'doc','docx' => 'bi-file-earmark-word text-blue-600',
-                                                        'xls','xlsx' => 'bi-file-earmark-excel text-green-700',
-                                                        default => 'bi-file-earmark text-gray-600'
-                                                    };
-                                                @endphp
-                                                <a href="{{ env('SUPABASE_URL') }}/storage/v1/object/public/{{ env('SUPABASE_STORAGE_BUCKET') }}/{{ $b->path_file }}"
-                                                   target="_blank"
-                                                   class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg hover:bg-blue-50 hover:shadow transition group">
-                                                    <i class="bi {{ $icon }} text-lg"></i>
-                                                    <span class="text-xs text-gray-700 truncate group-hover:text-blue-600 group-hover:underline">
-                                                        {{ $filename }}
-                                                    </span>
-                                                    <i class="bi bi-box-arrow-up-right text-gray-400 text-xs group-hover:text-blue-600"></i>
-                                                </a>
-                                            @endforeach
-                                        </div>
+                            <div class="border border-blue-200 rounded-xl overflow-hidden bg-blue-25">
+                                <!-- Header Kategori -->
+                                <button
+                                    onclick="toggleKategori({{ $p->id }}, {{ $kategoriId ?? 0 }})"
+                                    class="w-full px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white flex items-center justify-between hover:from-blue-600 hover:to-blue-700 transition">
+                                    <div class="flex items-center gap-2">
+                                        <i class="bi bi-folder2"></i>
+                                        <span class="font-medium text-sm">{{ $kategoriName }}</span>
+                                        <span class="bg-white/20 px-2.5 py-1 rounded-full text-xs font-bold">
+                                            {{ $berkasList->count() }}
+                                        </span>
                                     </div>
-                                @endforeach
+                                    <i class="bi bi-chevron-down transition-transform duration-300" id="icon-{{ $p->id }}-{{ $kategoriId ?? 0 }}"></i>
+                                </button>
+
+                                <!-- Daftar File -->
+                                <!-- Daftar File -->
+                                <div id="files-{{ $p->id }}-{{ $kategoriId ?? 0 }}" class="bg-white px-4 py-3 space-y-2 hidden">
+                                    @foreach($berkasList as $b)
+                                    <a href="{{ $b->full_url }}"
+                                        target="_blank"
+                                        class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg hover:bg-blue-50 hover:shadow transition group"
+                                        title="{{ App\Helpers\FileHelper::getFileType($b->filename) }}">
+                                        <i class="bi {{ App\Helpers\FileHelper::getFileIcon($b->filename) }} text-lg"></i>
+                                        <span class="text-xs text-gray-700 truncate group-hover:text-blue-600 group-hover:underline">
+                                            {{ $b->filename }}
+                                        </span>
+                                        <i class="bi bi-box-arrow-up-right text-gray-400 text-xs group-hover:text-blue-600"></i>
+                                    </a>
+                                    @endforeach
+                                </div>
                             </div>
+                            @endforeach
+                        </div>
                         @else
-                            <span class="text-gray-400 italic text-xs">Tidak ada dokumen</span>
+                        <span class="text-gray-400 italic text-xs">Tidak ada dokumen</span>
                         @endif
                     </td>
 
                     <!-- Aksi -->
                     <td class="px-4 py-4 text-center">
                         @if ($p->status == 'pending')
-                            <div class="flex justify-center gap-3">
-                                <button class="w-10 h-10 bg-green-500 text-white rounded-xl hover:bg-green-600 transition shadow-md btn-approve"
-                                        data-id="{{ $p->id }}" title="Setujui">
-                                    <i class="bi bi-check-lg text-lg"></i>
-                                </button>
-                                <button class="w-10 h-10 bg-red-500 text-white rounded-xl hover:bg-red-600 transition shadow-md btn-reject"
-                                        data-id="{{ $p->id }}" title="Tolak">
-                                    <i class="bi bi-x-lg text-lg"></i>
-                                </button>
-                            </div>
+                        <div class="flex justify-center gap-3">
+                            <button class="w-10 h-10 bg-green-500 text-white rounded-xl hover:bg-green-600 transition shadow-md btn-approve"
+                                data-id="{{ $p->id }}" title="Setujui">
+                                <i class="bi bi-check-lg text-lg"></i>
+                            </button>
+                            <button class="w-10 h-10 bg-red-500 text-white rounded-xl hover:bg-red-600 transition shadow-md btn-reject"
+                                data-id="{{ $p->id }}" title="Tolak">
+                                <i class="bi bi-x-lg text-lg"></i>
+                            </button>
+                        </div>
                         @else
-                            <span class="text-gray-400 text-xs italic">Tidak ada aksi</span>
+                        <span class="text-gray-400 text-xs italic">Tidak ada aksi</span>
                         @endif
                     </td>
                 </tr>
@@ -282,10 +273,10 @@
     }
 
     // Approve & Reject functionality
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Approve
         document.querySelectorAll('.btn-approve').forEach(btn => {
-            btn.addEventListener('click', async function () {
+            btn.addEventListener('click', async function() {
                 const id = this.dataset.id;
                 const row = document.getElementById(`row-${id}`);
 
@@ -298,7 +289,9 @@
                     cancelButtonText: 'Batal',
                     confirmButtonColor: '#22c55e',
                     cancelButtonColor: '#6b7280',
-                    customClass: { popup: 'rounded-2xl' }
+                    customClass: {
+                        popup: 'rounded-2xl'
+                    }
                 });
 
                 if (result.isConfirmed) {
@@ -332,7 +325,7 @@
 
         // Reject
         document.querySelectorAll('.btn-reject').forEach(btn => {
-            btn.addEventListener('click', async function () {
+            btn.addEventListener('click', async function() {
                 const id = this.dataset.id;
                 const row = document.getElementById(`row-${id}`);
 
@@ -371,7 +364,7 @@
                         return select === 'other' ? manual : select;
                     },
                     didOpen: () => {
-                        document.getElementById('reason-select').addEventListener('change', function () {
+                        document.getElementById('reason-select').addEventListener('change', function() {
                             const manual = document.getElementById('reason-manual');
                             manual.style.display = this.value === 'other' ? 'block' : 'none';
                         });
@@ -379,7 +372,11 @@
                 });
 
                 if (result.isConfirmed) {
-                    Swal.fire({ title: 'Memproses...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    Swal.fire({
+                        title: 'Memproses...',
+                        allowOutsideClick: false,
+                        didOpen: () => Swal.showLoading()
+                    });
 
                     try {
                         const res = await fetch(`/admin/penilaian/${id}/reject`, {
@@ -389,7 +386,9 @@
                                 'Content-Type': 'application/json',
                                 'Accept': 'application/json'
                             },
-                            body: JSON.stringify({ reason: result.value })
+                            body: JSON.stringify({
+                                reason: result.value
+                            })
                         });
                         const data = await res.json();
 
@@ -410,7 +409,8 @@
 
 <style>
     /* Table responsive & clean */
-    #tableIndikator th, #tableIndikator td {
+    #tableIndikator th,
+    #tableIndikator td {
         vertical-align: top;
     }
 
@@ -418,7 +418,9 @@
         #tableIndikator {
             font-size: 0.8125rem;
         }
-        #tableIndikator th, #tableIndikator td {
+
+        #tableIndikator th,
+        #tableIndikator td {
             padding: 0.75rem 0.5rem;
         }
     }
@@ -427,9 +429,12 @@
         #tableIndikator {
             font-size: 0.75rem;
         }
-        #tableIndikator th, #tableIndikator td {
+
+        #tableIndikator th,
+        #tableIndikator td {
             padding: 0.5rem 0.375rem;
         }
+
         .truncate {
             max-width: 10rem;
         }
@@ -439,10 +444,12 @@
     .overflow-x-auto::-webkit-scrollbar {
         height: 8px;
     }
+
     .overflow-x-auto::-webkit-scrollbar-track {
         background: #f3f4f6;
         border-radius: 999px;
     }
+
     .overflow-x-auto::-webkit-scrollbar-thumb {
         background: #3b82f6;
         border-radius: 999px;

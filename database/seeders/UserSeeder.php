@@ -2709,27 +2709,28 @@ class UserSeeder extends Seeder
         $emailTracker = []; // Untuk melacak email yang sudah dibuat
 
         foreach ($desaRecords as $desa) {
-            // Format nama desa untuk email: huruf kecil, tanpa spasi DAN tanpa underscore
-            $emailName = 'desa' . strtolower(str_replace([' ', '_'], '', $desa->nama_desa));
-            $password = str_replace('Desa ', '', $desa->nama_desa) . '@2025';
-            $baseEmail = $emailName . '@tasikdesa.com';
+            // 1. Hapus "Desa " dari awal nama desa
+            $namaTanpaDesa = str_replace('Desa ', '', $desa->nama_desa);
+
+            // 2. Hapus spasi, underscore, dan karakter khusus
+            $namaClean = strtolower(str_replace([' ', '_', '-', '.'], '', $namaTanpaDesa));
+
+            // 3. Format email baru: desanamadesa@tasikdesa.com (TANPA TITIK)
+            $baseEmail = 'desa' . $namaClean . '@tasikdesa.com';
 
             // Jika ada duplikat (contoh: Desa Ciawi di 2 kecamatan berbeda)
             if (isset($emailTracker[$baseEmail])) {
                 // Ambil nama kecamatan tanpa "Kec. "
                 $kecamatan = strtolower(str_replace(' ', '', str_replace('Kec. ', '', $desa->alamat_kantor)));
+                $kecamatan = preg_replace('/[^a-z0-9]/', '', $kecamatan);
 
-                // Gunakan nama desa ASLI (tanpa tambahan underscore) + kecamatan
-                $desaNameClean = strtolower(str_replace(' ', '', $desa->nama_desa));
-
-                // Cari dan hapus suffix kecamatan jika ada di nama desa
-                $desaNameClean = preg_replace('/_[a-z]+$/', '', $desaNameClean);
-
-                $emailName = 'desa' . $desaNameClean . '_' . $kecamatan;
-                $baseEmail = $emailName . '@tasikdesa.com';
+                $baseEmail = 'desa' . $namaClean . $kecamatan . '@tasikdesa.com';
             }
 
             $emailTracker[$baseEmail] = true;
+
+            // Password: nama desa tanpa "Desa " + @2025
+            $password = str_replace('Desa ', '', $desa->nama_desa) . '@2025';
 
             $users[] = [
                 'name' => 'Operator ' . $desa->nama_desa,

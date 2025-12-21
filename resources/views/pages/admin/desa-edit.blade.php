@@ -270,7 +270,7 @@
                             <div class="flex items-center justify-between text-xs text-gray-500">
                                 <span class="flex items-center gap-1">
                                     <i class="bi bi-calendar"></i>
-                                    {{ $user->created_at->format('d M Y') }}
+                                    {{ $user->created_at ? $user->created_at->format('d M Y') : 'N/A' }}
                                 </span>
                                 <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
                                     {{ $user->role }}
@@ -298,7 +298,7 @@
 
     <!-- Modal Add User -->
     <div class="modal fade" id="addUserModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered max-w-md">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-2xl rounded-2xl">
                 <div class="modal-header bg-gradient-to-r from-green-600 to-green-500 text-white rounded-t-2xl p-6">
                     <h5 class="modal-title font-bold flex items-center gap-2">
@@ -362,7 +362,7 @@
 
     <!-- Modal Edit User -->
     <div class="modal fade" id="editUserModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered max-w-md">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-2xl rounded-2xl">
                 <div class="modal-header bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-t-2xl p-6">
                     <h5 class="modal-title font-bold flex items-center gap-2">
@@ -417,7 +417,7 @@
     <!-- Modal Credentials -->
     @if (session('show_credentials'))
         <div class="modal fade" id="credentialsModal" tabindex="-1" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered max-w-md">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 shadow-2xl rounded-2xl">
                     <div class="modal-header bg-gradient-to-r from-green-600 to-green-500 text-white rounded-t-2xl p-6">
                         <h5 class="modal-title font-bold flex items-center gap-2">
@@ -479,6 +479,7 @@
 
 @push('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .sticky {
             position: sticky;
@@ -497,6 +498,7 @@
 @endpush
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>

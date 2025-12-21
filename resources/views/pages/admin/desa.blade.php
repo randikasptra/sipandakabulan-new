@@ -269,6 +269,8 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+{{-- 🔧 TAMBAHKAN Bootstrap CSS --}}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     /* Custom responsive pagination */
     @media (max-width: 640px) {
@@ -290,10 +292,33 @@
             font-size: 0.875rem;
         }
     }
+
+    /* 🔧 PERBAIKAN: Pastikan modal muncul di atas semua elemen */
+    .modal-backdrop {
+        z-index: 1040 !important;
+    }
+    
+    .modal {
+        z-index: 1050 !important;
+    }
+    
+    /* Styling untuk modal dialog */
+    .modal-dialog {
+        margin: 1.75rem auto;
+    }
+    
+    @media (max-width: 768px) {
+        .modal-dialog {
+            margin: 0.5rem;
+            max-width: calc(100% - 1rem);
+        }
+    }
 </style>
 @endpush
 
 @section('scripts')
+{{-- 🔧 TAMBAHKAN Bootstrap JS SEBELUM script lainnya --}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -321,17 +346,6 @@
         credentialsModal.show();
     });
     @endif
-
-    // Search function
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        let value = this.value.toLowerCase();
-        let rows = document.querySelectorAll('#desaTable tbody tr');
-
-        rows.forEach(row => {
-            let text = row.textContent.toLowerCase();
-            row.style.display = text.includes(value) ? '' : 'none';
-        });
-    });
 
     // Delete confirmation
     function confirmDelete(id) {
@@ -366,21 +380,42 @@
         });
     }
 
+    // 🔧 PERBAIKAN: Fungsi openDetail yang lebih robust
     function openDetail(id) {
+        // Tampilkan loading indicator
+        document.getElementById('detailContent').innerHTML = `
+            <div class="modal-content border-0 shadow-2xl rounded-2xl">
+                <div class="modal-body p-6 text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-gray-600">Memuat data desa...</p>
+                </div>
+            </div>
+        `;
+        
+        // Buka modal terlebih dahulu
+        var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+        detailModal.show();
+        
+        // Fetch data
         fetch(`/admin/desa/${id}/ajax-detail`)
-            .then(res => res.text())
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.text();
+            })
             .then(html => {
                 document.getElementById('detailContent').innerHTML = html;
-                new bootstrap.Modal(document.getElementById('detailModal')).show();
             })
             .catch(err => {
+                console.error('Error:', err);
                 toastr.error("Gagal memuat detail desa");
+                detailModal.hide();
             });
     }
 
     // Handle window resize for better mobile experience
     window.addEventListener('resize', function() {
-        // Adjust table responsiveness on resize
         const table = document.getElementById('desaTable');
         if (window.innerWidth < 768) {
             table.classList.add('text-sm');

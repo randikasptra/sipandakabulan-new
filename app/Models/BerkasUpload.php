@@ -27,4 +27,29 @@ class BerkasUpload extends Model
     {
         return $this->belongsTo(KategoriUpload::class, 'kategori_upload_id');
     }
+
+    // ✅ TAMBAHKAN ACCESSOR INI
+    public function getFullUrlAttribute()
+    {
+        if (!$this->path_file) {
+            return null;
+        }
+
+        $supabaseUrl = config('services.supabase.url');
+        $bucket = config('services.supabase.bucket', 'uploads');
+
+        return "{$supabaseUrl}/storage/v1/object/public/{$bucket}/{$this->path_file}";
+    }
+
+    // ✅ Accessor untuk nama file saja
+    public function getFilenameAttribute()
+    {
+        return basename($this->path_file);
+    }
+
+    // ✅ Accessor untuk ekstensi file
+    public function getExtensionAttribute()
+    {
+        return strtolower(pathinfo($this->path_file, PATHINFO_EXTENSION));
+    }
 }

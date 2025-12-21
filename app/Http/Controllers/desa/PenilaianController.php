@@ -174,6 +174,9 @@ class PenilaianController extends Controller
             // ==============================
             // 3️⃣ UPLOAD BERKAS PER TAHUN KE SUPABASE
             // ==============================
+            // ==============================
+            // 3️⃣ UPLOAD BERKAS PER TAHUN KE SUPABASE
+            // ==============================
             foreach ($request->allFiles() as $key => $uploadedFiles) {
                 if (!Str::startsWith($key, 'file_') && !Str::startsWith($key, 'custom_kategori_file_')) {
                     continue;
@@ -218,11 +221,17 @@ class PenilaianController extends Controller
                 $klaster = $indikator?->klaster;
                 $klasterSlug = $klaster ? Str::slug($klaster->slug ?? $klaster->title, '-') : 'unknown';
 
+                // ✅ AMBIL NAMA DESA DARI USER YANG LOGIN
+                $userDesa = Auth::user()->desa; // Pastikan relasi desa() ada di User model
+                $desaSlug = $userDesa ? Str::slug($userDesa->nama_desa, '-') : 'unknown-desa';
+
                 $filesArray = is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles];
 
                 Log::info("📤 Processing files for kategori {$kategoriId}", [
                     'key' => $key,
-                    'total_files' => count($filesArray)
+                    'total_files' => count($filesArray),
+                    'desa' => $userDesa->nama_desa ?? 'unknown',
+                    'desa_slug' => $desaSlug
                 ]);
 
                 foreach ($filesArray as $fileIndex => $file) {
@@ -231,22 +240,35 @@ class PenilaianController extends Controller
                         continue;
                     }
 
-                    $filename = time() . '_' . Str::random(8) . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME), '_') . '.' . $file->getClientOriginalExtension();
-                    $path = "desa/{$klasterSlug}/{$tahun}/{$filename}";
+                    // ✅ GENERATE FILENAME YANG UNIK
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $extension = $file->getClientOriginalExtension();
+                    $timestamp = time();
+                    $random = Str::random(8);
+
+                    // Format: timestamp_random_namafile.extension
+                    $filename = "{$timestamp}_{$random}_" . Str::slug($originalName, '_') . ".{$extension}";
+
+                    // ✅ PATH BARU: desa/{nama_desa}/{tahun}/{klaster}/{filename}
+                    $path = "desa/{$desaSlug}/{$tahun}/{$klasterSlug}/{$filename}";
 
                     Log::info("⬆️ Uploading file {$fileIndex}", [
                         'original_name' => $file->getClientOriginalName(),
-                        'path' => $path
+                        'new_filename' => $filename,
+                        'path' => $path,
+                        'desa' => $userDesa->nama_desa ?? 'unknown'
                     ]);
 
+                    // Upload ke Supabase
                     $response = Http::withHeaders([
                         'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_ROLE_KEY'),
-                        'Content-Type' => $file->getClientMimeType(),
+                        'Content-Type' => $file->getMimeType(),
                     ])->withBody(
                         file_get_contents($file->getRealPath()),
-                        $file->getClientMimeType()
+                        $file->getMimeType()
                     )->put(
-                        env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_STORAGE_BUCKET') . '/' . $path
+                        env('SUPABASE_URL') . '/storage/v1/object/' .
+                            env('SUPABASE_STORAGE_BUCKET') . '/' . $path
                     );
 
                     if ($response->failed()) {
@@ -258,6 +280,7 @@ class PenilaianController extends Controller
                         continue;
                     }
 
+                    // Cari penilaian yang sesuai
                     $penilaianId = Penilaian::where([
                         'desa_id' => $desaId,
                         'indikator_id' => $kategori->indikator_id,
@@ -268,7 +291,7 @@ class PenilaianController extends Controller
                         BerkasUpload::create([
                             'penilaian_id' => $penilaianId,
                             'kategori_upload_id' => $kategori->id,
-                            'path_file' => $path,
+                            'path_file' => $path, // Simpan path baru dengan struktur desa
                             'nilai' => 0,
                         ]);
 
@@ -286,7 +309,7 @@ class PenilaianController extends Controller
                         ]);
                     }
 
-                    usleep(100000);
+                    usleep(100000); // Delay 0.1 detik antara upload
                 }
             }
 
