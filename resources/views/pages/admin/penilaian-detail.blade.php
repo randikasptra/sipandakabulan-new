@@ -130,7 +130,7 @@
                             {{ $p->status == 'approved' ? 'bg-green-100 text-green-800' :
                                ($p->status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
                             <i class="bi {{ $p->status == 'approved' ? 'bi-check-circle' : ($p->status == 'pending' ? 'bi-clock' : 'bi-x-circle') }}"></i>
-                            {{ ucfirst($p->status) }}
+                            {{ $p->status == 'approved' ? 'DISETUJUI' : ($p->status == 'pending' ? 'MENUNGGU' : 'DITOLAK') }}
                         </span>
                     </td>
 
@@ -171,7 +171,6 @@
                                     <i class="bi bi-chevron-down transition-transform duration-300" id="icon-{{ $p->id }}-{{ $kategoriId ?? 0 }}"></i>
                                 </button>
 
-                                <!-- Daftar File -->
                                 <!-- Daftar File -->
                                 <div id="files-{{ $p->id }}-{{ $kategoriId ?? 0 }}" class="bg-white px-4 py-3 space-y-2 hidden">
                                     @foreach($berkasList as $b)
@@ -291,33 +290,51 @@
                     cancelButtonColor: '#6b7280',
                     customClass: {
                         popup: 'rounded-2xl'
+                    },
+                    backdrop: 'rgba(0, 0, 0, 0.5)',
+                    showLoaderOnConfirm: true,
+                    preConfirm: async () => {
+                        try {
+                            const res = await fetch(`/admin/penilaian/${id}/approve`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Accept': 'application/json'
+                                }
+                            });
+                            const data = await res.json();
+                            
+                            if (!data.success) {
+                                throw new Error(data.message || 'Gagal menyetujui');
+                            }
+                            return data;
+                        } catch (error) {
+                            Swal.showValidationMessage(error.message);
+                        }
                     }
                 });
 
                 if (result.isConfirmed) {
-                    this.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>';
-                    this.disabled = true;
-
-                    try {
-                        const res = await fetch(`/admin/penilaian/${id}/approve`, {
-                            method: 'PATCH',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json'
-                            }
-                        });
-                        const data = await res.json();
-
-                        if (data.success) {
-                            Swal.fire('Disetujui!', data.message, 'success');
-                            row.style.opacity = '0';
-                            row.style.transform = 'translateX(-50px)';
-                            setTimeout(() => row.remove(), 400);
-                        }
-                    } catch (err) {
-                        Swal.fire('Error', 'Terjadi kesalahan sistem', 'error');
-                        this.innerHTML = '<i class="bi bi-check-lg text-lg"></i>';
-                        this.disabled = false;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Disetujui!',
+                        text: 'Penilaian telah disetujui.',
+                        confirmButtonColor: '#22c55e',
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+                    
+                    // Update row status visually
+                    const statusSpan = row.querySelector('td:nth-child(5) span');
+                    if (statusSpan) {
+                        statusSpan.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-green-100 text-green-800';
+                        statusSpan.innerHTML = '<i class="bi bi-check-circle"></i> DISETUJUI';
+                    }
+                    
+                    // Remove action buttons
+                    const actionTd = row.querySelector('td:nth-child(8)');
+                    if (actionTd) {
+                        actionTd.innerHTML = '<span class="text-gray-400 text-xs italic">Tidak ada aksi</span>';
                     }
                 }
             });
@@ -329,20 +346,26 @@
                 const id = this.dataset.id;
                 const row = document.getElementById(`row-${id}`);
 
-                const result = await Swal.fire({
+                const { value: rejectReason } = await Swal.fire({
                     title: 'Tolak Penilaian',
                     html: `
-                        <div class="text-left space-y-3">
-                            <label class="block font-medium text-gray-700">Alasan Penolakan</label>
-                            <select id="reason-select" class="swal2-select w-full">
-                                <option value="">-- Pilih alasan --</option>
-                                <option value="Data tidak lengkap">Data tidak lengkap</option>
-                                <option value="Format dokumen salah">Format dokumen salah</option>
-                                <option value="Bukti tidak valid">Bukti tidak valid</option>
-                                <option value="Nilai tidak sesuai">Nilai tidak sesuai</option>
-                                <option value="other">Lainnya...</option>
-                            </select>
-                            <textarea id="reason-manual" class="swal2-textarea w-full" placeholder="Tulis alasan lain..." rows="4" style="display:none;"></textarea>
+                        <div class="text-left">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">Alasan Penolakan</label>
+                                <select id="reason-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition">
+                                    <option value="">-- Pilih alasan --</option>
+                                    <option value="Data tidak lengkap">Data tidak lengkap</option>
+                                    <option value="Format dokumen salah">Format dokumen salah</option>
+                                    <option value="Bukti tidak valid">Bukti tidak valid</option>
+                                    <option value="Nilai tidak sesuai">Nilai tidak sesuai</option>
+                                    <option value="Dokumen tidak terbaca">Dokumen tidak terbaca</option>
+                                    <option value="other">Lainnya...</option>
+                                </select>
+                            </div>
+                            <div id="custom-reason-container" class="hidden">
+                                <label class="block text-gray-700 font-medium mb-2">Alasan Lainnya</label>
+                                <textarea id="custom-reason" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition" rows="3" placeholder="Tulis alasan penolakan secara detail..."></textarea>
+                            </div>
                         </div>
                     `,
                     icon: 'warning',
@@ -350,28 +373,42 @@
                     confirmButtonText: 'Tolak',
                     cancelButtonText: 'Batal',
                     confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#6b7280',
+                    customClass: {
+                        popup: 'rounded-2xl'
+                    },
+                    backdrop: 'rgba(0, 0, 0, 0.5)',
                     preConfirm: () => {
                         const select = document.getElementById('reason-select').value;
-                        const manual = document.getElementById('reason-manual').value.trim();
-                        if (!select && !manual) {
-                            Swal.showValidationMessage('Harus memilih atau mengisi alasan');
+                        const custom = document.getElementById('custom-reason')?.value.trim() || '';
+                        
+                        if (!select) {
+                            Swal.showValidationMessage('Harus memilih alasan penolakan');
                             return false;
                         }
-                        if (select === 'other' && !manual) {
+                        
+                        if (select === 'other' && !custom) {
                             Swal.showValidationMessage('Harus mengisi alasan lainnya');
                             return false;
                         }
-                        return select === 'other' ? manual : select;
+                        
+                        return select === 'other' ? custom : select;
                     },
                     didOpen: () => {
                         document.getElementById('reason-select').addEventListener('change', function() {
-                            const manual = document.getElementById('reason-manual');
-                            manual.style.display = this.value === 'other' ? 'block' : 'none';
+                            const container = document.getElementById('custom-reason-container');
+                            if (this.value === 'other') {
+                                container.classList.remove('hidden');
+                                document.getElementById('custom-reason').focus();
+                            } else {
+                                container.classList.add('hidden');
+                            }
                         });
                     }
                 });
 
-                if (result.isConfirmed) {
+                if (rejectReason) {
+                    // Show loading
                     Swal.fire({
                         title: 'Memproses...',
                         allowOutsideClick: false,
@@ -386,20 +423,57 @@
                                 'Content-Type': 'application/json',
                                 'Accept': 'application/json'
                             },
-                            body: JSON.stringify({
-                                reason: result.value
-                            })
+                            body: JSON.stringify({ reason: rejectReason })
                         });
+                        
                         const data = await res.json();
 
                         if (data.success) {
-                            Swal.fire('Ditolak!', 'Penilaian telah ditolak dengan alasan.', 'success');
-                            row.style.opacity = '0';
-                            row.style.transform = 'translateX(-50px)';
-                            setTimeout(() => row.remove(), 400);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Ditolak!',
+                                text: 'Penilaian telah ditolak dengan alasan.',
+                                confirmButtonColor: '#ef4444',
+                                timer: 2000,
+                                timerProgressBar: true
+                            });
+                            
+                            // Update row status and show rejection reason
+                            const statusSpan = row.querySelector('td:nth-child(5) span');
+                            if (statusSpan) {
+                                statusSpan.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-red-100 text-red-800';
+                                statusSpan.innerHTML = '<i class="bi bi-x-circle"></i> DITOLAK';
+                            }
+                            
+                            // Add rejection reason to indikator cell
+                            const indikatorTd = row.querySelector('td:nth-child(2)');
+                            if (indikatorTd) {
+                                const existingRejectionDiv = indikatorTd.querySelector('.bg-red-50');
+                                if (!existingRejectionDiv) {
+                                    const rejectionDiv = document.createElement('div');
+                                    rejectionDiv.className = 'mt-3 p-3 bg-red-50 border-l-4 border-red-500 rounded-lg';
+                                    rejectionDiv.innerHTML = `
+                                        <p class="text-xs font-semibold text-red-800 mb-1">
+                                            <i class="bi bi-exclamation-triangle-fill mr-1"></i> Alasan Penolakan
+                                        </p>
+                                        <p class="text-xs text-red-700 leading-relaxed">
+                                            ${rejectReason}
+                                        </p>
+                                    `;
+                                    indikatorTd.appendChild(rejectionDiv);
+                                }
+                            }
+                            
+                            // Remove action buttons
+                            const actionTd = row.querySelector('td:nth-child(8)');
+                            if (actionTd) {
+                                actionTd.innerHTML = '<span class="text-gray-400 text-xs italic">Tidak ada aksi</span>';
+                            }
+                        } else {
+                            throw new Error(data.message || 'Gagal menolak penilaian');
                         }
-                    } catch (err) {
-                        Swal.fire('Error', 'Gagal memproses penolakan', 'error');
+                    } catch (error) {
+                        Swal.fire('Error', error.message, 'error');
                     }
                 }
             });
@@ -455,9 +529,22 @@
         border-radius: 999px;
     }
 
-    /* Smooth row removal */
-    #tableIndikator tbody tr {
-        transition: all 0.4s ease;
+    /* SweetAlert2 custom styles */
+    .swal2-popup {
+        font-family: 'Segoe UI', system-ui, sans-serif !important;
+    }
+    
+    .swal2-select, .swal2-textarea {
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.5rem !important;
+        padding: 0.75rem !important;
+        font-size: 0.875rem !important;
+    }
+    
+    .swal2-select:focus, .swal2-textarea:focus {
+        outline: none !important;
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important;
     }
 </style>
 @endsection
