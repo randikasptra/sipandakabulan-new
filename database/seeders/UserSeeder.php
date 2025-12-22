@@ -23,20 +23,20 @@ class UserSeeder extends Seeder
         User::insert([
             [
                 'name' => 'Admin Dinsos Kabupaten Tasikmalaya',
-                'email' => 'admin@gmail.com',
+                'email' => 'admin@evaluasikla.com',
                 'password' => Hash::make('password123'),
                 'role' => 'admin',
             ],
             [
                 'name' => 'Risna Admin',
-                'email' => 'risna@gmail.com',
-                'password' => Hash::make('password123'),
+                'email' => 'risna@evaluasikla.com',
+                'password' => Hash::make('risna@2025'),
                 'role' => 'admin',
             ],
             [
                 'name' => 'Tubagus Admin',
-                'email' => 'tubagus@gmail.com',
-                'password' => Hash::make('password123'),
+                'email' => 'tubagus@evaluasikla.com',
+                'password' => Hash::make('tubagus@2025'),
                 'role' => 'admin',
             ],
         ]);
