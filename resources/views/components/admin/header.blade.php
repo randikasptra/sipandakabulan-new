@@ -48,11 +48,11 @@
             </a>
 
             {{-- Settings (Optional) --}}
-            <a href="#" 
+            <!-- <a href="#" 
                class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-150">
                 <i data-lucide="settings" class="w-4 h-4"></i>
                 <span>Pengaturan</span>
-            </a>
+            </a> -->
 
             {{-- Divider --}}
             <div class="border-t border-gray-100 my-2"></div>

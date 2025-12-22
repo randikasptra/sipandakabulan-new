@@ -2643,13 +2643,13 @@ class UserSeeder extends Seeder
                 'alamat_kantor' => 'Kec. Cigalontang',
                 'no_telp' => '081234560345',
             ],
-            [
-                'nama_desa' => 'Desa Sirnagalih_Cigalontang',
-                'nama_kades' => 'Kepala Desa Sirnagalih',
-                'kode_desa' => 'DS346',
-                'alamat_kantor' => 'Kec. Cigalontang',
-                'no_telp' => '081234560346',
-            ],
+            // [
+            //     'nama_desa' => 'Desa Sirnagalih_Cigalontang',
+            //     'nama_kades' => 'Kepala Desa Sirnagalih',
+            //     'kode_desa' => 'DS346',
+            //     'alamat_kantor' => 'Kec. Cigalontang',
+            //     'no_telp' => '081234560346',
+            // ],
             [
                 'nama_desa' => 'Desa Sirnaputra',
                 'nama_kades' => 'Kepala Desa Sirnaputra',
@@ -2689,13 +2689,13 @@ class UserSeeder extends Seeder
             // ===============================
             // KECAMATAN LEUWISARI (TAMBAHAN)
             // ===============================
-            [
-                'nama_desa' => 'Desa Mangunreja_Leuwisari',
-                'nama_kades' => 'Kepala Desa Mangunreja',
-                'kode_desa' => 'DS352',
-                'alamat_kantor' => 'Kec. Leuwisari',
-                'no_telp' => '081234560352',
-            ],
+            // [
+            //     'nama_desa' => 'Desa Mangunreja_Leuwisari',
+            //     'nama_kades' => 'Kepala Desa Mangunreja',
+            //     'kode_desa' => 'DS352',
+            //     'alamat_kantor' => 'Kec. Leuwisari',
+            //     'no_telp' => '081234560352',
+            // ],
 
             // ===============================
             // KECAMATAN SINGAPARNA (TAMBAHAN)
