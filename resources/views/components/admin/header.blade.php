@@ -1,11 +1,11 @@
 {{-- components/admin/header.blade.php --}}
 
 <nav class="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-white border-b shadow-sm z-40 flex items-center px-4 lg:px-6 justify-between transition-all duration-300">
-    
+
     {{-- LEFT SIDE: Mobile Toggle & Page Title --}}
     <div class="flex items-center gap-3">
         {{-- Mobile toggle button --}}
-        <button 
+        <button
             id="sidebarToggle"
             class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 active:scale-95">
             <i data-lucide="menu" class="w-6 h-6 text-gray-600"></i>
@@ -33,7 +33,7 @@
         <div class="absolute right-0 mt-2 w-48 bg-white shadow-xl rounded-xl py-2 border border-gray-100
                     opacity-0 invisible group-hover:opacity-100 group-hover:visible 
                     transform scale-95 group-hover:scale-100 transition-all duration-200 origin-top-right">
-            
+
             {{-- User Info --}}
             <div class="px-4 py-3 border-b border-gray-100">
                 <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name }}</p>
@@ -41,8 +41,8 @@
             </div>
 
             {{-- Profil Link --}}
-            <a href="{{ route('profile.edit') }}" 
-               class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-150">
+            <a href="{{ route('admin.profile.index') }}"
+                class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-150">
                 <i data-lucide="user-circle" class="w-4 h-4"></i>
                 <span>Profil Saya</span>
             </a>
@@ -74,12 +74,14 @@
 <style>
     /* Ensure main content doesn't overlap with fixed header and sidebar */
     main {
-        margin-top: 4rem; /* 64px header height */
+        margin-top: 4rem;
+        /* 64px header height */
     }
 
     @media (min-width: 1024px) {
         main {
-            margin-left: 16rem; /* 256px sidebar width */
+            margin-left: 16rem;
+            /* 256px sidebar width */
         }
     }
 

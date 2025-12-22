@@ -11,6 +11,7 @@ use App\Http\Controllers\Desa\SettingsController;
 use App\Http\Controllers\Desa\CatatanIndikatorController;
 use App\Http\Controllers\Kecamatan\KecamatanDashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\AdminDesaController;
 use App\Http\Controllers\Admin\AdminPenilaianController;
 use App\Http\Controllers\Admin\AdminPengumumanController;
@@ -80,6 +81,17 @@ Route::middleware(['auth', 'role:admin'])
 
         // TUTORIAL
         Route::get('/tutorial', [AdminTutorialController::class, 'index'])->name('tutorial');
+
+        // Di dalam group admin routes, tambahkan:
+
+        // PROFILE ADMIN
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', [AdminProfileController::class, 'index'])->name('index');
+            Route::put('/update', [AdminProfileController::class, 'updateProfile'])->name('update');
+            Route::put('/password', [AdminProfileController::class, 'updatePassword'])->name('password');
+            Route::put('/info', [AdminProfileController::class, 'updateInfo'])->name('info');
+            Route::get('/activities', [AdminProfileController::class, 'getActivities'])->name('activities');
+        });
 
         // LAPORAN
         Route::prefix('laporan')->name('laporan.')->group(function () {

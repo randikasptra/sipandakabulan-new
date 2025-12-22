@@ -26,27 +26,27 @@ class AdminLaporanController extends Controller
 
         // Query dengan search dan pagination
         $query = Desa::withCount([
-            'penilaians as total_pending' => fn ($q) => $q->where('status', 'pending')
+            'penilaians as total_pending' => fn($q) => $q->where('status', 'pending')
                 ->where('tahun', $tahun)
                 ->where('bulan', $bulan),
-            'penilaians as total_approved' => fn ($q) => $q->where('status', 'approved')
+            'penilaians as total_approved' => fn($q) => $q->where('status', 'approved')
                 ->where('tahun', $tahun)
                 ->where('bulan', $bulan),
-            'penilaians as total_rejected' => fn ($q) => $q->where('status', 'rejected')
+            'penilaians as total_rejected' => fn($q) => $q->where('status', 'rejected')
                 ->where('tahun', $tahun)
                 ->where('bulan', $bulan),
         ])
-        ->withAvg([
-            'penilaians as rata_rata' => fn ($q) => $q->where('status', 'approved')
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
-        ], 'nilai');
+            ->withAvg([
+                'penilaians as rata_rata' => fn($q) => $q->where('status', 'approved')
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulan)
+            ], 'nilai');
 
         // Tambahkan search jika ada
         if ($search) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nama_desa', 'like', "%{$search}%")
-                  ->orWhere('kode_desa', 'like', "%{$search}%");
+                    ->orWhere('kode_desa', 'like', "%{$search}%");
             });
         }
 
@@ -58,21 +58,21 @@ class AdminLaporanController extends Controller
 
         // Query terpisah untuk total keseluruhan (tanpa pagination)
         $totalQuery = Desa::withCount([
-            'penilaians as total_pending' => fn ($q) => $q->where('status', 'pending')
+            'penilaians as total_pending' => fn($q) => $q->where('status', 'pending')
                 ->where('tahun', $tahun)
                 ->where('bulan', $bulan),
-            'penilaians as total_approved' => fn ($q) => $q->where('status', 'approved')
+            'penilaians as total_approved' => fn($q) => $q->where('status', 'approved')
                 ->where('tahun', $tahun)
                 ->where('bulan', $bulan),
-            'penilaians as total_rejected' => fn ($q) => $q->where('status', 'rejected')
+            'penilaians as total_rejected' => fn($q) => $q->where('status', 'rejected')
                 ->where('tahun', $tahun)
                 ->where('bulan', $bulan),
         ]);
 
         if ($search) {
-            $totalQuery->where(function($q) use ($search) {
+            $totalQuery->where(function ($q) use ($search) {
                 $q->where('nama_desa', 'like', "%{$search}%")
-                  ->orWhere('kode_desa', 'like', "%{$search}%");
+                    ->orWhere('kode_desa', 'like', "%{$search}%");
             });
         }
 
@@ -84,11 +84,11 @@ class AdminLaporanController extends Controller
         $totalRejected = $allDesas->sum('total_rejected');
 
         return view('pages.admin.laporan', compact(
-            'desas', 
-            'tahun', 
-            'bulan', 
-            'totalApproved', 
-            'totalPending', 
+            'desas',
+            'tahun',
+            'bulan',
+            'totalApproved',
+            'totalPending',
             'totalRejected',
             'search'
         ));
@@ -104,8 +104,8 @@ class AdminLaporanController extends Controller
 
         $klasters = Klaster::with(['indikators.penilaians' => function ($q) use ($desa, $tahun, $bulan) {
             $q->where('desa_id', $desa->id)
-              ->where('tahun', $tahun)
-              ->where('bulan', $bulan);
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan);
         }])->get();
 
         $klasters = $klasters->map(function ($klaster) {
@@ -160,9 +160,9 @@ class AdminLaporanController extends Controller
 
             $klasters = Klaster::with(['indikators.penilaians' => function ($q) use ($desa, $tahun, $bulan) {
                 $q->where('desa_id', $desa->id)
-                  ->where('tahun', $tahun)
-                  ->where('bulan', $bulan)
-                  ->where('status', 'approved');
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulan)
+                    ->where('status', 'approved');
             }])->get();
 
             $klasters = $klasters->map(function ($klaster) {
@@ -175,8 +175,9 @@ class AdminLaporanController extends Controller
                 return $klaster;
             });
 
+            // SOLUSI: Perbaiki compact() di sini juga
             $pdf = Pdf::loadView('exports.laporan-desa-pdf', compact('desa', 'klasters', 'tahun', 'bulan'))
-                      ->setPaper('a4', 'portrait');
+                ->setPaper('a4', 'portrait');
 
             return $pdf->download("Laporan_{$desa->nama_desa}_{$bulan}_{$tahun}.pdf");
         }
@@ -190,8 +191,9 @@ class AdminLaporanController extends Controller
             ->orderBy('klaster_id')
             ->get();
 
-        $pdf = Pdf::loadView('exports.laporan-pdf', compact('penilaians', 'tahun', $bulan))
-                  ->setPaper('a4', 'landscape');
+        // SOLUSI: Perbaiki compact() - ganti $bulan menjadi 'bulan'
+        $pdf = Pdf::loadView('exports.laporan-pdf', compact('penilaians', 'tahun', 'bulan'))
+            ->setPaper('a4', 'landscape');
 
         return $pdf->download("Laporan_Penilaian_Semua_Desa_{$bulan}_{$tahun}.pdf");
     }

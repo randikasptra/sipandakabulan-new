@@ -30,6 +30,32 @@ class PenilaianController extends Controller
             return back()->with('error', '❌ Akun belum terhubung ke desa.');
         }
 
+        // ✅ VALIDASI FILE: PDF & Excel only, Max 30MB
+        $fileValidationRules = [];
+        foreach ($request->allFiles() as $key => $files) {
+            if (Str::startsWith($key, 'file_') || Str::startsWith($key, 'custom_kategori_file_')) {
+                $fileValidationRules[$key] = 'nullable|array';
+                $fileValidationRules[$key . '.*'] = [
+                    'file',
+                    'mimes:pdf,xls,xlsx,xlsm',
+                    'max:30720' // 30MB in KB
+                ];
+            }
+        }
+
+        try {
+            // Validate files
+            $request->validate($fileValidationRules, [
+                '*.mimes' => 'File harus berformat PDF atau Excel (XLS/XLSX)',
+                '*.max' => 'Ukuran file maksimal 30MB',
+                '*.file' => 'File tidak valid',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()
+                ->withErrors($e->errors())
+                ->with('error', '❌ Validasi file gagal: ' . collect($e->errors())->flatten()->first());
+        }
+
         DB::beginTransaction();
 
         try {
@@ -121,7 +147,6 @@ class PenilaianController extends Controller
             // 2️⃣b SIMPAN CATATAN INDIKATOR (PER TAHUN)
             // ==============================
             foreach ($request->all() as $key => $value) {
-
                 if (!Str::startsWith($key, 'catatan_')) {
                     continue;
                 }
@@ -170,13 +195,26 @@ class PenilaianController extends Controller
                 ]);
             }
 
+            // ==============================
+            // 3️⃣ UPLOAD BERKAS PER TAHUN KE SUPABASE
+            // ==============================
+            
+            // ✅ GET SUPABASE CONFIG SEKALI DI AWAL
+            $supabaseUrl = config('services.supabase.url', env('SUPABASE_URL'));
+            $supabaseBucket = config('services.supabase.bucket', env('SUPABASE_STORAGE_BUCKET'));
+            $supabaseKey = config('services.supabase.service_role_key', env('SUPABASE_SERVICE_ROLE_KEY'));
 
-            // ==============================
-            // 3️⃣ UPLOAD BERKAS PER TAHUN KE SUPABASE
-            // ==============================
-            // ==============================
-            // 3️⃣ UPLOAD BERKAS PER TAHUN KE SUPABASE
-            // ==============================
+            // ✅ VALIDATE SUPABASE CONFIG
+            if (empty($supabaseUrl) || empty($supabaseBucket) || empty($supabaseKey)) {
+                throw new \Exception('❌ Konfigurasi Supabase tidak lengkap. Periksa file .env');
+            }
+
+            Log::info("📡 Supabase Config", [
+                'url' => $supabaseUrl,
+                'bucket' => $supabaseBucket,
+                'has_key' => !empty($supabaseKey)
+            ]);
+
             foreach ($request->allFiles() as $key => $uploadedFiles) {
                 if (!Str::startsWith($key, 'file_') && !Str::startsWith($key, 'custom_kategori_file_')) {
                     continue;
@@ -222,7 +260,7 @@ class PenilaianController extends Controller
                 $klasterSlug = $klaster ? Str::slug($klaster->slug ?? $klaster->title, '-') : 'unknown';
 
                 // ✅ AMBIL NAMA DESA DARI USER YANG LOGIN
-                $userDesa = Auth::user()->desa; // Pastikan relasi desa() ada di User model
+                $userDesa = Auth::user()->desa;
                 $desaSlug = $userDesa ? Str::slug($userDesa->nama_desa, '-') : 'unknown-desa';
 
                 $filesArray = is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles];
@@ -240,9 +278,30 @@ class PenilaianController extends Controller
                         continue;
                     }
 
+                    // ✅ ADDITIONAL FILE VALIDATION
+                    $extension = strtolower($file->getClientOriginalExtension());
+                    $allowedExtensions = ['pdf', 'xls', 'xlsx', 'xlsm'];
+                    
+                    if (!in_array($extension, $allowedExtensions)) {
+                        Log::warning("⚠️ File extension not allowed", [
+                            'file' => $file->getClientOriginalName(),
+                            'extension' => $extension
+                        ]);
+                        continue;
+                    }
+
+                    // Check file size (30MB = 31457280 bytes)
+                    if ($file->getSize() > 31457280) {
+                        Log::warning("⚠️ File too large", [
+                            'file' => $file->getClientOriginalName(),
+                            'size' => $file->getSize(),
+                            'size_mb' => round($file->getSize() / 1024 / 1024, 2)
+                        ]);
+                        continue;
+                    }
+
                     // ✅ GENERATE FILENAME YANG UNIK
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $extension = $file->getClientOriginalExtension();
                     $timestamp = time();
                     $random = Str::random(8);
 
@@ -252,28 +311,32 @@ class PenilaianController extends Controller
                     // ✅ PATH BARU: desa/{nama_desa}/{tahun}/{klaster}/{filename}
                     $path = "desa/{$desaSlug}/{$tahun}/{$klasterSlug}/{$filename}";
 
+                    // ✅ BUILD FULL URL DENGAN BENAR
+                    $uploadUrl = rtrim($supabaseUrl, '/') . '/storage/v1/object/' . $supabaseBucket . '/' . $path;
+
                     Log::info("⬆️ Uploading file {$fileIndex}", [
                         'original_name' => $file->getClientOriginalName(),
                         'new_filename' => $filename,
                         'path' => $path,
-                        'desa' => $userDesa->nama_desa ?? 'unknown'
+                        'upload_url' => $uploadUrl,
+                        'size' => $file->getSize(),
+                        'size_mb' => round($file->getSize() / 1024 / 1024, 2),
+                        'mime' => $file->getMimeType()
                     ]);
 
                     // Upload ke Supabase
                     $response = Http::withHeaders([
-                        'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_ROLE_KEY'),
+                        'Authorization' => 'Bearer ' . $supabaseKey,
                         'Content-Type' => $file->getMimeType(),
                     ])->withBody(
                         file_get_contents($file->getRealPath()),
                         $file->getMimeType()
-                    )->put(
-                        env('SUPABASE_URL') . '/storage/v1/object/' .
-                            env('SUPABASE_STORAGE_BUCKET') . '/' . $path
-                    );
+                    )->put($uploadUrl);
 
                     if ($response->failed()) {
                         Log::error('❌ Gagal upload ke Supabase', [
                             'file' => $filename,
+                            'upload_url' => $uploadUrl,
                             'error' => $response->body(),
                             'status' => $response->status()
                         ]);
@@ -344,16 +407,21 @@ class PenilaianController extends Controller
         }
 
         try {
+            // ✅ GET SUPABASE CONFIG
+            $supabaseUrl = config('services.supabase.url', env('SUPABASE_URL'));
+            $supabaseBucket = config('services.supabase.bucket', env('SUPABASE_STORAGE_BUCKET'));
+            $supabaseKey = config('services.supabase.service_role_key', env('SUPABASE_SERVICE_ROLE_KEY'));
+
             $berkasList = BerkasUpload::where('kategori_upload_id', $kategoriId)->get();
 
             foreach ($berkasList as $berkas) {
                 try {
-                    $url = env('SUPABASE_URL') . '/storage/v1/object/' .
-                        env('SUPABASE_STORAGE_BUCKET') . '/' . $berkas->path_file;
+                    // ✅ BUILD URL DENGAN BENAR
+                    $deleteUrl = rtrim($supabaseUrl, '/') . '/storage/v1/object/' . $supabaseBucket . '/' . $berkas->path_file;
 
                     Http::withHeaders([
-                        'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_ROLE_KEY'),
-                    ])->delete($url);
+                        'Authorization' => 'Bearer ' . $supabaseKey,
+                    ])->delete($deleteUrl);
 
                     $berkas->delete();
                 } catch (\Exception $e) {
@@ -394,17 +462,22 @@ class PenilaianController extends Controller
         }
 
         try {
+            // ✅ GET SUPABASE CONFIG
+            $supabaseUrl = config('services.supabase.url', env('SUPABASE_URL'));
+            $supabaseBucket = config('services.supabase.bucket', env('SUPABASE_STORAGE_BUCKET'));
+            $supabaseKey = config('services.supabase.service_role_key', env('SUPABASE_SERVICE_ROLE_KEY'));
+
             foreach ($penilaians as $penilaian) {
                 $berkasList = BerkasUpload::where('penilaian_id', $penilaian->id)->get();
 
                 foreach ($berkasList as $berkas) {
                     try {
-                        $url = env('SUPABASE_URL') . '/storage/v1/object/' .
-                            env('SUPABASE_STORAGE_BUCKET') . '/' . $berkas->path_file;
+                        // ✅ BUILD URL DENGAN BENAR
+                        $deleteUrl = rtrim($supabaseUrl, '/') . '/storage/v1/object/' . $supabaseBucket . '/' . $berkas->path_file;
 
                         Http::withHeaders([
-                            'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_ROLE_KEY'),
-                        ])->delete($url);
+                            'Authorization' => 'Bearer ' . $supabaseKey,
+                        ])->delete($deleteUrl);
 
                         $berkas->delete();
                     } catch (\Exception $e) {

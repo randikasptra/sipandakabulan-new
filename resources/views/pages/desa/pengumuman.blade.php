@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Header -->
-    <div class="mb-6">
+    <div class="mb-6 mt-24">
         <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
             <div>
                 <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3">
