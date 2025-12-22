@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+
 
 class AdminDesaController extends Controller
 {
@@ -213,28 +215,58 @@ class AdminDesaController extends Controller
             return back()->with('error', 'Gagal memperbarui user: ' . $e->getMessage());
         }
     }
-
     /**
-     * Reset password user
+     * Reset password user menjadi format: Namadesa@2025
      */
     public function resetPassword(Desa $desa, User $user)
     {
         try {
-            $newPassword = 'password123';
+            // 1. Format nama desa untuk password
+            $namaDesa = $desa->nama_desa;
+
+            // 2. Hapus "Desa " dari awal jika ada
+            $namaTanpaPrefix = preg_replace('/^Desa\s+/i', '', $namaDesa);
+
+            // 3. Hapus spasi dan karakter khusus
+            $namaClean = str_replace([' ', '-', '_', '.', ','], '', $namaTanpaPrefix);
+
+            // 4. Buat password: Namadesa@2025
+            //    - Huruf pertama kapital
+            //    - Sisanya kecil
+            //    - Tambahkan @2025 di akhir
+            $password = ucfirst(strtolower($namaClean)) . '@2025';
+
+            // 5. Update password user
             $user->update([
-                'password' => Hash::make($newPassword)
+                'password' => Hash::make($password)
+            ]);
+
+            // Log aktivitas
+            Log::info('Password direset', [
+                'user_id' => $user->id,
+                'desa_id' => $desa->id,
+                'password_format' => $password,
+                'reset_by' => auth()->id(),
+                'reset_at' => now(),
             ]);
 
             return back()
-                ->with('success', 'Password berhasil direset')
+                ->with('success', '✅ Password berhasil direset')
                 ->with('show_credentials', true)
                 ->with('credentials', [
                     'nama_desa' => $desa->nama_desa,
                     'email' => $user->email,
-                    'password' => $newPassword,
+                    'password' => $password,
+                    'format' => 'Namadesa@2025',
                 ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal reset password: ' . $e->getMessage());
+            Log::error('Gagal reset password', [
+                'error' => $e->getMessage(),
+                'desa_id' => $desa->id ?? null,
+                'user_id' => $user->id ?? null,
+            ]);
+
+            return back()->with('error', '❌ Gagal reset password: ' . $e->getMessage());
         }
     }
 

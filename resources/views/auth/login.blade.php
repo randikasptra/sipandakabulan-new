@@ -12,9 +12,6 @@
 
     <link rel="icon" type="image/png" href="{{ asset('assets/images/LogoKKLA.png') }}">
 
-    <!-- Ganti icon tab jadi logo KKLA -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/LogoKKLA.png') }}">
-
     <style>
         .glow-button {
             position: relative;
@@ -78,10 +75,18 @@
             class="w-20 h-20 object-contain drop-shadow-md">
     </div>
 
-    <!-- Judul Instansi -->
-    <h1 class="text-lg md:text-xl font-extrabold text-center text-gray-800 mb-6 leading-relaxed tracking-wide">
-        KABUPATEN TASIKMALAYA <br> PEMBERDAYAAN PEREMPUAN DAN PERLINDUNGAN ANAK <br> REPUBLIK INDONESIA
+    <!-- Judul Instansi - UPDATED -->
+    <h1 class="text-lg md:text-xl font-extrabold text-center text-gray-800 mb-2 leading-relaxed tracking-wide">
+        SISTEM PENDATAAN KABUPATEN LAYAK ANAK (SIPANDAKABULAN)<br>
+        KABUPATEN TASIKMALAYA<br>
+        TINGKAT KECAMATAN DAN DESA
     </h1>
+    
+    <h2 class="text-sm md:text-base font-bold text-center text-gray-700 mb-6 leading-relaxed">
+        DINAS SOSIAL PENGENDALIAN PENDUDUK, KELUARGA BERENCANA,<br>
+        PEMBERDAYAAN PEREMPUAN DAN PERLINDUNGAN ANAK<br>
+        KABUPATEN TASIKMALAYA
+    </h2>
 
     <!-- Card Login (Glassmorphism) -->
     <div
@@ -94,7 +99,7 @@
         <h2 class="text-3xl font-bold text-center text-gray-800 mb-8 font-sans tracking-tight relative">
             <span class="relative z-10">
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Masuk</span>
-                <span class="text-blue-500">SIPANDAKABULAN</span>
+                <span class="text-blue-500"> SIPANDAKABULAN</span>
             </span>
             <div class="w-24 h-1.5 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mx-auto mt-3"></div>
         </h2>
@@ -134,7 +139,6 @@
         <!-- Form Login -->
         <form method="POST" action="{{ route('login') }}" class="space-y-6">
             @csrf
-
 
             <!-- Email Field -->
             <div class="relative">
@@ -233,17 +237,44 @@
         </form>
     </div>
 
-    <!-- Kotak Bantuan -->
+    <!-- Kotak Bantuan - UPDATED -->
     <div
         class="bg-white/80 backdrop-blur-md mt-8 p-6 rounded-2xl shadow-md w-full max-w-md text-center text-sm text-gray-700">
-        <p class="text-red-600 font-semibold mt-4">Jika mengalami masalah username atau password, silakan email ke
-            <br><a href="mailto:cs@evaluasikla.id" class="text-blue-600 underline">cs@evaluasikla.id</a>
+        <p class="font-semibold text-gray-800 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+            </svg>
+            Bantuan & Informasi
         </p>
+        
+        <div class="space-y-2 text-left">
+            <p class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                </svg>
+                <span>Email: <a href="mailto:pppa.kabtasik@gmail.com" class="text-blue-600 underline font-medium">pppa.kabtasik@gmail.com</a></span>
+            </p>
+            
+            <p class="font-semibold text-gray-700 mt-4 mb-2">Kontak Admin:</p>
+            <p class="flex items-start ml-7">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+                <span>Risna Gustina, S.Kom<br><a href="https://wa.me/6282130067230" class="text-green-600 font-medium">0821-3006-7230</a></span>
+            </p>
+            <p class="flex items-start ml-7">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+                <span>Tubagus Arfan Fahridan, S.Kom<br><a href="https://wa.me/6285222928827" class="text-green-600 font-medium">0852-2292-8827</a></span>
+            </p>
+        </div>
     </div>
 
     <!-- Kutipan UU -->
     <div
-        class="bg-white/80 backdrop-blur-md mt-6 p-6 rounded-2xl shadow-md w-full max-w-3xl text-center text-gray-700073 text-sm leading-relaxed">
+        class="bg-white/80 backdrop-blur-md mt-6 p-6 rounded-2xl shadow-md w-full max-w-3xl text-center text-gray-700 text-sm leading-relaxed">
         <strong class="block mb-3 text-gray-800 text-base">Pemerintah Daerah Berkewajiban dan Bertanggung
             Jawab</strong>
         Untuk melaksanakan dan mendukung kebijakan nasional dalam penyelenggaraan Perlindungan Anak melalui upaya daerah

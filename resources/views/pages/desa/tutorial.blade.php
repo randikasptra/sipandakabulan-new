@@ -4,456 +4,201 @@
 
 @section('content')
     <div class="max-w-7xl mx-auto px-4 py-8 mt-24">
-
-        {{-- HEADER TUTORIAL --}}
+        {{-- HEADER --}}
         <div class="flex items-center gap-3 mb-6">
             <div class="w-10 h-10 bg-gradient-to-r from-blue-900 to-blue-700 rounded-lg flex items-center justify-center">
                 <i class="bi bi-journal-code text-white text-lg"></i>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800">Tutorial Lengkap Penggunaan SIPANDAKABULAN</h2>
+            <h2 class="text-2xl font-bold text-gray-800">Panduan Lengkap Pengisian Penilaian Desa</h2>
         </div>
 
         {{-- CARD WRAPPER --}}
         <div class="bg-white shadow-lg rounded-2xl border border-gray-200 p-6">
-
             <p class="text-gray-600 mb-6">
-                Panduan langkah demi langkah untuk mengisi penilaian Desa Layak Anak melalui sistem SIPANDAKABULAN.
-                Pastikan semua indikator di semua klaster berstatus <b class="text-green-600">DISETUJUI</b> untuk menyelesaikan evaluasi.
+                Ikuti panduan langkah demi langkah untuk mengisi dan menyelesaikan penilaian Desa Layak Anak.
+                Pastikan semua indikator di semua klaster mencapai status <b class="text-green-600">DISETUJUI</b>.
             </p>
-
 
             {{-- ACCORDION --}}
             <div class="space-y-4" id="accordion">
-
-                {{-- ITEM 1: DASHBOARD --}}
+                {{-- STEP 1: MEMILIH KLASTER --}}
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAcc(1)"
-                        class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
+                    <button onclick="toggleAcc(1)" class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                            <span class="font-semibold text-gray-800">Dashboard Utama - Memantau Progress</span>
+                            <span class="font-semibold text-gray-800">Memulai: Memilih Klaster dari Dashboard</span>
                         </div>
                         <i id="icon-1" class="bi bi-chevron-down text-gray-600"></i>
                     </button>
                     <div id="acc-1" class="hidden p-6 text-gray-600 leading-relaxed">
-                        {{-- IMAGE SECTION --}}
                         <div class="mb-4 rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                            <img src="{{ asset('images/tutorial/1.png') }}" 
-                                 alt="Dashboard Utama" 
-                                 class="w-full h-auto object-cover"
-                                 onerror="this.src='https://via.placeholder.com/800x400/3b82f6/ffffff?text=Gambar+1+Dashboard'">
-                            <div class="bg-gray-800 text-white p-3 text-sm text-center">
-                                Gambar 1: Tampilan Dashboard Utama
-                            </div>
+                            <img src="{{ asset('images/tutorial/1.png') }}" alt="Dashboard Klaster" class="w-full h-auto object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/800x300/3b82f6/ffffff?text=Gambar+1+Dashboard+Klaster'">
+                            <div class="bg-gray-800 text-white p-3 text-sm text-center">Gambar 1: Dashboard untuk memilih klaster yang akan diisi.</div>
                         </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="font-bold text-gray-800 mb-3">📊 Ringkasan Dashboard:</h4>
-                                <ul class="list-disc pl-5 space-y-2">
-                                    <li><b>Progress Total</b> - Persentase keseluruhan evaluasi</li>
-                                    <li><b>Nilai EM</b> - Total nilai yang sudah diperoleh</li>
-                                    <li><b>Nilai Maksimal</b> - Target nilai yang harus dicapai</li>
-                                    <li><b>Ringkasan Status</b> - Jumlah klaster per status</li>
+                        <h4 class="font-bold text-gray-800 mb-3">🎯 Langkah-Langkah:</h4>
+                        <ol class="list-decimal pl-5 space-y-2">
+                            <li>Buka <b>Dashboard Utama</b> untuk melihat daftar semua klaster (Kelembagaan, Hak Sipil, dll).</li>
+                            <li>Perhatikan <b>status warna</b> pada setiap kartu klaster.
+                                <ul class="list-disc pl-5 mt-2 text-sm">
+                                    <li><b class="text-gray-500">Abu-abu</b>: Belum mulai diisi.</li>
+                                    <li><b class="text-yellow-600">Kuning</b>: Sudah diisi, status <b>MENUNGGU</b> review admin.</li>
+                                    <li><b class="text-red-600">Merah</b>: <b>DITOLAK</b>, perlu diulang.</li>
+                                    <li><b class="text-green-600">Hijau</b>: <b>DISETUJUI</b>, selesai.</li>
                                 </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 mb-3">🎯 Warna Status Klaster:</h4>
-                                <div class="space-y-2">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                                        <span class="text-sm"><b class="text-green-600">DISETUJUI</b> - Sudah diverifikasi admin</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
-                                        <span class="text-sm"><b class="text-yellow-600">MENUNGGU</b> - Belum direview admin</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                                        <span class="text-sm"><b class="text-red-600">DITOLAK</b> - Perlu revisi sesuai alasan penolakan</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-300">
-                            <p class="text-sm text-blue-800">
-                                <i class="bi bi-info-circle mr-2"></i>
-                                <b>Tips:</b> Pilih klaster yang masih berstatus <b class="text-yellow-600">MENUNGGU</b> atau <b class="text-red-600">DITOLAK</b> untuk diproses terlebih dahulu.
-                            </p>
-                        </div>
+                            </li>
+                            <li>Klik tombol <span class="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm rounded-lg font-medium shadow"> <i class="bi bi-pencil-square"></i> Proses Penilaian </span> pada klaster yang ingin dikerjakan (prioritaskan yang kuning atau merah).</li>
+                        </ol>
                     </div>
                 </div>
 
-                {{-- ITEM 2: PILIH KLASTER --}}
+                {{-- STEP 2: MENGISI INDIKATOR & DOWNLOAD TEMPLATE --}}
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAcc(2)"
-                        class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
+                    <button onclick="toggleAcc(2)" class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                            <span class="font-semibold text-gray-800">Memilih Klaster untuk Dinilai</span>
+                            <span class="font-semibold text-gray-800">Mengisi Indikator dan Download Panduan</span>
                         </div>
                         <i id="icon-2" class="bi bi-chevron-down text-gray-600"></i>
                     </button>
                     <div id="acc-2" class="hidden p-6 text-gray-600 leading-relaxed">
-                        {{-- IMAGE SECTION --}}
                         <div class="mb-4 rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                            <img src="{{ asset('images/tutorial/2.png') }}" 
-                                 alt="Memilih Klaster" 
-                                 class="w-full h-auto object-cover"
-                                 onerror="this.src='https://via.placeholder.com/800x300/10b981/ffffff?text=Gambar+2+Memilih+Klaster'">
-                            <div class="bg-gray-800 text-white p-3 text-sm text-center">
-                                Gambar 2: Memilih Klaster dari Dashboard
-                            </div>
+                            <img src="{{ asset('images/tutorial/2.png') }}" alt="Form Indikator" class="w-full h-auto object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/800x300/10b981/ffffff?text=Gambar+2+Form+Indikator'">
+                            <div class="bg-gray-800 text-white p-3 text-sm text-center">Gambar 2: Halaman untuk memilih poin indikator dan mengunggah dokumen.</div>
                         </div>
-                        
-                        <h4 class="font-bold text-gray-800 mb-3">🎯 Cara Memilih Klaster:</h4>
-                        <ol class="list-decimal pl-5 space-y-3">
-                            <li>Pada dashboard, cari kartu klaster yang ingin Anda kerjakan</li>
-                            <li>Perhatikan <b>status klaster</b> di pojok kanan atas kartu</li>
-                            <li>Klik tombol <span class="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm rounded-lg font-medium shadow-md hover:shadow-lg transition">
-                                <i class="bi bi-pencil-square"></i> Proses Penilaian
-                            </span></li>
-                            <li>Anda akan diarahkan ke halaman detail klaster tersebut</li>
-                        </ol>
-                        
-                        <div class="mt-4 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border border-yellow-300">
-                            <p class="text-sm text-yellow-800">
-                                <i class="bi bi-exclamation-triangle mr-2"></i>
-                                <b>Perhatian:</b> Klaster yang berstatus <b class="text-green-600">DISETUJUI</b> sudah terkunci dan tidak bisa diubah.
-                            </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-3">📝 Isi Poin Indikator:</h4>
+                                <ul class="list-disc pl-5 space-y-2">
+                                    <li>Pilih <b>poin nilai</b> (misal: 0, 5, 10) yang sesuai dengan kondisi lapangan di desa Anda.</li>
+                                    <li>Isi <b>Catatan</b> opsional untuk memberikan penjelasan tambahan.</li>
+                                    <li>Gunakan tombol <span class="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm rounded-lg font-medium shadow"> <i class="bi bi-download"></i> Download Template Excel </span> sebagai panduan untuk format data yang perlu diunggah.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-3">📎 Dokumen Pendukung:</h4>
+                                <p class="text-sm mb-2">Dokumen pendukung bersifat <b>opsional</b>, tetapi sangat disarankan untuk memperkuat penilaian.</p>
+                                <p class="text-xs text-gray-500">Format yang didukung: PDF, Excel,  (maks. 30MB per file).</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- ITEM 3: FORM PENILAIAN --}}
+                {{-- STEP 3 & 4: UPLOAD DINAMIS DI KELEMBAGAAN --}}
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAcc(3)"
-                        class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
+                    <button onclick="toggleAcc(3)" class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                            <span class="font-semibold text-gray-800">Mengisi Form Penilaian Indikator</span>
+                            <span class="font-semibold text-gray-800">Upload Dinamis: Contoh di Klaster Kelembagaan</span>
                         </div>
                         <i id="icon-3" class="bi bi-chevron-down text-gray-600"></i>
                     </button>
                     <div id="acc-3" class="hidden p-6 text-gray-600 leading-relaxed">
-                        {{-- IMAGE SECTION --}}
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                             <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                                <img src="{{ asset('images/tutorial/3.png') }}" 
-                                     alt="Form Penilaian" 
-                                     class="w-full h-48 object-cover"
-                                     onerror="this.src='https://via.placeholder.com/400x200/8b5cf6/ffffff?text=Gambar+3+Form+Penilaian'">
-                                <div class="bg-gray-800 text-white p-2 text-xs text-center">
-                                    Gambar 3: Form Penilaian Indikator
-                                </div>
+                                <img src="{{ asset('images/tutorial/3.png') }}" alt="Upload Dokumen Patokan" class="w-full h-48 object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250/8b5cf6/ffffff?text=Gambar+3+Upload+Dokumen+Patokan'">
+                                <div class="bg-gray-800 text-white p-2 text-xs text-center">Gambar 3: Unggah hingga 9 dokumen (opsional) di kategori yang sudah ada.</div>
                             </div>
                             <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                                <img src="{{ asset('images/tutorial/4.png') }}" 
-                                     alt="Template Excel" 
-                                     class="w-full h-48 object-cover"
-                                     onerror="this.src='https://via.placeholder.com/400x200/10b981/ffffff?text=Gambar+4+Template+Excel'">
-                                <div class="bg-gray-800 text-white p-2 text-xs text-center">
-                                    Gambar 4: Download Template Excel
-                                </div>
+                                <img src="{{ asset('images/tutorial/4.png') }}" alt="Tambah Kategori Baru" class="w-full h-48 object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250/f59e0b/ffffff?text=Gambar+4+Tambah+Kategori+Baru'">
+                                <div class="bg-gray-800 text-white p-2 text-xs text-center">Gambar 4: Menambah kategori baru jika dokumen lebih dari 9 atau jenisnya berbeda.</div>
                             </div>
                         </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="font-bold text-gray-800 mb-3">📝 Komponen Form:</h4>
-                                <ul class="list-disc pl-5 space-y-2">
-                                    <li><b>Indikator Penilaian</b> - Pertanyaan/kondisi yang dinilai</li>
-                                    <li><b>Pilihan Nilai</b> - Radio button/dropdown untuk memilih poin</li>
-                                    <li><b>Catatan</b> - Keterangan tambahan (opsional)</li>
-                                    <li><b>Template Excel</b> - Panduan pengisian (jika tersedia)</li>
-                                    <li><b>Dokumen Pendukung</b> - Area upload bukti dokumen</li>
-                                </ul>
+                        <h4 class="font-bold text-gray-800 mb-3">🔄 Cara Kerja Upload Dinamis:</h4>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                <h5 class="font-semibold text-gray-700 mb-2">📄 Situasi Normal (Poin 1 Kelembagaan):</h5>
+                                <p class="text-sm">Tersedia <b>9 kolom upload</b> untuk dokumen seperti SK Gugus Tugas. Anda boleh mengisi <b>semua, sebagian, atau tidak sama sekali</b> (opsional).</p>
                             </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 mb-3">⚙️ Cara Pengisian:</h4>
-                                <ol class="list-decimal pl-5 space-y-2">
-                                    <li>Baca indikator dengan teliti</li>
-                                    <li>Pilih nilai yang sesuai kondisi desa</li>
-                                    <li>Isi catatan jika diperlukan</li>
-                                    <li>Upload dokumen pendukung (opsional)</li>
-                                    <li>Lanjut ke indikator berikutnya</li>
+                            <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                                <h5 class="font-semibold text-gray-700 mb-2">➕ Jika Dokumen Lebih dari 9 atau Jenis Berbeda:</h5>
+                                <ol class="list-decimal pl-5 text-sm space-y-1">
+                                    <li>Klik tombol <span class="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs rounded-lg font-medium shadow"> <i class="bi bi-plus-circle"></i> Tambah Kategori Upload </span>.</li>
+                                    <li>Isi <b>Nama Kategori Baru</b> (misal: "SK Tambahan" atau "Laporan Kegiatan").</li>
+                                    <li>Unggah file (PDF/Excel) pada kolom yang baru muncul.</li>
+                                    <li>Ulangi langkah ini untuk menambah kategori ke-11, 12, dan seterusnya.</li>
                                 </ol>
+                                <p class="text-xs text-gray-600 mt-2">📌 <b>Fitur ini berlaku sama untuk semua poin di semua klaster.</b></p>
                             </div>
-                        </div>
-                        
-                        <div class="mt-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-300">
-                            <p class="text-sm text-blue-800">
-                                <i class="bi bi-lightbulb mr-2"></i>
-                                <b>Saran:</b> Gunakan <b class="text-blue-700">Download Template Excel</b> jika tersedia untuk memandu pengisian data.
-                            </p>
                         </div>
                     </div>
                 </div>
 
-                {{-- ITEM 4: UPLOAD DOKUMEN --}}
+                {{-- STEP 6,7,8: MEMAHAMI STATUS INDIKATOR --}}
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAcc(4)"
-                        class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
+                    <button onclick="toggleAcc(4)" class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
-                            <span class="font-semibold text-gray-800">Upload Dokumen Pendukung</span>
+                            <span class="font-semibold text-gray-800">Memahami Tiga Status Indikator</span>
                         </div>
                         <i id="icon-4" class="bi bi-chevron-down text-gray-600"></i>
                     </button>
                     <div id="acc-4" class="hidden p-6 text-gray-600 leading-relaxed">
-                        {{-- IMAGE SECTION --}}
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                            <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                                <img src="{{ asset('images/tutorial/5.png') }}" 
-                                     alt="Upload Dokumen" 
-                                     class="w-full h-48 object-cover"
-                                     onerror="this.src='https://via.placeholder.com/400x200/f59e0b/ffffff?text=Gambar+5+Upload+Dokumen'">
-                                <div class="bg-gray-800 text-white p-2 text-xs text-center">
-                                    Gambar 5: Area Upload Dokumen
-                                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="text-center p-4 border border-yellow-300 bg-gradient-to-b from-yellow-50 to-amber-50 rounded-xl">
+                                <div class="w-12 h-12 bg-yellow-500 text-white rounded-full flex items-center justify-center text-xl mx-auto mb-3 shadow">⏳</div>
+                                <h5 class="font-bold text-gray-800">Status: <span class="text-yellow-700">MENUNGGU</span></h5>
+                                <img src="{{ asset('images/tutorial/7.png') }}" alt="Status Menunggu" class="w-full h-32 object-cover rounded-lg my-2 border" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x150/eab308/ffffff?text=Status+MENUNGGU'">
+                                <p class="text-xs text-gray-600">Indikator telah disimpan dan dikirim, <b>belum direview oleh Admin</b>. Warna: <b class="text-yellow-600">KUNING</b>.</p>
                             </div>
-                            <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                                <img src="{{ asset('images/tutorial/6.png') }}" 
-                                     alt="Tambah Kategori" 
-                                     class="w-full h-48 object-cover"
-                                     onerror="this.src='https://via.placeholder.com/400x200/10b981/ffffff?text=Gambar+6+Tambah+Kategori'">
-                                <div class="bg-gray-800 text-white p-2 text-xs text-center">
-                                    Gambar 6: Tambah Kategori Upload
-                                </div>
+                            <div class="text-center p-4 border border-green-300 bg-gradient-to-b from-green-50 to-emerald-50 rounded-xl">
+                                <div class="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center text-xl mx-auto mb-3 shadow">✅</div>
+                                <h5 class="font-bold text-gray-800">Status: <span class="text-green-700">DISETUJUI</span></h5>
+                                <img src="{{ asset('images/tutorial/6.png') }}" alt="Status Disetujui" class="w-full h-32 object-cover rounded-lg my-2 border" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x150/22c55e/ffffff?text=Status+DISETUJUI'">
+                                <p class="text-xs text-gray-600">Admin telah menyetujui. <b>Nilai dan dokumen sudah final</b>. Warna: <b class="text-green-600">HIJAU</b>. <i>(Ini yang kita tuju)</i>.</p>
                             </div>
-                        </div>
-                        
-                        <h4 class="font-bold text-gray-800 mb-3">📎 Fitur Upload Dokumen:</h4>
-                        <div class="space-y-4">
-                            <div class="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border">
-                                <h5 class="font-semibold text-gray-700 mb-2">✅ Dokumen yang bisa diupload:</h5>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                    <span class="px-3 py-1.5 bg-white border rounded-lg text-xs text-center">Surat Keputusan (SK)</span>
-                                    <span class="px-3 py-1.5 bg-white border rounded-lg text-xs text-center">Foto Kegiatan</span>
-                                    <span class="px-3 py-1.5 bg-white border rounded-lg text-xs text-center">Laporan PDF</span>
-                                    <span class="px-3 py-1.5 bg-white border rounded-lg text-xs text-center">Dokumen Word</span>
-                                    <span class="px-3 py-1.5 bg-white border rounded-lg text-xs text-center">File Excel</span>
-                                    <span class="px-3 py-1.5 bg-white border rounded-lg text-xs text-center">Scan Dokumen</span>
-                                </div>
-                            </div>
-                            
-                            <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
-                                <h5 class="font-semibold text-gray-700 mb-2">➕ Tambah Kategori Upload:</h5>
-                                <p class="text-sm mb-2">Jika dokumen tidak sesuai kategori yang ada:</p>
-                                <ol class="list-decimal pl-5 text-sm space-y-1">
-                                    <li>Klik <span class="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs rounded-lg font-medium shadow">
-                                        <i class="bi bi-plus-circle"></i> Tambah Kategori Baru
-                                    </span></li>
-                                    <li>Isi nama kategori baru</li>
-                                    <li>Upload file sesuai kategori tersebut</li>
-                                </ol>
+                            <div class="text-center p-4 border border-red-300 bg-gradient-to-b from-red-50 to-rose-50 rounded-xl">
+                                <div class="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center text-xl mx-auto mb-3 shadow">❌</div>
+                                <h5 class="font-bold text-gray-800">Status: <span class="text-red-700">DITOLAK</span></h5>
+                                <img src="{{ asset('images/tutorial/8.png') }}" alt="Status Ditolak" class="w-full h-32 object-cover rounded-lg my-2 border" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x150/ef4444/ffffff?text=Status+DITOLAK'">
+                                <p class="text-xs text-gray-600">Admin menolak. <b>Cek alasan penolakan, lalu perbaiki dan isi ulang poin/dokumennya</b>. Warna: <b class="text-red-600">MERAH</b>.</p>
                             </div>
                         </div>
-                        
-                        <div class="mt-4 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border border-yellow-300">
-                            <p class="text-sm text-yellow-800">
-                                <i class="bi bi-exclamation-triangle mr-2"></i>
-                                <b>Catatan:</b> Upload dokumen bersifat <b>opsional</b>, namun sangat disarankan untuk memperkuat validasi penilaian.
-                            </p>
+                        <div class="p-4 bg-red-50 rounded-lg border border-red-300">
+                            <p class="text-sm text-red-800"><i class="bi bi-exclamation-octagon mr-2"></i><b>Penting untuk Status DITOLAK:</b> Anda <b>harus</b> membuka indikator tersebut kembali, membaca alasan penolakan dari Admin, melakukan perbaikan, dan menyimpan ulang untuk dikirim kembali ke status <b>MENUNGGU</b>.</p>
                         </div>
                     </div>
                 </div>
 
-                {{-- ITEM 5: STATUS & VERIFIKASI --}}
+                {{-- STEP 9 & 10: STATUS KLASTER & FINAL --}}
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAcc(5)"
-                        class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
+                    <button onclick="toggleAcc(5)" class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
-                            <span class="font-semibold text-gray-800">Memahami Status & Proses Verifikasi</span>
+                            <span class="font-semibold text-gray-800">Status Akhir Klaster dan Penyelesaian</span>
                         </div>
                         <i id="icon-5" class="bi bi-chevron-down text-gray-600"></i>
                     </button>
                     <div id="acc-5" class="hidden p-6 text-gray-600 leading-relaxed">
-                        {{-- IMAGE SECTION --}}
                         <div class="mb-4 rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                            <img src="{{ asset('images/tutorial/7.png') }}" 
-                                 alt="Status Verifikasi" 
-                                 class="w-full h-auto object-cover"
-                                 onerror="this.src='https://via.placeholder.com/800x300/ef4444/ffffff?text=Gambar+7+Status+Verifikasi'">
-                            <div class="bg-gray-800 text-white p-3 text-sm text-center">
-                                Gambar 7: Status Penilaian dan Verifikasi
+                            <img src="{{ asset('images/tutorial/10.png') }}" alt="Dashboard Klaster Lengkap" class="w-full h-auto object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/800x300/8b5cf6/ffffff?text=Gambar+8+Dashboard+Klaster+Lengkap'">
+                            <div class="bg-gray-800 text-white p-3 text-sm text-center">Gambar 8: Tampak penuh semua klaster dengan statusnya masing-masing di Dashboard.</div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-3">📊 Bacaan Dashboard Akhir:</h4>
+                                <ul class="list-disc pl-5 space-y-2">
+                                    <li><b class="text-green-600">HIJAU (DISETUJUI)</b>: Klaster telah selesai dan benar. Tidak perlu tindakan lebih lanjut.</li>
+                                    <li><b class="text-yellow-600">KUNING (MENUNGGU)</b>: Sedalam dalam proses review Admin. Harus ditunggu.</li>
+                                    <li><b class="text-red-600">MERAH (DITOLAK)</b>: Ada indikator yang harus <b>ditinjau ulang dan diperbaiki</b>.</li>
+                                    <li><b class="text-gray-500">ABU-ABU</b>: Belum mulai diisi.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-3">🎉 Tujuan Akhir yang Berhasil:</h4>
+                                <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md mb-3">
+                                    <img src="{{ asset('images/tutorial/9.png') }}" alt="Status Final Disetujui" class="w-full h-32 object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200/22c55e/ffffff?text=Gambar+9+Semua+Disetujui'">
+                                    <div class="bg-gray-800 text-white p-2 text-xs text-center">Gambar 9: Semua indikator dalam satu klaster berstatus DISETUJUI (Hijau).</div>
+                                </div>
+                                <p class="text-sm">Ketika <b>semua indikator</b> dalam satu klaster berwarna <b class="text-green-600">hijau</b>, berarti klaster tersebut telah <b>berhasil diselesaikan</b> sesuai nilai dan dokumen pendukung. Tugas Anda untuk klaster itu selesai.</p>
                             </div>
                         </div>
-                        
-                        <h4 class="font-bold text-gray-800 mb-3">🔄 Flow Status Penilaian:</h4>
-                        <div class="space-y-4">
-                            <div class="flex items-start gap-3 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border border-yellow-200">
-                                <div class="w-10 h-10 bg-yellow-500 text-white rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
-                                    <i class="bi bi-clock"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-semibold text-gray-700">1. MENUNGGU (Pending) ⏳</h5>
-                                    <p class="text-sm text-gray-600">Penilaian sudah dikirim dan menunggu review dari admin Dinsos.</p>
-                                    <p class="text-xs text-yellow-600 mt-1">📌 Status ini masih bisa diubah</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start gap-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
-                                <div class="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
-                                    <i class="bi bi-check-circle"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-semibold text-gray-700">2. DISETUJUI (Approved) ✅</h5>
-                                    <p class="text-sm text-gray-600">Admin telah menyetujui penilaian. Indikator terkunci dan tidak bisa diubah.</p>
-                                    <p class="text-xs text-green-600 mt-1">📌 Status final - evaluasi selesai</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start gap-3 p-4 bg-gradient-to-r from-red-50 to-rose-50 rounded-xl border border-red-200">
-                                <div class="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
-                                    <i class="bi bi-x-circle"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-semibold text-gray-700">3. DITOLAK (Rejected) ❌</h5>
-                                    <p class="text-sm text-gray-600">Admin menolak penilaian. Periksa <b class="text-red-600">alasan penolakan</b> dan perbaiki sesuai saran.</p>
-                                    <p class="text-xs text-red-600 mt-1">📌 Setelah diperbaiki, kirim ulang untuk verifikasi</p>
-                                </div>
-                            </div>
+                        <div class="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl border border-green-300">
+                            <p class="text-green-800 font-semibold"><i class="bi bi-flag mr-2"></i>Tujuan Utama: Usahakan agar seluruh klaster di Dashboard Anda berwarna <b class="text-green-700">HIJAU</b>, yang menandakan seluruh penilaian telah <b>DISETUJUI</b> oleh Admin.</p>
                         </div>
-                        
-                        <div class="mt-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 rounded-xl border border-red-300 shadow-sm">
-                            <p class="text-sm text-red-800">
-                                <i class="bi bi-exclamation-octagon mr-2"></i>
-                                <b>Penting:</b> Jika penilaian <b class="text-red-600">DITOLAK</b>, Anda <b>harus</b> memperbaiki sesuai alasan yang diberikan sebelum mengirim ulang.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- ITEM 6: SIMPAN & FINAL --}}
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <button onclick="toggleAcc(6)"
-                        class="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition">
-                        <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">6</div>
-                            <span class="font-semibold text-gray-800">Menyimpan & Menyelesaikan Evaluasi</span>
-                        </div>
-                        <i id="icon-6" class="bi bi-chevron-down text-gray-600"></i>
-                    </button>
-                    <div id="acc-6" class="hidden p-6 text-gray-600 leading-relaxed">
-                        {{-- IMAGE SECTION --}}
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                            <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                                <img src="{{ asset('images/tutorial/8.png') }}" 
-                                     alt="Tombol Simpan" 
-                                     class="w-full h-48 object-cover"
-                                     onerror="this.src='https://via.placeholder.com/400x200/3b82f6/ffffff?text=Gambar+8+Tombol+Simpan'">
-                                <div class="bg-gray-800 text-white p-2 text-xs text-center">
-                                    Gambar 8: Tombol Simpan & Kirim
-                                </div>
-                            </div>
-                            <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md">
-                                <img src="{{ asset('images/tutorial/9.png') }}" 
-                                     alt="Dashboard Final" 
-                                     class="w-full h-48 object-cover"
-                                     onerror="this.src='https://via.placeholder.com/400x200/10b981/ffffff?text=Gambar+9+Dashboard+Final'">
-                                <div class="bg-gray-800 text-white p-2 text-xs text-center">
-                                    Gambar 9: Dashboard Setelah Selesai
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <h4 class="font-bold text-gray-800 mb-3">💾 Proses Penyimpanan:</h4>
-                        <div class="space-y-3">
-                            <div class="p-4 bg-gradient-to-r from-gray-50 to-slate-100 rounded-xl border shadow-sm">
-                                <h5 class="font-semibold text-gray-700 mb-2">Simpan Sementara:</h5>
-                                <p class="text-sm">Gunakan tombol <span class="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg font-medium shadow hover:shadow-md transition">
-                                    <i class="bi bi-save"></i> Simpan Draft
-                                </span> jika ingin menyimpan progress tanpa mengirim untuk verifikasi.</p>
-                                <p class="text-xs text-gray-500 mt-2">📌 Status tetap DRAFT - bisa diubah kapan saja</p>
-                            </div>
-                            
-                            <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl border border-green-300 shadow-sm">
-                                <h5 class="font-semibold text-gray-700 mb-2">Kirim untuk Verifikasi:</h5>
-                                <p class="text-sm">Gunakan tombol <span class="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm rounded-lg font-medium shadow hover:shadow-md transition">
-                                    <i class="bi bi-send-check"></i> Simpan & Kirim Verifikasi
-                                </span> untuk mengirim penilaian ke admin.</p>
-                                <p class="text-xs text-green-600 mt-2">📌 Status berubah menjadi MENUNGGU - menunggu review admin</p>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-300 shadow-sm">
-                            <p class="text-sm text-green-800">
-                                <i class="bi bi-flag mr-2"></i>
-                                <b>Tujuan Akhir:</b> Semua klaster harus berstatus <b class="text-green-600">DISETUJUI</b> untuk menyelesaikan evaluasi Desa Layak Anak.
-                            </p>
-                        </div>
-                        
-                        <div class="mt-4 p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl border border-purple-300 shadow-sm">
-                            <h5 class="font-semibold text-purple-800 mb-3 flex items-center gap-2">
-                                <i class="bi bi-check-circle"></i> 📋 Checklist Penyelesaian:
-                            </h5>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div class="flex items-center gap-2 p-2 bg-white rounded-lg border">
-                                    <i class="bi bi-check-lg text-green-500"></i>
-                                    <span class="text-sm">Semua indikator telah diisi</span>
-                                </div>
-                                <div class="flex items-center gap-2 p-2 bg-white rounded-lg border">
-                                    <i class="bi bi-check-lg text-green-500"></i>
-                                    <span class="text-sm">Dokumen pendukung terupload</span>
-                                </div>
-                                <div class="flex items-center gap-2 p-2 bg-white rounded-lg border">
-                                    <i class="bi bi-check-lg text-green-500"></i>
-                                    <span class="text-sm">Semua status DISETUJUI</span>
-                                </div>
-                                <div class="flex items-center gap-2 p-2 bg-white rounded-lg border">
-                                    <i class="bi bi-check-lg text-green-500"></i>
-                                    <span class="text-sm">Progress total 100%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- FAQ SECTION --}}
-            <div class="mt-8 pt-8 border-t border-gray-200">
-                <div class="flex items-center gap-2 mb-4">
-                    <i class="bi bi-question-circle text-2xl text-blue-600"></i>
-                    <h3 class="text-xl font-bold text-gray-800">Pertanyaan yang Sering Ditanyakan</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border hover:shadow-md transition">
-                        <h4 class="font-semibold text-gray-700 flex items-center gap-2">
-                            <i class="bi bi-question-circle text-blue-500"></i>
-                            Apa yang harus dilakukan jika penilaian ditolak?
-                        </h4>
-                        <p class="text-sm text-gray-600 mt-2 pl-6">Buka kembali indikator yang ditolak, baca alasan penolakan, perbaiki nilai/dokumen yang diminta, lalu kirim ulang.</p>
-                    </div>
-                    <div class="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border hover:shadow-md transition">
-                        <h4 class="font-semibold text-gray-700 flex items-center gap-2">
-                            <i class="bi bi-question-circle text-blue-500"></i>
-                            Bisakah mengubah penilaian yang sudah disetujui?
-                        </h4>
-                        <p class="text-sm text-gray-600 mt-2 pl-6"><b>Tidak bisa.</b> Penilaian yang sudah DISETUJUI terkunci permanen. Hubungi admin jika ada kesalahan kritis.</p>
-                    </div>
-                    <div class="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border hover:shadow-md transition">
-                        <h4 class="font-semibold text-gray-700 flex items-center gap-2">
-                            <i class="bi bi-question-circle text-blue-500"></i>
-                            Berapa lama waktu verifikasi oleh admin?
-                        </h4>
-                        <p class="text-sm text-gray-600 mt-2 pl-6">Biasanya 1-3 hari kerja. Status akan berubah otomatis setelah admin melakukan review.</p>
-                    </div>
-                    <div class="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border hover:shadow-md transition">
-                        <h4 class="font-semibold text-gray-700 flex items-center gap-2">
-                            <i class="bi bi-question-circle text-blue-500"></i>
-                            Bagaimana jika dokumen terlalu besar?
-                        </h4>
-                        <p class="text-sm text-gray-600 mt-2 pl-6">Maksimal ukuran file adalah 10MB per file. Kompres file atau gunakan format PDF untuk mengurangi ukuran.</p>
                     </div>
                 </div>
             </div>
-
-
         </div>
-
     </div>
 
     {{-- SCRIPT ACCORDION --}}
@@ -461,61 +206,15 @@
         function toggleAcc(id) {
             const content = document.getElementById('acc-' + id);
             const icon = document.getElementById('icon-' + id);
-
             if (content.classList.contains('hidden')) {
                 content.classList.remove('hidden');
-                icon.classList.add('rotate-180');
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-chevron-up');
             } else {
                 content.classList.add('hidden');
-                icon.classList.remove('rotate-180');
+                icon.classList.remove('bi-chevron-up');
+                icon.classList.add('bi-chevron-down');
             }
         }
     </script>
-
-    <style>
-        /* Modern styling untuk gambar */
-        .tutorial-image {
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            background: linear-gradient(white, white) padding-box,
-                        linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
-        }
-        
-        .tutorial-image:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Gradient borders untuk card */
-        .gradient-border {
-            position: relative;
-            border-radius: 1rem;
-            background: white;
-        }
-        
-        .gradient-border::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(135deg, #3b82f6, #10b981, #f59e0b);
-            border-radius: 1.1rem;
-            z-index: -1;
-        }
-        
-        /* Animasi untuk checklist */
-        @keyframes checkPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .check-animate {
-            animation: checkPulse 2s infinite;
-        }
-    </style>
-
 @endsection
