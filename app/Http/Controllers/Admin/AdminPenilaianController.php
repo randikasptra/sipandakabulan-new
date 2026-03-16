@@ -133,9 +133,15 @@ class AdminPenilaianController extends Controller
         return view('pages.admin.penilaian-detail', compact('desa', 'klaster', 'penilaians'));
     }
 
-    // ✅ Approve penilaian
-    public function approve(Penilaian $penilaian)
+    // ✅ Approve penilaian (ID dari request body)
+    public function approve(Request $request)
     {
+        $request->validate([
+            'id' => 'required|exists:penilaians,id'
+        ]);
+        
+        $penilaian = Penilaian::findOrFail($request->id);
+        
         $penilaian->update([
             'status' => 'approved',
             'rejection_reason' => null,
@@ -149,16 +155,19 @@ class AdminPenilaianController extends Controller
         ]);
     }
 
-    // ❌ Reject penilaian dengan alasan
-    public function reject(Request $request, Penilaian $penilaian)
+    // ❌ Reject penilaian dengan alasan (ID dari request body)
+    public function reject(Request $request)
     {
         $request->validate([
+            'id' => 'required|exists:penilaians,id',
             'reason' => 'required|string|min:5|max:500'
         ], [
             'reason.required' => 'Alasan penolakan wajib diisi',
             'reason.min' => 'Alasan penolakan minimal 5 karakter',
             'reason.max' => 'Alasan penolakan maksimal 500 karakter'
         ]);
+        
+        $penilaian = Penilaian::findOrFail($request->id);
 
         $penilaian->update([
             'status' => 'rejected',

@@ -38,21 +38,24 @@ Route::get('/', function () {
 // =======================
 // ADMIN ROUTES
 // =======================
-Route::middleware(['auth', 'role:admin'])
+Route::middleware(['auth', 'role:admin','web'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+       Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         // PENILAIAN
         Route::get('/penilaian', [AdminPenilaianController::class, 'index'])->name('penilaian');
         Route::get('/penilaian/desa/{desa}', [AdminPenilaianController::class, 'showDesa'])->name('penilaian.desa');
         Route::get('/penilaian/desa/{desa}/klaster/{klaster}', [AdminPenilaianController::class, 'showKlaster'])->name('penilaian.klaster');
-        Route::patch('/penilaian/{penilaian}/approve', [AdminPenilaianController::class, 'approve'])->name('penilaian.approve');
-        Route::patch('/penilaian/{penilaian}/reject', [AdminPenilaianController::class, 'reject'])->name('penilaian.reject');
+        
+        // ✅ APPROVE & REJECT (Tanpa dynamic parameter untuk compatibility)
+        Route::post('/penilaian/approve', [AdminPenilaianController::class, 'approve'])->name('penilaian.approve');
+        Route::post('/penilaian/reject', [AdminPenilaianController::class, 'reject'])->name('penilaian.reject');
 
-        Route::post('/penilaian/batch-approve', [AdminPenilaianController::class, 'batchApprove'])->name('penilaian.batch.approve');
-        Route::post('/penilaian/batch-reject', [AdminPenilaianController::class, 'batchReject'])->name('penilaian.batch.reject');
+
+
+        
         // DESA MANAGEMENT
         Route::get('/desa', [AdminDesaController::class, 'index'])->name('desa');
         Route::get('/desa/create', [AdminDesaController::class, 'create'])->name('desa.create');

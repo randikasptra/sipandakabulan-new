@@ -5,9 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Masuk SIPANDAKABULAN</title>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @section('title', 'Login SIPANDAKABULAN Kabupaten Tasikmalaya')
+
+    @section('meta_description')
+    Halaman login resmi SIPANDAKABULAN – Sistem Informasi Pendataan Kabupaten Layak Anak Kabupaten Tasikmalaya untuk akses kecamatan dan desa.
+    @endsection
+
+    @section('meta_robots', 'index, follow')
+
+    <title>LOGIN SIPANDAKABULAN</title>
+
+ 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="icon" type="image/png" href="{{ asset('assets/images/LogoKKLA.png') }}">

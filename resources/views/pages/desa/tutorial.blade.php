@@ -1,6 +1,7 @@
 @extends('layouts.desaLayout')
 
 @section('title', 'Tutorial Penggunaan SIPANDAKABULAN')
+@section('meta_robots', 'noindex, nofollow')
 
 @section('content')
     <div class="max-w-7xl mx-auto px-4 py-8 mt-24">

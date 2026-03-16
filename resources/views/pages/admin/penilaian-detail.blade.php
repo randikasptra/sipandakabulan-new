@@ -295,13 +295,22 @@
                     showLoaderOnConfirm: true,
                     preConfirm: async () => {
                         try {
-                            const res = await fetch(`/admin/penilaian/${id}/approve`, {
-                                method: 'PATCH',
+                            const res = await fetch(`/admin/penilaian/approve`, {
+                                method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json',
                                     'Accept': 'application/json'
-                                }
+                                },
+                                body: JSON.stringify({ id: id })
                             });
+
+                            if (!res.ok) {
+                                const errorText = await res.text();
+                                console.error('Response:', errorText);
+                                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                            }
+
                             const data = await res.json();
                             
                             if (!data.success) {
@@ -309,7 +318,8 @@
                             }
                             return data;
                         } catch (error) {
-                            Swal.showValidationMessage(error.message);
+                            console.error('Error:', error);
+                            Swal.showValidationMessage(`Request failed: ${error.message}`);
                         }
                     }
                 });
@@ -416,15 +426,21 @@
                     });
 
                     try {
-                        const res = await fetch(`/admin/penilaian/${id}/reject`, {
-                            method: 'PATCH',
+                        const res = await fetch(`/admin/penilaian/reject`, {
+                            method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Content-Type': 'application/json',
                                 'Accept': 'application/json'
                             },
-                            body: JSON.stringify({ reason: rejectReason })
+                            body: JSON.stringify({ id: id, reason: rejectReason })
                         });
+
+                        if (!res.ok) {
+                            const errorText = await res.text();
+                            console.error('Response:', errorText);
+                            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                        }
                         
                         const data = await res.json();
 
@@ -473,6 +489,7 @@
                             throw new Error(data.message || 'Gagal menolak penilaian');
                         }
                     } catch (error) {
+                        console.error('Error:', error);
                         Swal.fire('Error', error.message, 'error');
                     }
                 }

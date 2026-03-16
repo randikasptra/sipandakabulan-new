@@ -1,5 +1,6 @@
 @extends('layouts.desaLayout')
-
+@section('title', 'Pengumuman | SIPANDAKABULAN')
+@section('meta_robots', 'noindex, nofollow')
 @section('title', 'Pengumuman')
 
 @section('content')

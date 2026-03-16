@@ -1,4 +1,6 @@
 @extends('layouts.desaLayout')
+@section('title', 'Pengisian Klaster | SIPANDAKABULAN')
+@section('meta_robots', 'noindex, nofollow')
 @section('content')
 <div class="container">
     {{-- HEADER --}}

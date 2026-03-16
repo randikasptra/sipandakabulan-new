@@ -19,6 +19,17 @@
     {{-- ✅ Font Inter --}}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    {{-- ✅ SEO Meta --}}
+<meta name="description"
+      content="@yield('meta_description', 'SIPANDAKABULAN adalah Sistem Informasi Pendataan Kabupaten Layak Anak Kabupaten Tasikmalaya yang digunakan oleh Dinas Sosial untuk tingkat kecamatan dan desa.')">
+
+<meta name="robots" content="@yield('meta_robots', 'index, follow')">
+
+<link rel="canonical" href="{{ url()->current() }}">
+
+
     {{-- ✅ Favicon --}}
     <link rel="icon" type="image/png" href="{{ asset('assets/images/LogoKKLA.png') }}">
 
@@ -92,7 +103,7 @@
     </style>
 
     {{-- ✅ Vite (Alpine.js di-load disini) --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+  
 </head>
 
 <body class="bg-gray-50 text-gray-800">

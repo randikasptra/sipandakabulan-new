@@ -1,5 +1,9 @@
 @extends('layouts.desaLayout')
 
+@section('title', 'Dashboard Desa | SIPANDAKABULAN')
+@section('meta_robots', 'noindex, nofollow')
+
+
 @section('content')
 <div class="dashboard-wrapper">
 
